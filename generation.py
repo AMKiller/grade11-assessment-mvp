@@ -175,23 +175,33 @@ are parsed by code, not read by a person.
 "marking_steps" is a JSON list of objects, one per line of working, in the order a marker would
 tick them, e.g.:
 [
-    {{"text": "2x² - x - 6 = 0", "tick": "M1"}},
-    {{"text": "(2x + 3)(x - 2) = 0", "tick": "A1"}},
-    {{"text": "x = -3/2 or x = 2", "tick": "A1"}}
+    {{"text": "2x² - x - 6 = 0", "tick_label": "standard form", "tick_count": 1}},
+    {{"text": "(2x + 3)(x - 2) = 0", "tick_label": "factors", "tick_count": 1}},
+    {{"text": "x = -3/2 or x = 2", "tick_label": "both answers", "tick_count": 2}}
 ]
 The archetype's own "typical_breakdown" (given below, under Marking pattern) is the PRIMARY
 STRUCTURAL GUIDE for this list -- it comes from real DBE marking memos, not a suggestion. Follow
-its step count, order, and tick-type labels (M1, A1, A1 (CA), M2, etc. -- copy its exact notation,
-don't invent your own labelling scheme) as closely as the specific question you're generating
-allows. "tick" holds that short DBE-style code string; use null only for a rare pure intermediate
-line with no mark of its own (most steps in most archetypes DO carry a tick). The LAST step must
-be the final answer, exactly matching "answer".
+its step count and order as closely as the specific question you're generating allows. But its
+notation (A1, M1, A1 (CA) etc.) is the internal shorthand this project's knowledge base was
+documented in -- NOT what appears in the final marking guide. For "tick_label", write a short
+plain-English description of what's being credited instead -- e.g. "substitution", "factors",
+"critical value", "answer", "standard form", "expand", "completing the square", "conclusion",
+"setup". Never output "A1", "M1", "CA", or any DBE-internal code as the tick_label itself.
+
+"tick_count" is normally 1 (one tick). Use 2 only when a single line legitimately earns two
+marks credited together as one combined tick (e.g. a compound answer like "x = 3 or x = -2"
+where the archetype's typical_breakdown shows something like "A1+A1: both value(s)") -- in that
+case set tick_label to something like "both answers"/"both values"/"both x-values" and
+tick_count: 2; do not split that into two separate step objects. Use tick_count: 0 (and
+tick_label: null) only for a rare pure intermediate line with no mark of its own -- most steps
+in most archetypes carry a tick. The LAST step must be the final answer, exactly matching "answer".
 
 You may deviate from typical_breakdown's exact step count/order ONLY when the archetype's own
 "consensus" or "notes" field explicitly documents that this kind of variation is legitimate (e.g.
 an accepted alternative method, or a special case needing an extra step) -- match that documented
-variation, don't invent a new one. Do not compress multiple ticked steps into one object -- one
-tick-worthy operation per step, matching real DBE marking guide granularity.
+variation, don't invent a new one. Do not compress multiple ticked steps into one object beyond
+the tick_count:2 compound-answer case above -- one tick-worthy operation per step, matching real
+DBE marking guide granularity.
 
 COGNITIVE LEVEL -- use these concrete definitions, not just the label names, when setting
 "cognitive_level" (self-labelling a question "complex" because it has many marks, without it
@@ -325,7 +335,7 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
             return None
 
         expected_ticks = len(typical_breakdown)
-        actual_ticks = sum(1 for s in question.marking_steps if s.get("tick"))
+        actual_ticks = sum(1 for s in question.marking_steps if s.get("tick_count", 0) > 0)
 
         if abs(actual_ticks - expected_ticks) > 1:
             return (
