@@ -160,7 +160,15 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
             system=system_prompt
         )
 
-        response_text = message.content[0].text.strip()
+        # Extract text from response, skipping thinking blocks
+        response_text = None
+        for block in message.content:
+            if hasattr(block, 'text'):
+                response_text = block.text.strip()
+                break
+
+        if not response_text:
+            raise ValueError("No text content in Claude response")
 
         try:
             data = json.loads(response_text)
