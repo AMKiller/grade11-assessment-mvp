@@ -217,42 +217,37 @@ if "generation_result" in st.session_state:
                 st.warning(f"⚠ Verification incomplete: {q.get('sympy_error', 'Unknown error')}")
 
     # Download section
-    st.subheader("📥 Download Papers")
+    st.subheader("📥 Download Assessment")
+    st.caption("One combined document: question paper, marking guideline, and cognitive level analysis grid.")
 
-    col1, col2 = st.columns(2)
+    if st.button("Generate Full Assessment (.docx)", use_container_width=True):
+        with st.spinner("Building question paper, marking guide, and cognitive grid..."):
+            try:
+                gen = DocumentGenerator(template_path=None)
 
-    with col1:
-        if st.button("Generate Question Paper (.docx)", use_container_width=True):
-            with st.spinner("Building question paper..."):
-                try:
-                    gen = DocumentGenerator(template_path=None)
+                doc_bytes = gen.generate_full_assessment(
+                    questions=result['question_objects'],
+                    topic=topic,
+                    total_marks=result['total_marks'],
+                    task=task or None,
+                    term=term if term else None,
+                    time_minutes=time_minutes,
+                    examiner=examiner or None,
+                    moderator=moderator or None,
+                    grade=grade
+                )
 
-                    qp_bytes = gen.generate_question_paper(
-                        questions=result['question_objects'],
-                        topic=topic,
-                        total_marks=result['total_marks'],
-                        task=task or None,
-                        term=term if term else None,
-                        time_minutes=time_minutes,
-                        examiner=examiner or None,
-                        moderator=moderator or None,
-                        grade=grade
-                    )
+                st.download_button(
+                    label="💾 Download Assessment",
+                    data=doc_bytes,
+                    file_name=f"Grade_{grade}_{topic.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True
+                )
 
-                    st.download_button(
-                        label="💾 Download Question Paper",
-                        data=qp_bytes,
-                        file_name=f"Grade_{grade}_{topic.replace(' ', '_')}_QP_{datetime.now().strftime('%Y%m%d')}.docx",
-                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                        use_container_width=True
-                    )
-
-                except Exception as e:
-                    st.error(f"Failed to generate QP: {e}")
-
-    with col2:
-        if st.button("Generate Marking Guide (.docx)", use_container_width=True):
-            st.info("Marking guide generation requires manual marking data annotation (coming soon)")
+            except Exception as e:
+                st.error(f"Failed to generate assessment: {e}")
+                st.code(__import__('traceback').format_exc())
 
 # Footer
 st.divider()

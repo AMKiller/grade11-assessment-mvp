@@ -101,8 +101,8 @@ def test_document_generation():
     try:
         gen = DocumentGenerator()
 
-        # Try to generate question paper
-        qp_bytes = gen.generate_question_paper(
+        # Try to generate the full assessment (QP + marking guide + cognitive grid)
+        qp_bytes = gen.generate_full_assessment(
             questions=questions,
             topic="Equations and Inequalities",
             total_marks=6,

@@ -19,7 +19,7 @@ class GeneratedQuestion:
     def __init__(self, archetype_id: str, question_text: str, answer_text: str,
                  answer_expression: str, marks: int, cognitive_level: str,
                  problem_type: str = "unverifiable", sympy_problem: str = "",
-                 claimed_solution: str = ""):
+                 claimed_solution: str = "", marking_steps: list = None):
         self.archetype_id = archetype_id
         self.question_text = question_text
         self.answer_text = answer_text
@@ -29,6 +29,7 @@ class GeneratedQuestion:
         self.problem_type = problem_type
         self.sympy_problem = sympy_problem
         self.claimed_solution = claimed_solution
+        self.marking_steps = marking_steps or []
         self.sympy_verified = False
         self.manual_review_required = False
         self.sympy_error = None
@@ -42,6 +43,7 @@ class GeneratedQuestion:
             "marks": self.marks,
             "cognitive_level": self.cognitive_level,
             "problem_type": self.problem_type,
+            "marking_steps": self.marking_steps,
             "sympy_verified": self.sympy_verified,
             "manual_review_required": self.manual_review_required,
             "sympy_error": self.sympy_error
@@ -149,8 +151,9 @@ varying the numbers and context freely within the archetype's scope.
 
 Respond ONLY with valid JSON, no other text, in this exact structure:
 {{
-    "question": "The complete question text, including any setup or numbers",
-    "answer": "The final answer exactly as it should appear on the marking guide (human-readable, e.g. 'x = 1.35 or x = -1.85')",
+    "question": "The complete question text, including any setup or numbers -- do NOT state the mark value anywhere inside this text (no '(4 marks)', no '[4]'); marks are shown separately in the document and must never be duplicated in the question wording",
+    "answer": "The final answer exactly as it should appear on the marking guide (human-readable, e.g. 'x = 1,35 or x = -1,85')",
+    "marking_steps": "A list of ordered working steps for the marking guide -- see rules below",
     "problem_type": "equation | inequality | system | unverifiable",
     "sympy_problem": "A machine-parseable statement of the underlying math problem -- see rules below",
     "claimed_solution": "A machine-parseable Python literal of your claimed solution -- see rules below",
@@ -160,6 +163,43 @@ Respond ONLY with valid JSON, no other text, in this exact structure:
 CRITICAL: "sympy_problem" and "claimed_solution" exist so your answer can be independently
 re-solved and checked by SymPy before this question is accepted into a real assessment.
 Get these exactly right -- a wrong answer that passes this check ships to real students.
+
+NOTATION RULE -- applies to "question", "answer", and "marking_steps" ONLY (human-readable
+text seen by the teacher/student): use South African comma-decimal notation, e.g. "3,25" not
+"3.25". Do NOT use this comma notation in "sympy_problem" or "claimed_solution" -- those two
+fields must stay in standard Python/JSON numeric syntax with periods (e.g. 3.25), since they
+are parsed by code, not read by a person.
+
+"marking_steps" is a JSON list of objects, one per line of working, in the order a marker would
+tick them, e.g.:
+[
+    {{"text": "2x² - x - 6 = 0", "tick": true}},
+    {{"text": "(2x + 3)(x - 2) = 0", "tick": true}},
+    {{"text": "x = -3/2 or x = 2", "tick": true}}
+]
+Each step is one calculation line (matching the archetype's marking_pattern breakdown below --
+one object per M/A tick described there). Set "tick": true on a step that earns a mark on its
+own, and "tick": false only for a pure intermediate line with no mark of its own (rare -- most
+archetypes tick every line). The LAST step must be the final answer, exactly matching "answer".
+Do not compress multiple ticked steps into one object -- one tick-worthy operation per step,
+matching real DBE marking guide granularity (see the archetype's marking_pattern.typical_breakdown).
+
+COGNITIVE LEVEL -- use these concrete definitions, not just the label names, when setting
+"cognitive_level" (self-labelling a question "complex" because it has many marks, without it
+actually requiring a decision or skill-combination, is a common and serious mistake):
+- "knowledge": a single recall step or direct formula substitution, no decision-making.
+- "routine": a standard multi-step procedure the learner has drilled before, applied to new
+  numbers -- the method to use is obvious from how the question is phrased.
+- "complex": the learner must DECIDE which procedure applies (the question does not name the
+  method), OR must combine two or more previously-separate skills in one sub-question. If the
+  required method is unambiguous from the wording alone, it is NOT complex, no matter how many
+  marks or steps it has.
+- "problem_solving": genuinely unfamiliar in structure -- requires adapting a known technique to
+  a scenario that doesn't map directly onto a drilled question type, often needing an insight not
+  explicitly cued by the question.
+Red flag that a question is mislabelled: if you named the method in the question text itself
+("using the quadratic formula, solve..."), that removes the decision-making that would justify
+"complex" or higher -- it's "routine" regardless of mark value.
 
 Rules for "problem_type" and the two machine-readable fields:
 
@@ -250,7 +290,8 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
             cognitive_level=data.get("cognitive_level", "routine"),
             problem_type=data.get("problem_type", "unverifiable"),
             sympy_problem=data.get("sympy_problem", ""),
-            claimed_solution=data.get("claimed_solution", "")
+            claimed_solution=data.get("claimed_solution", ""),
+            marking_steps=data.get("marking_steps", [])
         )
 
     NUMERIC_TOLERANCE = 0.02  # allows for 2-d.p. rounding in either direction
