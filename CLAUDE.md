@@ -1,5 +1,11 @@
 # Grade 11 Assessment Generator — Development Notes
 
+## Formatting specification — read before touching generation.py or docgen.py
+
+**`format_SKILL.md` and `task_SKILL (1).md` (in this repo root) are the authoritative formatting specification for the output document** — question numbering, table structure, marking-guide layout, cognitive grid, front matter, fonts, borders, spacing. They are not optional background reading; the question-numbering scheme, marking-guide structure, and cognitive grid described there are **not yet implemented** in `generation.py`/`docgen.py` as of Sept 23, 2026 (see the audit in that day's conversation history / git log around commit adding this note). Read both files in full at the start of any session that edits `generation.py` or `docgen.py`, before writing or changing a single line.
+
+**Precedence rule when the skills conflict with `PROJECT_BRIEF.md`:** on front-matter (cover page, page border, branding, template tokens), `PROJECT_BRIEF.md` wins — the MVP's generic no-template fallback stays plain/unbranded/no-border, per PROJECT_BRIEF's explicit "no branding, no border image" instruction. On everything in the body of the paper (question numbering, tables, marking guide, cognitive grid), `format_SKILL.md` wins.
+
 ## Architecture Decisions (Sept 23, 2026)
 
 **Flat-file, no pre-scaffolded layers.** Every generated paper is a file downloaded by the teacher — nothing persisted server-side. This keeps the system simple and makes it trivial to add auth/persistence later (the seam is in the function boundary, not a folder structure).
