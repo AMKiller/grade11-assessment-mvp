@@ -202,7 +202,7 @@ TEST_HIERARCHICAL_QUESTION = {
                     ],
                     "marks": 3,
                     "cognitive_level": "complex",
-                    "answer": [{"type": "math", "value": "n \\approx 12,5 \\text{ years}"}],
+                    "answer": [{"type": "math", "value": "n ≈ 12,5"}, {"type": "text", "value": " years"}],
                     "marking_steps": [
                         {
                             "parts": [
@@ -220,7 +220,7 @@ TEST_HIERARCHICAL_QUESTION = {
                         },
                         {
                             "parts": [
-                                {"type": "math", "value": "n = \\frac{\\ln 2}{\\ln 1,06} \\approx 12,5"}
+                                {"type": "math", "value": "n = \\frac{ln 2}{ln 1,06} ≈ 12,5"}
                             ],
                             "tick_label": "logarithmic solution",
                             "tick_count": 1
@@ -253,9 +253,9 @@ TEST_HIERARCHICAL_QUESTION = {
                     "tick_count": 2
                 }
             ],
-            "problem_type": "equation",
-            "sympy_problem": "x**2 - 3*x - 10",
-            "claimed_solution": "[]"
+            "problem_type": "unverifiable",
+            "sympy_problem": "",
+            "claimed_solution": ""
         }
     ],
     "total_marks": 9  # 2 (flat) + 2+3 (stem children) + 2 (flat) = 9

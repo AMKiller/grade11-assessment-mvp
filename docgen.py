@@ -12,6 +12,7 @@ from table_helpers import (
     add_information_sheet_image, set_table_fixed_layout_and_grid,
     show_table_borders
 )
+from generation import _analyze_cognitive_distribution
 
 DEFAULT_COGNITIVE_TARGETS = {
     'knowledge': 20,
@@ -22,6 +23,53 @@ DEFAULT_COGNITIVE_TARGETS = {
 
 COGNITIVE_LEVELS = ['knowledge', 'routine', 'complex', 'problem_solving']
 COGNITIVE_GRID_COL_WIDTHS_IN = [1.3, 0.85, 0.85, 0.85, 1.15, 0.7]
+
+
+def _flatten_topic_hierarchy(qnum: int, hierarchical_questions: list) -> list:
+    """
+    Flatten a topic's ordered list of hierarchical question dicts (one per
+    archetype slot, as returned by generate_question()/generate_paper())
+    into a single numbered row list, assigning composite qnum.i / qnum.i.j
+    numbers -- e.g. "1.1", "1.5" (stem), "1.5.1", "1.5.2", "1.6".
+
+    generation.py's own Python-generated numbering inside each dict only
+    knows that dict's position within its own archetype call, not its
+    position within the whole topic, so it's discarded here in favor of a
+    topic-wide sequential index (matches format_SKILL.md's "primary
+    sub-question number (1.1, 1.2, 2.1...)" scheme).
+
+    Returns a list of dicts, each either:
+      {"num": "1.5", "parts": [...], "marks": None, "is_stem": True}
+      {"num": "1.1", "parts": [...], "marks": 3, "leaf": {...}}
+      {"num": "1.5.1", "parts": [...], "marks": 2, "leaf": {...}}
+    """
+    flat = []
+    i = 0
+    for qdict in hierarchical_questions:
+        for row in qdict.get("question_structure", []):
+            i += 1
+            if row.get("is_stem"):
+                flat.append({
+                    "num": f"{qnum}.{i}",
+                    "parts": row.get("parts", []),
+                    "marks": None,
+                    "is_stem": True
+                })
+                for j, child in enumerate(row.get("children", []), 1):
+                    flat.append({
+                        "num": f"{qnum}.{i}.{j}",
+                        "parts": child.get("parts", []),
+                        "marks": child.get("marks"),
+                        "leaf": child
+                    })
+            else:
+                flat.append({
+                    "num": f"{qnum}.{i}",
+                    "parts": row.get("parts", []),
+                    "marks": row.get("marks"),
+                    "leaf": row
+                })
+    return flat
 
 
 def parts_to_cell_content(parts: list) -> list:
@@ -68,8 +116,10 @@ class DocumentGenerator:
         product as one downloadable document per generated assessment.
 
         Args:
-            topics_data: List of (topic_name: str, questions: list[GeneratedQuestion])
-                       tuples, in the order they should appear. Each topic becomes
+            topics_data: List of (topic_name: str, questions: list[dict]) tuples,
+                       where each dict is a hierarchical question_structure dict
+                       as returned by generate_question()/generate_paper() --
+                       in the order they should appear. Each topic becomes
                        its own QUESTION N group (QUESTION 1, QUESTION 2, ...), each
                        internally sub-numbered N.1, N.2... -- matching how a real
                        multi-topic DBE paper structures one Question block per topic.
@@ -246,12 +296,13 @@ class DocumentGenerator:
         the table, then the standalone bold centred grand TOTAL [N] paragraph."""
         for qnum, questions in question_groups:
             add_question_heading(doc, f"QUESTION {qnum}")
+            flat = _flatten_topic_hierarchy(qnum, questions)
             rows = [
-                {'num': f'{qnum}.{i}', 'parts': parts_to_cell_content(q.question_parts), 'marks': q.marks}
-                for i, q in enumerate(questions, 1)
+                {'num': r['num'], 'parts': parts_to_cell_content(r['parts']), 'marks': r['marks']}
+                for r in flat
             ]
             table = add_question_table(doc, rows)
-            question_total = sum(q.marks for q in questions)
+            question_total = sum(r['marks'] for r in flat if r['marks'] is not None)
             add_question_total_row(table, question_total)
             doc.add_paragraph()
 
@@ -267,9 +318,15 @@ class DocumentGenerator:
         doc.add_paragraph()
 
         for qnum, questions in question_groups:
+            flat = _flatten_topic_hierarchy(qnum, questions)
             step_groups = []
-            for i, q in enumerate(questions, 1):
-                steps = q.marking_steps or [{"parts": q.answer_parts, "tick_label": "answer", "tick_count": 1}]
+            for r in flat:
+                if r.get("is_stem"):
+                    continue  # stems carry no marks/marking steps of their own
+                leaf = r["leaf"]
+                steps = leaf.get("marking_steps") or [
+                    {"parts": leaf.get("answer", []), "tick_label": "answer", "tick_count": 1}
+                ]
                 step_tuples = []
                 for step in steps:
                     count = step.get("tick_count", 0)
@@ -277,9 +334,9 @@ class DocumentGenerator:
                     tick_display = f"{'✓' * count} {label}" if count > 0 and label else None
                     step_tuples.append((parts_to_cell_content(step.get("parts", [])), tick_display))
                 step_groups.append({
-                    'num': f'{qnum}.{i}',
+                    'num': r['num'],
                     'steps': step_tuples,
-                    'marks': q.marks
+                    'marks': r['marks']
                 })
             add_marking_guide_question_table(doc, qnum, step_groups)
             doc.add_paragraph()
@@ -306,10 +363,10 @@ class DocumentGenerator:
         level_totals = {level: 0 for level in COGNITIVE_LEVELS}
 
         for qnum, questions in question_groups:
-            row_totals = {level: 0 for level in COGNITIVE_LEVELS}
-            for q in questions:
-                if q.cognitive_level in row_totals:
-                    row_totals[q.cognitive_level] += q.marks
+            # Reuses generation.py's leaf-walk (flat rows + stem children) so
+            # the grid is built from the same actually-generated leaves as
+            # the rest of the document, not from the pre-generation plan.
+            row_totals = _analyze_cognitive_distribution(questions, targets)["marks_by_level"]
             row_total_marks = sum(row_totals.values())
 
             row = table.add_row()
