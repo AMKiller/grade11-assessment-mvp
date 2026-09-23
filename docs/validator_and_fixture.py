@@ -134,8 +134,8 @@ TEST_HIERARCHICAL_QUESTION = {
             "type": "flat_row",
             "is_stem": False,
             "parts": [
-                {"type": "text", "value": "Solve for "},
-                {"type": "math", "value": "x"}
+                {"type": "text", "value": "Solve for x: "},
+                {"type": "math", "value": "2x - 5 = 0"}
             ],
             "marks": 2,
             "cognitive_level": "routine",
