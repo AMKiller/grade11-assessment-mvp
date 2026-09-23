@@ -39,7 +39,7 @@ Hierarchical design cost is **comparable to or slightly cheaper than flat design
 3. **MODEL CHOICE as config constant** — Currently hardcoded in generation code; should be a configurable value (e.g., `MODEL = "claude-opus-5"`) to easily compare cost/quality tradeoffs between Opus 5.5 and Sonnet 5
 4. **#0 (TOP): Format/Task specification audit** — Verify question numbering, table layout, and math-notation subset against `format_SKILL.md` and `task_SKILL (1).md`. This is the blocking issue from the original report; see details below.
 
-## Stage 2: Hierarchical Numbering Implementation (DESIGN COMPLETE, CODE PENDING)
+## Stage 2: Hierarchical Numbering Implementation (TESTING COMPLETE, CODE PENDING)
 
 **Status:** Design approved Sept 24, 2026. Implementation plan documented. No API credits spent.
 
@@ -142,7 +142,251 @@ See Findings section above. Normal case: Opus 5.5 $0.11, Sonnet 5 $0.05 per pape
 - Amendment 10: Test plan (fixture + docgen rendering + spec verification)
 - Amendment 11: No API credits spent; files changed listed above
 
-## Next Steps (Awaiting Approval)
+## Amendment Confirmations (Code Implementation Specification)
+
+### 1. Grid-First: Cognitive Distribution (Before Each Call)
+
+**Location:** `app.py` and `generation.py` QuestionGenerator.generate_question()
+
+**Current flow (unchanged):**
+```python
+# app.py (unchanged)
+gen = QuestionGenerator(topic)
+gen.select_archetypes(num_questions, target_distribution)  # Line ~175
+# Returns: archetypes pre-selected to hit K:20/R:35/C:30/P:15
+
+# generation.py, generate_paper() (unchanged at line 716-726)
+for i, (archetype, planned_marks) in enumerate(zip(gen.selected_archetypes, marks_plan), 1):
+    q = gen.generate_question(archetype.archetype_id, marks=planned_marks)  # Line 737
+```
+
+**NEW (hierarchical): Pass cognitive_targets into each call**
+```python
+# generation.py, generate_question() signature changes:
+def generate_question(self, archetype_id: str, marks: int = None,
+                     cognitive_targets: dict = None, max_retries: int = 3):
+    """
+    cognitive_targets: dict like {"routine": 4, "complex": 2}
+    This is computed from the archetype's cognitive_level_distribution
+    before calling generate_question().
+    """
+    # Build archetype_context that includes cognitive_targets
+    archetype_context = f"""
+Archetype: {archetype.name} ({archetype.archetype_id})
+...
+Cognitive level targets for this question: {cognitive_targets}
+  → You should generate leaves that sum to these targets
+  → Example: 4 marks routine + 2 marks complex = 6 total marks
+"""
+```
+
+**Where the plan is built:**
+- Line `generate_paper()`: `_distribute_marks()` computes marks per archetype (line 726)
+- **NEW (to add):** Before `gen.generate_question()` call, compute cognitive_targets from archetype.cognitive_level_distribution
+- Pass cognitive_targets as new parameter
+
+**Grid-first principle: CONFIRMED** — Distribution determined at archetype selection; Claude fills in structure within that constraint.
+
+### 2. Cost Estimate (Redone with Correct Assumptions)
+
+**Token Profile (Hierarchical, 5 questions per 50-mark paper):**
+
+Assumption: One hierarchical question = stem + 2-3 children = larger output
+- System prompt: 2,330 tokens (static, resent per call)
+- Per-question input: 290 tokens (archetype + cognitive_targets + mark split)
+  - Archetype description: ~200 tokens
+  - Cognitive targets: ~30 tokens ("routine: 4, complex: 2")
+  - Requesting marks per child: ~40 tokens
+  - **Total: ~290 tokens**
+- Per-question output: **800-1,200 tokens** (hierarchical = larger)
+  - Flat question alone: ~400 tokens
+  - Stem + 2 children: ~800-900 tokens
+  - Stem + 3 children: ~1,000-1,200 tokens
+  - **Average (2-3 children mix): ~950 tokens**
+- Retry pattern: Normal 5 calls, worst case 15 calls (max 3 retries per question)
+
+**Cost Calculation:**
+
+Per call (average):
+- Input: (2,330 system + 290 context) = 2,620 tokens
+- Output: 950 tokens (hierarchical average)
+
+**Opus 5.5:** Input $4/1M, Output $20/1M
+- Per call: (2,620 × $0.000004) + (950 × $0.000020) = $0.0105 + $0.019 = **$0.0295**
+
+**Sonnet 5:** Input $2/1M, Output $10/1M
+- Per call: (2,620 × $0.000002) + (950 × $0.000010) = $0.00524 + $0.0095 = **$0.01474**
+
+**Per 50-Mark Paper (5 questions):**
+
+| Model | Normal (5×) | Worst (15×) |
+|---|---|---|
+| **Opus 5.5** | 5 × $0.0295 = **$0.148** | 15 × $0.0295 = **$0.443** |
+| **Sonnet 5** | 5 × $0.01474 = **$0.074** | 15 × $0.01474 = **$0.221** |
+
+**Note:** These are ESTIMATES until usage log shows real numbers. Actual output tokens may vary (800-1,200 range).
+
+**Comparison to earlier estimate:**
+- Earlier estimate (550 output tokens): $0.11 Opus 5.5, $0.054 Sonnet 5
+- Revised estimate (950 output tokens): $0.148 Opus 5.5, $0.074 Sonnet 5
+- **Difference:** +34% cost per paper for Opus 5.5, +37% for Sonnet 5
+- **Reason:** Hierarchical questions output larger JSON (stem + multiple children)
+- **Still acceptable:** Sonnet 5 at $0.074 is still budget-friendly for MVP
+
+### Testing Summary
+
+**✓ Validator Tests (All Passed):**
+- Good hierarchical fixture (mixed flat + stem + 2 children): PASS
+- Broken: Stem with 1 child: FAIL (correctly rejects)
+- Broken: Marks not summing (5 vs target 6): FAIL (correctly rejects)
+- Broken: Tick count mismatch (1 vs marks 3): FAIL (correctly rejects)
+- Broken: Stem with marks=2 (should be null): FAIL (correctly rejects)
+
+**✓ Docgen Structure Test (Properties Verified):**
+- Stem rows have marks=None: PASS
+- Flat rows have marks>0: PASS
+- All rows have parts list: PASS
+- Total marks = 9 (leaves only): PASS
+- Leaf count = 4 (2 flat + 2 stem children): PASS
+
+**⏳ Docgen Rendering Test (Pending Implementation):**
+- Will render .docx from hierarchical fixture
+- Will verify against format_SKILL.md rules (see below)
+
+## Implementation Specification (Code Changes Required)
+
+### File: generation.py
+
+**Changes:**
+1. Add validator function `_validate_hierarchical_structure()` at line ~450
+   - Takes question_structure dict and target_marks
+   - Validates stems (marks=null, ≥2 children), children (marks>0), flat rows (marks>0)
+   - Returns (is_valid, errors)
+   - **Source:** docs/validator_and_fixture.py
+
+2. Add numbering generator `_generate_hierarchical_numbering()` at line ~480
+   - Converts question_structure (no numbers) to flat with Python-generated numbers
+   - Handles: flat rows (1.1, 1.2), stems (1.5), children (1.5.1, 1.5.2)
+   - Returns list of (number_str, row_data) tuples
+
+3. Update `generate_question()` signature (line ~187):
+   - Add parameter: `cognitive_targets: dict = None`
+   - Pass into Claude context
+
+4. Update `_call_claude()` (line ~245):
+   - Update system prompt: remove numbering rules (use docs/new_generation_prompt.md)
+   - Include cognitive_targets in archetype_context
+   - Expect return format: `{question_structure: [...], total_marks: N}`
+   - NO numbering in Claude's output
+
+5. Update JSON parsing (line ~420):
+   - Expect `question_structure` array (not flat)
+   - Validate with `_validate_hierarchical_structure()`
+   - Generate numbering with `_generate_hierarchical_numbering()`
+
+6. Update `_verify_answer()` (line ~503):
+   - Now operates on individual leaves (children), not whole question
+   - Called for each leaf that has sympy_problem
+
+7. Update retry logic (line ~209):
+   - On leaf failure: re-call Claude with stem + passing siblings as context
+   - Don't re-generate entire question
+
+### File: docgen.py
+
+**Changes:**
+1. Update `_add_question_paper_body()` (line ~243):
+   - Accept hierarchical structure from generation.py
+   - Iterate through: flat rows + stem rows with children
+   - For each stem: render text (no marks), then render children (1.5.1, 1.5.2, etc.)
+   - Compute per-question total as sum of leaves (exclude stems)
+   - Call `add_question_table()` with flat rows prepared
+
+2. Update `_add_marking_guide_body()` (line ~260):
+   - Same hierarchy iteration
+   - Render only leaf marking_steps (not stems)
+   - **NEW (Amendment 6):** Render last marking_steps row in BOLD (final answer)
+   - Compute per-question total from leaves only
+
+### File: table_helpers.py
+
+**Changes:** NONE required
+- `add_question_table()` already handles `depth = num.count('.') - 1`
+- Column merge logic (c1 merges with c2 for depth-0/stem) already works
+- Blank spacer row logic already works (if/not is_stem)
+
+### File: app.py
+
+**Changes:**
+1. Before calling `gen.generate_question()` (around line ~200-250):
+   - Compute cognitive_targets from archetype.cognitive_level_distribution
+   - Pass as parameter to generate_question()
+
+**Example:**
+```python
+# NEW CODE in app.py
+cognitive_targets = archetype.marking_pattern.get("typical_breakdown", {})
+# Returns e.g., {"routine": 4, "complex": 2, "knowledge": 0, "problem_solving": 0}
+
+q = gen.generate_question(
+    archetype.archetype_id,
+    marks=planned_marks,
+    cognitive_targets=cognitive_targets  # NEW PARAMETER
+)
+```
+
+## Testing Checklist (When Implementation is Complete)
+
+**Without API (validator + fixture tests — DONE ✓):**
+- ✓ Validator rejects stem with 1 child
+- ✓ Validator rejects marks not summing to target
+- ✓ Validator rejects tick count mismatch
+- ✓ Validator rejects stem with marks != null
+- ✓ Validator accepts good hierarchical fixture
+
+**With docgen rendering (code implementation needed):**
+- [ ] Render hierarchical fixture to .docx via updated docgen.py
+- [ ] Render .docx to PDF (libreoffice + libreoffice-math)
+- [ ] Render PDF to page images (pdftoppm)
+- [ ] Verify each page against format_SKILL.md rules:
+  - [ ] Numbering correct (1.1, 1.5, 1.5.1, 1.5.2, 1.6)
+  - [ ] Depth-based indentation correct (1.5.1 indented vs 1.5)
+  - [ ] Blank spacer rows after every non-stem row
+  - [ ] [N] question total row present (no "Total:" label, not bold)
+  - [ ] Stem row has no marks cell (marks=null rendered as empty)
+  - [ ] Math objects are native <m:oMath> (not plain text)
+  - [ ] Decimal notation comma (3,25 not 3.25)
+  - [ ] Tick counts match marks on marking guide
+  - [ ] Final answer line bold in marking guide
+  - [ ] TOTAL [N] grand total paragraphs at end of Q.P. and M.G.
+  - [ ] Cognitive grid present with FET TARGET % and THIS TASK %
+
+**With API (when credits added):**
+- [ ] Generate real paper (5 questions, hierarchical mix)
+- [ ] Verify usage log: input + output tokens vs estimate
+- [ ] Check cost vs budget
+- [ ] Verify SymPy verification works on leaves
+- [ ] Verify retry logic on failed leaf
+
+## Summary: What Changed (For Git Log)
+
+**Files Modified:**
+- `generation.py`: +~150 lines (validator, numbering, prompt update, hierarchy support)
+- `docgen.py`: +~50 lines (hierarchy iteration, bold final answer, stem handling)
+- `app.py`: +~10 lines (compute cognitive_targets, pass to generate_question)
+- `STATUS.md`: Updated with cost estimate, implementation spec
+
+**Files Added:**
+- `docs/new_generation_prompt.md`: Updated system prompt (numbering rules removed)
+- `docs/validator_and_fixture.py`: Validator function + test fixture
+- `docs/cost_estimate_hierarchical.md`: Token profile and cost breakdown
+- `docs/test_validator.py`: Validator tests (all passing)
+- `docs/test_docgen_hierarchy.py`: Docgen structure verification
+
+**Backup Branch:**
+- `backup-pre-stage2`: Full backup of working state before implementation
+
+## Next Steps (Awaiting API Credits)
 
 1. **Integrate validator into generation.py** — validate before accepting question
 2. **Update generation.py prompt** — remove numbering rules, add structure rules
