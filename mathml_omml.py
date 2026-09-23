@@ -6,17 +6,27 @@ actual converter Microsoft ships with Office.
 Supported DSL: ^{..} / ^x superscript, _{..} / _x subscript, \\frac{a}{b},
 \\sqrt{x}, \\sqrt[n]{x}, {...} grouping, literal text/digits/operators,
 unicode symbols typed directly (± ≤ ≥ ≠ · ÷ √ Δ etc.)
+
+Note: lxml is optional. If not available, OMML rendering is disabled
+(only relevant for local development with libreoffice-math verification).
 """
 import re
 import os
-from lxml import etree
 
-MMLNS = "http://www.w3.org/1998/Math/MathML"
-_XSLT_PATH = os.path.join(os.path.dirname(__file__), 'MML2OMML.XSL')
-_xslt_transform = etree.XSLT(etree.parse(_XSLT_PATH))
+try:
+    from lxml import etree
+    MMLNS = "http://www.w3.org/1998/Math/MathML"
+    _XSLT_PATH = os.path.join(os.path.dirname(__file__), 'MML2OMML.XSL')
+    _xslt_transform = etree.XSLT(etree.parse(_XSLT_PATH))
+    LXML_AVAILABLE = True
+except ImportError:
+    LXML_AVAILABLE = False
+    _xslt_transform = None
 
 
 def mml(tag, *children, text=None, **attrib):
+    if not LXML_AVAILABLE:
+        raise RuntimeError("lxml is required for math object generation. Install with: pip install lxml")
     e = etree.Element(f"{{{MMLNS}}}{tag}")
     for k, v in attrib.items():
         e.set(k, v)
@@ -176,6 +186,8 @@ def latex_to_mathml(latex):
 
 def latex_to_omath(latex):
     """Return an <m:oMath> lxml element (already namespaced) for the given DSL string."""
+    if not LXML_AVAILABLE:
+        raise RuntimeError("lxml is required for math object generation. Install with: pip install lxml")
     mathml_root = latex_to_mathml(latex)
     result = _xslt_transform(mathml_root)
     return result.getroot()
