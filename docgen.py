@@ -252,9 +252,9 @@ class DocumentGenerator:
         for qnum, questions in question_groups:
             step_groups = []
             for i, q in enumerate(questions, 1):
-                steps = q.marking_steps or [{"text": q.answer_text, "tick": True}]
+                steps = q.marking_steps or [{"text": q.answer_text, "tick": "A1"}]
                 step_tuples = [
-                    ([step.get("text", "")], "✓" if step.get("tick") else None)
+                    ([step.get("text", "")], f"✓{step['tick']}" if step.get("tick") else None)
                     for step in steps
                 ]
                 step_groups.append({

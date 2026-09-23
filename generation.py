@@ -33,6 +33,7 @@ class GeneratedQuestion:
         self.sympy_verified = False
         self.manual_review_required = False
         self.sympy_error = None
+        self.marking_fidelity_warning = None
 
     def to_dict(self):
         return {
@@ -46,7 +47,8 @@ class GeneratedQuestion:
             "marking_steps": self.marking_steps,
             "sympy_verified": self.sympy_verified,
             "manual_review_required": self.manual_review_required,
-            "sympy_error": self.sympy_error
+            "sympy_error": self.sympy_error,
+            "marking_fidelity_warning": self.marking_fidelity_warning
         }
 
 
@@ -173,16 +175,23 @@ are parsed by code, not read by a person.
 "marking_steps" is a JSON list of objects, one per line of working, in the order a marker would
 tick them, e.g.:
 [
-    {{"text": "2x² - x - 6 = 0", "tick": true}},
-    {{"text": "(2x + 3)(x - 2) = 0", "tick": true}},
-    {{"text": "x = -3/2 or x = 2", "tick": true}}
+    {{"text": "2x² - x - 6 = 0", "tick": "M1"}},
+    {{"text": "(2x + 3)(x - 2) = 0", "tick": "A1"}},
+    {{"text": "x = -3/2 or x = 2", "tick": "A1"}}
 ]
-Each step is one calculation line (matching the archetype's marking_pattern breakdown below --
-one object per M/A tick described there). Set "tick": true on a step that earns a mark on its
-own, and "tick": false only for a pure intermediate line with no mark of its own (rare -- most
-archetypes tick every line). The LAST step must be the final answer, exactly matching "answer".
-Do not compress multiple ticked steps into one object -- one tick-worthy operation per step,
-matching real DBE marking guide granularity (see the archetype's marking_pattern.typical_breakdown).
+The archetype's own "typical_breakdown" (given below, under Marking pattern) is the PRIMARY
+STRUCTURAL GUIDE for this list -- it comes from real DBE marking memos, not a suggestion. Follow
+its step count, order, and tick-type labels (M1, A1, A1 (CA), M2, etc. -- copy its exact notation,
+don't invent your own labelling scheme) as closely as the specific question you're generating
+allows. "tick" holds that short DBE-style code string; use null only for a rare pure intermediate
+line with no mark of its own (most steps in most archetypes DO carry a tick). The LAST step must
+be the final answer, exactly matching "answer".
+
+You may deviate from typical_breakdown's exact step count/order ONLY when the archetype's own
+"consensus" or "notes" field explicitly documents that this kind of variation is legitimate (e.g.
+an accepted alternative method, or a special case needing an extra step) -- match that documented
+variation, don't invent a new one. Do not compress multiple ticked steps into one object -- one
+tick-worthy operation per step, matching real DBE marking guide granularity.
 
 COGNITIVE LEVEL -- use these concrete definitions, not just the label names, when setting
 "cognitive_level" (self-labelling a question "complex" because it has many marks, without it
@@ -286,7 +295,7 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
                 ) from e
             raise ValueError(f"Claude response was not valid JSON: {response_text}") from e
 
-        return GeneratedQuestion(
+        question = GeneratedQuestion(
             archetype_id=archetype.archetype_id,
             question_text=data["question"],
             answer_text=data["answer"],
@@ -298,6 +307,33 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
             claimed_solution=data.get("claimed_solution", ""),
             marking_steps=data.get("marking_steps", [])
         )
+        question.marking_fidelity_warning = self._check_marking_fidelity(question, archetype)
+        return question
+
+    def _check_marking_fidelity(self, question: "GeneratedQuestion", archetype) -> Optional[str]:
+        """
+        Soft, non-blocking check: does the generated marking_steps tick count
+        roughly match the archetype's own documented typical_breakdown length?
+        This does NOT gate acceptance (unlike sympy verification) -- a
+        differently-structured-but-correct breakdown isn't a wrong answer,
+        just possibly a lower-fidelity match to the real memo convention this
+        archetype was extracted from. Surfaced to the user as an informational
+        flag so they can spot-check it before using the paper.
+        """
+        typical_breakdown = archetype.marking_pattern.get("typical_breakdown", [])
+        if not typical_breakdown:
+            return None
+
+        expected_ticks = len(typical_breakdown)
+        actual_ticks = sum(1 for s in question.marking_steps if s.get("tick"))
+
+        if abs(actual_ticks - expected_ticks) > 1:
+            return (
+                f"This archetype's real marking memos typically show {expected_ticks} ticked "
+                f"steps, but the generated marking guide has {actual_ticks} -- worth a quick "
+                f"look before using this question."
+            )
+        return None
 
     NUMERIC_TOLERANCE = 0.02  # allows for 2-d.p. rounding in either direction
 

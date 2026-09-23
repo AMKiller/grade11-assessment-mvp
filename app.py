@@ -278,6 +278,9 @@ if "generation_result" in st.session_state:
             else:
                 st.warning(f"⚠ Verification incomplete: {q.get('sympy_error', 'Unknown error')}")
 
+            if q.get('marking_fidelity_warning'):
+                st.info(f"📋 Marking guide fidelity: {q['marking_fidelity_warning']}")
+
     # Download section
     st.subheader("📥 Download Assessment")
     st.caption("One combined document: question paper, marking guideline, and cognitive level analysis grid.")
