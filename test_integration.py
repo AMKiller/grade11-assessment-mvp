@@ -78,24 +78,29 @@ def test_document_generation():
     """Test document generation without Claude."""
     print("\n📄 Testing Document Generation...")
 
-    # Create mock questions
+    # docgen.py now consumes hierarchical question dicts (question_structure
+    # + total_marks), not flat GeneratedQuestion objects -- see generation.py's
+    # grid-first redesign and docgen.py's _flatten_topic_hierarchy().
+    def flat_question(archetype_id, question_text, answer_text, marks, cognitive_level):
+        return {
+            "archetype_id": archetype_id,
+            "total_marks": marks,
+            "question_structure": [{
+                "is_stem": False,
+                "parts": [{"type": "text", "value": question_text}],
+                "marks": marks,
+                "cognitive_level": cognitive_level,
+                "answer": [{"type": "text", "value": answer_text}],
+                "marking_steps": [{"parts": [{"type": "text", "value": answer_text}],
+                                    "tick_label": "answer", "tick_count": marks}],
+                "problem_type": "unverifiable"
+            }]
+        }
+
     questions = [
-        GeneratedQuestion(
-            archetype_id="eqineq_001",
-            question_text="Solve: (x-2)(x+3) = 0",
-            answer_text="x = 2 or x = -3",
-            answer_expression="x = (2, -3)",
-            marks=2,
-            cognitive_level="routine"
-        ),
-        GeneratedQuestion(
-            archetype_id="eqineq_002",
-            question_text="Solve: x² + 3x - 4 = 0 (correct to 2 decimal places)",
-            answer_text="x ≈ 0.85 or x ≈ -4.85",
-            answer_expression="x = (0.85, -4.85)",
-            marks=4,
-            cognitive_level="routine"
-        ),
+        flat_question("eqineq_001", "Solve: (x-2)(x+3) = 0", "x = 2 or x = -3", 2, "routine"),
+        flat_question("eqineq_002", "Solve: x² + 3x - 4 = 0 (correct to 2 decimal places)",
+                       "x ≈ 0.85 or x ≈ -4.85", 4, "routine"),
     ]
 
     try:
