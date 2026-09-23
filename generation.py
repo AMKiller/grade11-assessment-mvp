@@ -90,6 +90,8 @@ class QuestionGenerator:
             if marks is None:
                 marks = 3
 
+        last_exception = None
+
         for attempt in range(max_retries):
             try:
                 question = self._call_claude(archetype, marks)
@@ -107,9 +109,12 @@ class QuestionGenerator:
                         return question
 
             except Exception as e:
+                last_exception = e
                 print(f"  Attempt {attempt + 1}/{max_retries}: {type(e).__name__}: {e}")
                 if attempt == max_retries - 1:
-                    return None
+                    raise RuntimeError(
+                        f"All {max_retries} attempts failed. Last error: {type(last_exception).__name__}: {last_exception}"
+                    ) from last_exception
 
         return None
 
