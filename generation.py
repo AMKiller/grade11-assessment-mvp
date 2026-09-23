@@ -1,8 +1,11 @@
 import ast
 import json
 import os
+import random
+import time
 from types import SimpleNamespace
 from typing import Optional
+import anthropic
 from anthropic import Anthropic
 from sympy import (
     sympify, solve, solveset, solve_univariate_inequality, symbols, simplify,
@@ -15,6 +18,78 @@ from mathml_omml import latex_to_omath
 
 client = Anthropic()
 kb = KnowledgeBase()
+
+# Single config constant for the generation model -- lets us compare Opus 5.5
+# vs Sonnet 5 on the same paper for cost and quality without editing code.
+# Override via the GENERATION_MODEL env var (e.g. GENERATION_MODEL=claude-opus-5-5).
+GENERATION_MODEL = os.getenv("GENERATION_MODEL", "claude-sonnet-5")
+
+
+# ============================================================
+# API call retry policy -- fail-fast on non-retryable errors
+# ============================================================
+
+# Transient errors: worth retrying with backoff, since the same request is
+# likely to succeed shortly after. RateLimitError=429, InternalServerError
+# covers all 5xx, APIConnectionError covers network failures (its subclass
+# APITimeoutError is caught too).
+RETRYABLE_API_EXCEPTIONS = (
+    anthropic.RateLimitError,
+    anthropic.InternalServerError,
+    anthropic.APIConnectionError,
+)
+
+MAX_API_RETRIES = 5
+API_RETRY_BASE_DELAY = 1.0  # seconds; doubles each attempt
+
+
+class NonRetryableAPIError(Exception):
+    """
+    Raised for any Anthropic API error that must NOT be retried -- 400
+    (including "credit balance too low" and "prompt too long", which are
+    real fatal problems that asking again won't fix), 401 (bad API key),
+    403 (permission denied), or any other non-transient API error -- and
+    also once MAX_API_RETRIES is exhausted on a genuinely transient error,
+    since a rate limit or outage that hasn't cleared after several backoff
+    attempts won't clear for the next question either.
+
+    This is meant to propagate all the way up through generate_question()
+    and generate_paper() and abort the ENTIRE paper immediately, unlike a
+    verification failure or malformed-JSON retry (see generate_question()),
+    which only affects the one question being generated. Wraps the
+    original exception in .original so callers/UI can show its real detail.
+    """
+    def __init__(self, original: Exception):
+        self.original = original
+        super().__init__(str(original))
+
+
+def _call_claude_with_retry(**kwargs):
+    """
+    Call the Anthropic API with fail-fast retry semantics. See
+    RETRYABLE_API_EXCEPTIONS / NonRetryableAPIError for the policy.
+    """
+    last_exception = None
+    for attempt in range(MAX_API_RETRIES):
+        try:
+            return client.messages.create(**kwargs)
+        except RETRYABLE_API_EXCEPTIONS as e:
+            last_exception = e
+            if attempt < MAX_API_RETRIES - 1:
+                delay = API_RETRY_BASE_DELAY * (2 ** attempt) + random.uniform(0, 0.5)
+                print(
+                    f"  [api retry] {type(e).__name__} (attempt {attempt + 1}/{MAX_API_RETRIES}), "
+                    f"retrying in {delay:.1f}s..."
+                )
+                time.sleep(delay)
+                continue
+            raise NonRetryableAPIError(e) from e
+        except anthropic.APIError as e:
+            # Anything else (400/401/403/404/422/...) is not in the
+            # retryable set above -- fail fast, no retry.
+            raise NonRetryableAPIError(e) from e
+
+    raise NonRetryableAPIError(last_exception) from last_exception
 
 # ============================================================
 # Hierarchical Structure Support
@@ -312,6 +387,14 @@ class QuestionGenerator:
         for attempt in range(max_retries):
             try:
                 data = self._call_claude(archetype, marks, cognitive_targets, attempt=attempt)
+            except NonRetryableAPIError:
+                # Fail fast: a non-retryable API error (bad request, bad
+                # credentials, insufficient credit, etc.) is not a
+                # generation-quality problem this question's retry loop can
+                # fix -- retrying would just repeat the same fatal error.
+                # Propagate immediately so generate_paper() aborts the
+                # whole paper instead of burning retries per question.
+                raise
             except Exception as e:
                 last_exception = e
                 print(f"  Attempt {attempt + 1}/{max_retries}: {type(e).__name__}: {e}")
@@ -572,8 +655,8 @@ a natural way to hit multiple cognitive levels in one slot is a stem with childr
 levels (e.g. a "routine" first part and a "complex" second part), matching the target's split.
 """
 
-        message = client.messages.create(
-            model="claude-opus-5-5",
+        message = _call_claude_with_retry(
+            model=GENERATION_MODEL,
             max_tokens=4096,
             messages=[
                 {
@@ -1036,6 +1119,14 @@ def generate_paper(topic: str, num_questions: int = 5,
                 error_msg = f"Question {i} ({archetype.archetype_id}): generation failed after retries"
                 print(f"  ✗ {error_msg}")
                 generation_errors.append(error_msg)
+        except NonRetryableAPIError as e:
+            # Stop the whole paper immediately -- this is a fatal API-level
+            # problem (bad request/credentials/insufficient credit/exhausted
+            # transient retries), not a per-question generation-quality
+            # issue. Continuing to the next question would just repeat the
+            # same failure and produce a misleadingly partial paper.
+            print(f"  ✗ FATAL: {type(e.original).__name__}: {e.original} -- aborting paper generation")
+            raise
         except Exception as e:
             error_msg = f"Question {i} ({archetype.archetype_id}): {type(e).__name__}: {e}"
             print(f"  ✗ {error_msg}")

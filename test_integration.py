@@ -103,33 +103,28 @@ def test_document_generation():
                        "x ≈ 0.85 or x ≈ -4.85", 4, "routine"),
     ]
 
-    try:
-        gen = DocumentGenerator()
+    # No try/except here -- a failure must propagate and fail the whole
+    # suite loudly, not print a "⚠" warning and let the run report success
+    # (this exact pattern previously masked a real regression, see STATUS.md).
+    gen = DocumentGenerator()
 
-        # Try to generate the full assessment (QP + marking guide + cognitive grid)
-        qp_bytes = gen.generate_full_assessment(
-            topics_data=[("Equations and Inequalities", questions)],
-            total_marks=6,
-            task="Task 2",
-            term="Term 1",
-            time_minutes=60,
-            examiner="Test Examiner",
-            moderator="Test Moderator",
-            grade="11"
-        )
+    qp_bytes = gen.generate_full_assessment(
+        topics_data=[("Equations and Inequalities", questions)],
+        total_marks=6,
+        task="Task 2",
+        term="Term 1",
+        time_minutes=60,
+        examiner="Test Examiner",
+        moderator="Test Moderator",
+        grade="11"
+    )
 
-        assert len(qp_bytes) > 0
-        print(f"  ✓ Question paper generated ({len(qp_bytes)} bytes)")
+    assert len(qp_bytes) > 0
+    print(f"  ✓ Question paper generated ({len(qp_bytes)} bytes)")
 
-        # Save to file for inspection
-        with open("/tmp/test_qp.docx", "wb") as f:
-            f.write(qp_bytes)
-        print("  ✓ Saved to /tmp/test_qp.docx")
-
-    except Exception as e:
-        print(f"  ⚠ Document generation error: {e}")
-        import traceback
-        traceback.print_exc()
+    with open("/tmp/test_qp.docx", "wb") as f:
+        f.write(qp_bytes)
+    print("  ✓ Saved to /tmp/test_qp.docx")
 
 
 def test_cognitive_analysis():
@@ -181,6 +176,8 @@ def test_cognitive_analysis():
 
 
 if __name__ == "__main__":
+    import sys
+
     print("=" * 60)
     print("INTEGRATION TEST: Grade 11 Assessment Generator")
     print("=" * 60)
@@ -200,7 +197,9 @@ if __name__ == "__main__":
         print(f"\n❌ TEST FAILED: {e}")
         import traceback
         traceback.print_exc()
+        sys.exit(1)
     except Exception as e:
         print(f"\n❌ UNEXPECTED ERROR: {e}")
         import traceback
         traceback.print_exc()
+        sys.exit(1)

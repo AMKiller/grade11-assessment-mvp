@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 
 from knowledge_base import KnowledgeBase
-from generation import generate_paper, _analyze_cognitive_distribution, parts_to_plain_text
+from generation import generate_paper, _analyze_cognitive_distribution, parts_to_plain_text, NonRetryableAPIError
 from docgen import DocumentGenerator
 
 AVAILABLE_TOPICS = ["Equations and Inequalities", "Exponents and Surds"]
@@ -228,6 +228,19 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
             else:
                 st.success(f"✓ Generated {len(result['questions'])} questions across {len(selected_topics)} topic(s)")
 
+        except NonRetryableAPIError as e:
+            # A fatal, non-retryable API problem (bad request, bad API key,
+            # insufficient credit, or a transient error that didn't clear
+            # after retrying) -- generate_paper() stopped the whole paper
+            # immediately rather than producing a misleadingly partial one.
+            st.error(
+                "❌ Assessment generation stopped -- the Claude API returned an error that "
+                "can't be fixed by retrying:\n\n"
+                f"**{type(e.original).__name__}:** {e.original}\n\n"
+                "Common causes: API credit balance too low, an invalid/expired API key, "
+                "or a request that's too long. Fix the underlying issue and try again -- "
+                "no partial paper was generated."
+            )
         except Exception as e:
             st.error(f"❌ Generation failed: {e}")
             st.write("**Full error traceback:**")
