@@ -444,6 +444,7 @@ def generate_paper(topic: str, num_questions: int = 5,
         "num_questions": len(questions),
         "total_marks": total_marks,
         "questions": [q.to_dict() for q in questions],
+        "question_objects": questions,
         "cognitive_analysis": cognitive_analysis,
         "generation_errors": generation_errors
     }

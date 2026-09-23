@@ -228,7 +228,7 @@ if "generation_result" in st.session_state:
                     gen = DocumentGenerator(template_path=None)
 
                     qp_bytes = gen.generate_question_paper(
-                        questions=[type('Q', (), q)() for q in result['questions']],
+                        questions=result['question_objects'],
                         topic=topic,
                         total_marks=result['total_marks'],
                         task=task or None,
