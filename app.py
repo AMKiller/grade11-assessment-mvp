@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 
 from knowledge_base import KnowledgeBase
-from generation import generate_paper, _analyze_cognitive_distribution
+from generation import generate_paper, _analyze_cognitive_distribution, parts_to_plain_text
 from docgen import DocumentGenerator
 
 AVAILABLE_TOPICS = ["Equations and Inequalities", "Exponents and Surds"]
@@ -178,6 +178,7 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
             combined_question_dicts = []
             combined_errors = []
             combined_total_marks = 0
+            combined_planned_level_totals = {level: 0 for level in target_distribution}
 
             for t in selected_topics:
                 st.write(f"Generating **{t}** (target: {marks_per_topic[t]} marks)...")
@@ -188,15 +189,21 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
                     prefer_core=prefer_core,
                     target_marks=marks_per_topic[t]
                 )
-                topics_data.append((t, topic_result['question_objects']))
+                # topic_result['questions'] is a list of hierarchical dicts
+                # (question_structure + total_marks per archetype slot) --
+                # this is what both docgen and the preview below consume.
+                topics_data.append((t, topic_result['questions']))
                 combined_question_dicts.extend(topic_result['questions'])
                 combined_total_marks += topic_result['total_marks']
                 combined_errors.extend(
                     f"[{t}] {err}" for err in topic_result.get('generation_errors', [])
                 )
+                for level, marks in topic_result.get('planned_level_totals', {}).items():
+                    combined_planned_level_totals[level] = combined_planned_level_totals.get(level, 0) + marks
 
-            all_question_objects = [q for _, qs in topics_data for q in qs]
-            cognitive_analysis = _analyze_cognitive_distribution(all_question_objects, target_distribution)
+            # Built from the ACTUAL leaves Claude generated (flat rows + stem
+            # children), not the plan -- see generation.py's grid-first design.
+            cognitive_analysis = _analyze_cognitive_distribution(combined_question_dicts, target_distribution)
 
             result = {
                 "topics": selected_topics,
@@ -204,6 +211,7 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
                 "questions": combined_question_dicts,
                 "total_marks": combined_total_marks,
                 "cognitive_analysis": cognitive_analysis,
+                "planned_level_totals": combined_planned_level_totals,
                 "generation_errors": combined_errors
             }
 
@@ -258,28 +266,46 @@ if "generation_result" in st.session_state:
                 delta_color="off" if abs(var) < 5 else "inverse"
             )
 
+    # Plan vs. actual, in marks -- makes any rounding/redesign shortfall
+    # from the leaf plan (generation.py's _build_leaf_plan) visible, not
+    # just the percentage view above.
+    planned = result.get("planned_level_totals", {})
+    actual = analysis.get("marks_by_level", {})
+    if planned:
+        st.caption("Planned vs. actual marks per cognitive level:")
+        plan_cols = st.columns(4)
+        for col, level in zip(plan_cols, levels):
+            with col:
+                st.write(f"**{level.capitalize()}**: {actual.get(level, 0)} / {planned.get(level, 0)} planned")
+
     # Questions preview
     st.subheader("Generated Questions")
 
     for i, q in enumerate(result['questions'], 1):
-        with st.expander(f"Question {i}: {q['archetype_id']}"):
-            st.markdown(f"**Question Text:**\n\n{q['question']}")
-            st.markdown(f"**Expected Answer:**\n\n`{q['answer']}`")
-            st.markdown(f"**Marks:** {q['marks']}")
-            st.markdown(f"**Cognitive Level:** {q['cognitive_level']}")
-
-            if q.get('sympy_verified'):
-                st.success("✓ Answer independently re-solved and confirmed by SymPy")
-            elif q.get('manual_review_required'):
-                if q.get('problem_type') == 'unverifiable':
-                    st.info(f"ℹ Not mechanically verifiable ({q.get('problem_type')} archetype) — requires manual review before use")
+        with st.expander(f"Question {i}: {q.get('archetype_id', 'unknown')} ({q.get('total_marks', '?')} marks)"):
+            for row in q.get('question_structure', []):
+                is_stem = row.get('is_stem', False)
+                if is_stem:
+                    st.markdown(f"**Context:** {parts_to_plain_text(row.get('parts', []))}")
+                    leaves = row.get('children', [])
                 else:
-                    st.error(f"⚠️ SymPy's independent solve DISAGREED with Claude's claimed answer — requires manual review: {q.get('sympy_error', '')}")
-            else:
-                st.warning(f"⚠ Verification incomplete: {q.get('sympy_error', 'Unknown error')}")
+                    leaves = [row]
 
-            if q.get('marking_fidelity_warning'):
-                st.info(f"📋 Marking guide fidelity: {q['marking_fidelity_warning']}")
+                for leaf in leaves:
+                    st.markdown(f"**{parts_to_plain_text(leaf.get('parts', []))}**")
+                    st.markdown(f"Expected answer: `{parts_to_plain_text(leaf.get('answer', []))}`")
+                    st.markdown(f"Marks: {leaf.get('marks')} | Cognitive Level: {leaf.get('cognitive_level')}")
+
+                    if leaf.get('sympy_verified'):
+                        st.success("✓ Answer independently re-solved and confirmed by SymPy")
+                    elif leaf.get('manual_review_required'):
+                        if leaf.get('problem_type') == 'unverifiable':
+                            st.info(f"ℹ Not mechanically verifiable ({leaf.get('problem_type')} archetype) — requires manual review before use")
+                        else:
+                            st.error(f"⚠️ SymPy's independent solve DISAGREED with Claude's claimed answer — requires manual review: {leaf.get('sympy_error', '')}")
+                    else:
+                        st.warning(f"⚠ Verification incomplete: {leaf.get('sympy_error', 'Unknown error')}")
+                    st.divider()
 
     # Download section
     st.subheader("📥 Download Assessment")
