@@ -22,7 +22,12 @@ DEFAULT_COGNITIVE_TARGETS = {
 }
 
 COGNITIVE_LEVELS = ['knowledge', 'routine', 'complex', 'problem_solving']
-COGNITIVE_GRID_COL_WIDTHS_IN = [1.3, 0.85, 0.85, 0.85, 1.15, 0.7]
+# "Knowledge" widened from 0.85" -- at that width it wrapped mid-word
+# ("Knowledg" / "e") in real rendering, confirmed by viewing a rendered
+# page image (format_SKILL.md's own verification standard). 1.05" fits it
+# on one line; total width (5.9") stays under the ~6.69" usable A4 width
+# (21cm page - 2x2cm margins) alongside the other five columns.
+COGNITIVE_GRID_COL_WIDTHS_IN = [1.3, 1.05, 0.85, 0.85, 1.15, 0.7]
 
 
 def _flatten_topic_hierarchy(qnum: int, hierarchical_questions: list) -> list:
@@ -376,8 +381,10 @@ class DocumentGenerator:
                 r = row.cells[i + 1].paragraphs[0].add_run(str(row_totals[level]))
                 set_font(r, size=11)
                 level_totals[level] += row_totals[level]
+            # Total column is bold on every row, not just the TOTAL row --
+            # task_SKILL.md: "Bold the total row and total column".
             r = row.cells[5].paragraphs[0].add_run(str(row_total_marks))
-            set_font(r, size=11)
+            set_font(r, size=11, bold=True)
 
         total_row = table.add_row()
         r = total_row.cells[0].paragraphs[0].add_run("TOTAL")

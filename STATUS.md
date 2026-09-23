@@ -31,15 +31,16 @@ Hierarchical design cost is **comparable to or slightly cheaper than flat design
 
 ## Approved & Pending
 
-**✓ Approved:** Logging framework (Part 2)
+**✓ Approved and DONE:**
+- Logging framework (Part 2)
+- **#2: Smart retry logic** — implemented as the fail-fast policy described under "Implementation Status" below (retry only 429/5xx/network, never 4xx, whole-paper abort on a fatal error). See `test_retry_policy.py`.
+- **MODEL CHOICE as config constant** — `GENERATION_MODEL` in `generation.py`, see "Model config" below.
+- **#0 (TOP): Format/Task specification audit** — both files read in full and checked against the running code; see "Implementation Status" below for what was found and fixed.
 
-**⏳ Pending user approval/implementation:**
-1. **#2: Smart retry logic** — Only retry transient errors (429/5xx), not 4xx auth/billing; fail fast with clear message. Error categorization is done; implementation pending.
-2. **#1: Prompt caching** — Cache the static system prompt across all calls in a session (deferred until credits replenished)
-3. **MODEL CHOICE as config constant** — Currently hardcoded in generation code; should be a configurable value (e.g., `MODEL = "claude-opus-5"`) to easily compare cost/quality tradeoffs between Opus 5.5 and Sonnet 5
-4. **#0 (TOP): Format/Task specification audit** — Verify question numbering, table layout, and math-notation subset against `format_SKILL.md` and `task_SKILL (1).md`. This is the blocking issue from the original report; see details below.
+**⏳ Still pending:**
+- **#1: Prompt caching** — cache the static system prompt across calls in a session (deferred until credits replenished; not yet started).
 
-## Stage 2: Hierarchical Numbering Implementation (TESTING COMPLETE, CODE PENDING)
+## Stage 2: Hierarchical Numbering Implementation (COMPLETE -- see "Implementation Status" below)
 
 **Status:** Design approved Sept 24, 2026. Implementation plan documented. No API credits spent.
 
@@ -394,81 +395,70 @@ q = gen.generate_question(
 - `docs/new_generation_prompt.md`: Updated system prompt (numbering rules removed)
 - `docs/validator_and_fixture.py`: Validator function + test fixture
 - `docs/cost_estimate_hierarchical.md`: Token profile and cost breakdown
-- `docs/test_validator.py`: Validator tests (all passing)
-- `docs/test_docgen_hierarchy.py`: Docgen structure verification
+- `docs/test_validator.py`: Validator tests (all passing, real assertions)
+
+`docs/test_docgen_hierarchy.py` (an earlier planning-stage script that only
+printed ✓/✗ labels without ever asserting, and described docgen.py
+hierarchy support as a "next step -- not yet implemented") was deleted
+once that became false: Step 2 below implemented it for real, and Step 4
+rendered this exact fixture to actual page images. Superseded by
+`test_integration.py::test_document_generation()` and the real
+`samples/hierarchical_sample_QP_MG.docx` (see below).
 
 **Backup Branch:**
 - `backup-pre-stage2`: Full backup of working state before implementation
 
 ## Implementation Status: What's Done, What's Next
 
-### ✓ COMPLETED (Stage 2, No API)
+**All four implementation steps are complete, tested without the API, and rendered/verified against `format_SKILL.md`/`task_SKILL.md` page by page.** The former "Format/Task Specification Audit (TOP PRIORITY)" item below is resolved -- both files were read in full, the current code was checked against them directly, and the gaps found have been fixed or are noted as pre-existing/out-of-scope below.
 
-1. **generation.py changes:**
-   - ✓ Added `validate_hierarchical_structure()` function (lines 20-83)
-   - ✓ Added `_generate_numbering_for_hierarchy()` function (lines 86-106)
-   - ✓ Updated `_call_claude()` signature: now accepts `cognitive_targets` parameter
-   - ✓ Updated system prompt: removed numbering rules, added hierarchical JSON schema
-   - ✓ Updated JSON parsing: validates hierarchy, generates numbering, returns dict (not GeneratedQuestion)
-   - ✓ Math validation: updated to recurse through stems/children
+### ✓ COMPLETED
 
-2. **Validator tests:**
-   - ✓ Good hierarchical fixture passes
-   - ✓ All 5 broken fixtures fail correctly with clear error messages
+1. **generation.py -- grid-first hierarchical generation:**
+   - `validate_hierarchical_structure()`, `_generate_numbering_for_hierarchy()`: hierarchy validation + Python-assigned numbering.
+   - `_allocate_marks_by_cognitive_level()` / `_build_leaf_plan()`: whole-paper marks-per-level plan fixed *before* any archetype is chosen for a slot or any Claude call is made (see "Grid-first" answer below).
+   - `generate_question()` / `_call_claude()` / `_verify_all_leaves()`: operate on the hierarchical dict shape throughout; every leaf (flat row or stem child) is independently SymPy-verified.
+   - `GENERATION_MODEL` config constant (default `claude-sonnet-5`, override via env var) -- see "Model config" below.
+   - Fail-fast API retry policy (`_call_claude_with_retry`, `NonRetryableAPIError`) -- see "Retry policy" below.
 
-3. **Backup:**
-   - ✓ Branch `backup-pre-stage2` created
+2. **docgen.py -- renders the hierarchy for real:** `_flatten_topic_hierarchy()` assigns `qnum.i`/`qnum.i.j` numbers; question paper, marking guide, and cognitive grid all consume hierarchical dicts. Two cosmetic gaps found and fixed -- see below.
 
-### ⏳ REMAINING (Code Changes)
+3. **app.py:** consumes `generate_paper()`'s hierarchical `questions` list directly; shows planned-vs-actual cognitive distribution in both marks and percentage terms; a dedicated `NonRetryableAPIError` handler shows the teacher a clear, actionable message instead of a raw traceback.
 
-1. **generation.py:**
-   - Update `generate_question()` signature: add `cognitive_targets: dict` parameter
-   - Update return type handling: `_call_claude()` now returns dict, need to handle in `generate_question()`
-   - Update `_verify_answer()`: work with individual leaves (in hierarchical structure)
-   - Update retry logic: on leaf failure, re-call Claude with stem + siblings as context
+4. **Rendered and verified (no API calls):** `samples/hierarchical_sample_QP_MG.docx` and `samples/hierarchical_sample_QP_MG.pdf` -- built from the good `TEST_HIERARCHICAL_QUESTION` fixture, converted to PDF via `soffice`, each page viewed as an image and checked line-by-line against `format_SKILL.md`/`task_SKILL.md`. Open these two files directly to see the current output shape.
 
-2. **docgen.py:**
-   - Update `_add_question_paper_body()`: handle stems (marks=null) + depth-1 children (1.5.1 indentation)
-   - Update `_add_marking_guide_body()`: render only leaf marking_steps, bold final answer row
-   - Compute per-question totals from leaves only (exclude stems)
+### Model config (single constant, no code edits needed to compare models)
 
-3. **app.py:**
-   - Compute `cognitive_targets` from archetype's `cognitive_level_distribution` before calling `generate_question()`
-   - Pass `cognitive_targets` parameter
+`generation.py`, just below the `client`/`kb` globals:
+```python
+GENERATION_MODEL = os.getenv("GENERATION_MODEL", "claude-sonnet-5")
+```
+Used at the one `client.messages.create()` call site in `_call_claude()`. Override with the `GENERATION_MODEL` env var (e.g. `GENERATION_MODEL=claude-opus-5-5`) to compare cost/quality against Sonnet 5 without touching code.
 
-4. **Testing (No API):**
-   - Feed good fixture through updated docgen.py to .docx
-   - Render .docx to PDF + page images
-   - Verify every page against format_SKILL.md rules
+### Fail-fast API retry policy
+
+`generation.py`:
+- **Retry with exponential backoff** (`_call_claude_with_retry`, `RETRYABLE_API_EXCEPTIONS`, `MAX_API_RETRIES=5`): `RateLimitError` (429), `InternalServerError` (5xx), `APIConnectionError` (network/timeout).
+- **Never retry, fail immediately** (`NonRetryableAPIError`): `BadRequestError` (400, including "credit balance too low" and "prompt too long"), `AuthenticationError` (401), `PermissionDeniedError` (403), and any other `anthropic.APIError`. Also raised once `MAX_API_RETRIES` is exhausted on a genuinely transient error.
+- `generate_question()`'s own per-question quality-retry loop (verification failures, malformed JSON) does **not** consume a retry on `NonRetryableAPIError` -- it re-raises immediately.
+- `generate_paper()` re-raises `NonRetryableAPIError` out of its per-question loop -- **the whole paper stops immediately**, not just the one question, so a fatal API error never produces a misleadingly partial paper.
+- `app.py` catches `NonRetryableAPIError` specifically and shows the teacher a clear, actionable Streamlit message (distinct from the generic traceback dump for other errors).
+- Verified with 6 mocked tests in `test_retry_policy.py` (no real API calls) -- retry-then-succeed with increasing backoff, immediate failure on 400/401/403, retry exhaustion on a persistent 500, and confirmation that `generate_question()` doesn't re-consume its own retries on a fatal API error.
+
+### Two cosmetic gaps -- checked against the spec, both were real bugs, both fixed
+
+Found during the Step 4 render/verify pass; checked against `format_SKILL.md` and `task_SKILL.md` as requested:
+
+1. **Cognitive grid Total column not bold on per-question rows.** `task_SKILL.md`'s Grid structure section states explicitly: *"Bold the total row and total column for emphasis."* The code only bolded the `TOTAL` row, not the `Total` column's per-question values (e.g. `QUESTION 1`'s `9`, `QUESTION 2`'s `2`) -- a direct, confirmed spec violation. **Fixed** in `docgen.py::_add_cognitive_grid` (the per-row Total cell now uses `bold=True`).
+2. **"Knowledge" header wrapping mid-word** (`Knowledg` / `e` on two lines) in the cognitive grid, caused by too narrow a column (`COGNITIVE_GRID_COL_WIDTHS_IN`, Knowledge was 0.85"). Neither `format_SKILL.md` nor `task_SKILL.md` mandates exact column widths for this grid (unlike the question-layout table's spec'd 0.5"/0.65"/4.45"/0.5"), so this isn't a literal spec violation -- but `format_SKILL.md`'s own standard ("verified against a real example... not from re-reading the prose alone") makes an ugly mid-word wrap a real defect. **Fixed** by widening the Knowledge column to 1.05" (total grid width 5.9", still under the ~6.69" usable A4 width); confirmed by re-rendering and viewing the page image -- "Knowledge" now sits on one line.
+
+Both fixes are in `samples/hierarchical_sample_QP_MG.docx`/`.pdf`.
 
 ### Not Started (Awaiting API Credits)
 
-- Real generation run with usage log
-- Cost validation against new estimate ($0.148 Opus 5.5, $0.074 Sonnet 5 normal case)
-- SymPy verification on real hierarchical questions
-- Retry logic testing
-
-## Next Steps (Awaiting API Credits)
-
-1. **Integrate validator into generation.py** — validate before accepting question
-2. **Update generation.py prompt** — remove numbering rules, add structure rules
-3. **Implement docgen.py hierarchy support** — stem rows, child numbering, indent
-4. **Update app.py** to pass cognitive_targets into generation
-5. **Test with fixture** — render .docx, verify against spec rules
-6. **When credits added:** Run real generation, check usage log
-
-## Format/Task Specification Audit (TOP PRIORITY)
-
-**Status:** Not yet run. This is the core issue reported in the original conversation (Sept 23, 2026).
-
-**What needs verification:**
-- **Question numbering scheme:** format_SKILL.md § Universal Document Formatting specifies flat depth-0 numbering (1.1, 1.2, 1.3...). Confirm `generation.py` and `docgen.py` produce this format only.
-- **Table layout:** format_SKILL.md specifies a 4-column question-layout table (0.5" | 0.65" | 4.45" | 0.5") with hidden borders and marks bottom-aligned. Verify `add_question_table()` in `table_helpers.py` implements this exactly.
-- **Marking-guide table:** format_SKILL.md specifies a separate 3-column visible-border table (0.49" | 4.58" | 1.04"), one working step per row. Confirm `add_marking_guide_question_table()` matches this.
-- **Math notation subset:** `mathml_omml.py` supports `^{}`, `_{}`, `\frac{}{}`, `\sqrt{}`, `\sqrt[n]{}`, `\cdot`, and typed Unicode. Verify Claude's prompts restrict math to this subset and the `_validate_math_parts()` verification function enforces it.
-- **Cognitive grid:** Confirm it is present in the final document as a visible table, not a separate spreadsheet.
-
-**Reference files:** Gr11_Task7_Equations_Exponents_QP_MG.docx is the real, human-approved template for comparing output shape.
+- Real generation run with usage log (the first real run happens once credits are added -- see below)
+- Cost validation against the estimate ($0.148 Opus 5.5 / $0.074 Sonnet 5 normal case, both still estimates until the usage log has real numbers)
+- SymPy verification and the retry policy exercised against real Claude output (only mocked/fixture-based so far)
 
 ## Known Gaps & Scope Decisions
 
