@@ -146,10 +146,21 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
             )
 
             st.session_state.generation_result = result
-            st.success(f"✓ Generated {len(result['questions'])} questions")
+
+            if len(result['questions']) == 0:
+                st.error("❌ Generated 0 questions. See errors below:")
+                for err in result.get('generation_errors', []):
+                    st.code(err)
+            elif result.get('generation_errors'):
+                st.warning(f"⚠ Generated {len(result['questions'])} questions, but {len(result['generation_errors'])} failed:")
+                for err in result['generation_errors']:
+                    st.code(err)
+            else:
+                st.success(f"✓ Generated {len(result['questions'])} questions")
 
         except Exception as e:
             st.error(f"❌ Generation failed: {e}")
+            st.write("**Full error traceback:**")
             import traceback
             st.code(traceback.format_exc())
 

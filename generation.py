@@ -246,15 +246,24 @@ def generate_paper(topic: str, num_questions: int = 5,
 
     questions = []
     total_marks = 0
+    generation_errors = []
 
     for i, archetype in enumerate(gen.selected_archetypes, 1):
         print(f"Generating question {i}/{num_questions} ({archetype.name})...")
-        q = gen.generate_question(archetype.archetype_id)
-        if q:
-            questions.append(q)
-            total_marks += q.marks
-        else:
-            print(f"  Failed to generate question from {archetype.archetype_id}")
+        try:
+            q = gen.generate_question(archetype.archetype_id)
+            if q:
+                questions.append(q)
+                total_marks += q.marks
+                print(f"  ✓ Question {i} generated and verified")
+            else:
+                error_msg = f"Question {i} ({archetype.archetype_id}): generation/verification failed after retries"
+                print(f"  ✗ {error_msg}")
+                generation_errors.append(error_msg)
+        except Exception as e:
+            error_msg = f"Question {i} ({archetype.archetype_id}): {type(e).__name__}: {e}"
+            print(f"  ✗ {error_msg}")
+            generation_errors.append(error_msg)
 
     cognitive_analysis = _analyze_cognitive_distribution(questions, target_distribution)
 
@@ -263,7 +272,8 @@ def generate_paper(topic: str, num_questions: int = 5,
         "num_questions": len(questions),
         "total_marks": total_marks,
         "questions": [q.to_dict() for q in questions],
-        "cognitive_analysis": cognitive_analysis
+        "cognitive_analysis": cognitive_analysis,
+        "generation_errors": generation_errors
     }
 
 
