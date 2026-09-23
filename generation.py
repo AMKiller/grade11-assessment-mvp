@@ -9,20 +9,52 @@ from sympy import (
 )
 from sympy.parsing.sympy_parser import parse_expr
 from knowledge_base import KnowledgeBase
+from mathml_omml import latex_to_omath
 
 
 client = Anthropic()
 kb = KnowledgeBase()
 
 
+def _normalize_parts(value) -> list:
+    """
+    Accept either a plain string (wrapped as a single text part, for
+    backward compat / hand-constructed test questions) or a list of
+    {"type": "text"|"math", "value": str} parts (the real generation
+    output), and always return the parts-list form.
+    """
+    if isinstance(value, str):
+        return [{"type": "text", "value": value}]
+    if isinstance(value, list):
+        return value
+    return [{"type": "text", "value": str(value)}]
+
+
+def parts_to_plain_text(parts: list) -> str:
+    """Join parts into a plain-text approximation for previews/debugging.
+    Math parts are shown as their raw DSL source -- not pretty, but the
+    real rendering happens via OMML in the actual .docx, not here."""
+    out = []
+    for part in parts:
+        out.append(part.get("value", ""))
+    return "".join(out)
+
+
 class GeneratedQuestion:
-    def __init__(self, archetype_id: str, question_text: str, answer_text: str,
+    def __init__(self, archetype_id: str, question_text, answer_text,
                  answer_expression: str, marks: int, cognitive_level: str,
                  problem_type: str = "unverifiable", sympy_problem: str = "",
                  claimed_solution: str = "", marking_steps: list = None):
+        """
+        question_text / answer_text: either a plain string, or a list of
+        {"type": "text"|"math", "value": str} parts -- the latter is what
+        real generation produces, so docgen.py can route "math" parts
+        through insert_inline_math() for genuine Word Math objects instead
+        of plain unicode text.
+        """
         self.archetype_id = archetype_id
-        self.question_text = question_text
-        self.answer_text = answer_text
+        self.question_parts = _normalize_parts(question_text)
+        self.answer_parts = _normalize_parts(answer_text)
         self.answer_expression = answer_expression
         self.marks = marks
         self.cognitive_level = cognitive_level
@@ -34,6 +66,16 @@ class GeneratedQuestion:
         self.manual_review_required = False
         self.sympy_error = None
         self.marking_fidelity_warning = None
+
+    @property
+    def question_text(self) -> str:
+        """Plain-text rendering of question_parts, for previews/logging."""
+        return parts_to_plain_text(self.question_parts)
+
+    @property
+    def answer_text(self) -> str:
+        """Plain-text rendering of answer_parts, for previews/logging."""
+        return parts_to_plain_text(self.answer_parts)
 
     def to_dict(self):
         return {
@@ -153,8 +195,8 @@ varying the numbers and context freely within the archetype's scope.
 
 Respond ONLY with valid JSON, no other text, in this exact structure:
 {{
-    "question": "The complete question text, including any setup or numbers -- do NOT state the mark value anywhere inside this text (no '(4 marks)', no '[4]'); marks are shown separately in the document and must never be duplicated in the question wording",
-    "answer": "The final answer exactly as it should appear on the marking guide (human-readable, e.g. 'x = 1,35 or x = -1,85')",
+    "question": "A list of {{type, value}} parts -- see MATH NOTATION rules below -- do NOT state the mark value anywhere inside this text (no '(4 marks)', no '[4]'); marks are shown separately in the document and must never be duplicated in the question wording",
+    "answer": "A list of {{type, value}} parts, exactly as the final answer should appear on the marking guide -- see MATH NOTATION rules below",
     "marking_steps": "A list of ordered working steps for the marking guide -- see rules below",
     "problem_type": "equation | inequality | system | unverifiable",
     "sympy_problem": "A machine-parseable statement of the underlying math problem -- see rules below",
@@ -166,19 +208,39 @@ CRITICAL: "sympy_problem" and "claimed_solution" exist so your answer can be ind
 re-solved and checked by SymPy before this question is accepted into a real assessment.
 Get these exactly right -- a wrong answer that passes this check ships to real students.
 
-NOTATION RULE -- applies to "question", "answer", and "marking_steps" ONLY (human-readable
-text seen by the teacher/student): use South African comma-decimal notation, e.g. "3,25" not
-"3.25". Do NOT use this comma notation in "sympy_problem" or "claimed_solution" -- those two
-fields must stay in standard Python/JSON numeric syntax with periods (e.g. 3.25), since they
-are parsed by code, not read by a person.
+MATH NOTATION -- applies to "question", "answer", and every marking_steps[].parts (human-readable
+content that ends up in the actual document, rendered as real native Word equation objects, not
+plain text or an image). Every one of these fields is a JSON list of parts, each part one of:
+    {{"type": "text", "value": "Solve for x: "}}
+    {{"type": "math", "value": "2x^{{2}}+x-5=0"}}
+Split at every boundary between prose and mathematical notation -- e.g. "Solve for x: " is a text
+part, "2x^{{2}}+x-5=0" is a math part. A string with no math in it is still a list, just with one
+text part, e.g. [{{"type": "text", "value": "Show that the answer is unique."}}].
+
+Inside a "math" part's value, you may ONLY use this notation (this is a small DSL, not full
+LaTeX -- anything outside this list will fail to render and the whole question will be rejected):
+  - "^{{...}}" or "^x" for superscript/exponent, "_{{...}}" or "_x" for subscript
+  - "\\frac{{a}}{{b}}" for a fraction, "\\sqrt{{x}}" for a square root, "\\sqrt[n]{{x}}" for an nth root
+  - "{{...}}" for grouping
+  - unicode symbols typed directly for everything else: ± ≤ ≥ ≠ · ÷ √ Δ ∈ ∞ π etc. -- do NOT use
+    LaTeX commands for these (no \\leq, \\geq, \\neq, \\left(, \\right), \\text{{}}, \\dfrac, \\cdot
+    is the one exception that IS supported, but prefer the unicode · directly)
+  - plain digits/letters/operators as needed
+Decimals use South African comma notation even inside math parts, e.g. {{"type": "math", "value":
+"1,35"}} -- this parses correctly as a single number, same as "1.35" would.
+
+This restriction does NOT apply to "sympy_problem" or "claimed_solution" -- those two fields stay
+in standard Python/JSON numeric syntax with periods, are NOT split into parts, and are never
+rendered as math objects (they're parsed by code, not displayed).
 
 "marking_steps" is a JSON list of objects, one per line of working, in the order a marker would
 tick them, e.g.:
 [
-    {{"text": "2x² - x - 6 = 0", "tick_label": "standard form", "tick_count": 1}},
-    {{"text": "(2x + 3)(x - 2) = 0", "tick_label": "factors", "tick_count": 1}},
-    {{"text": "x = -3/2 or x = 2", "tick_label": "both answers", "tick_count": 2}}
+    {{"parts": [{{"type": "math", "value": "2x^{{2}} - x - 6 = 0"}}], "tick_label": "standard form", "tick_count": 1}},
+    {{"parts": [{{"type": "math", "value": "(2x + 3)(x - 2) = 0"}}], "tick_label": "factors", "tick_count": 1}},
+    {{"parts": [{{"type": "math", "value": "x = -3/2"}}, {{"type": "text", "value": " or "}}, {{"type": "math", "value": "x = 2"}}], "tick_label": "both answers", "tick_count": 2}}
 ]
+Each step's "parts" follows the exact same MATH NOTATION rules as "question"/"answer" above.
 The archetype's own "typical_breakdown" (given below, under Marking pattern) is the PRIMARY
 STRUCTURAL GUIDE for this list -- it comes from real DBE marking memos, not a suggestion. Follow
 its step count and order as closely as the specific question you're generating allows. But its
@@ -305,6 +367,11 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
                 ) from e
             raise ValueError(f"Claude response was not valid JSON: {response_text}") from e
 
+        self._validate_math_parts(data.get("question", []), "question")
+        self._validate_math_parts(data.get("answer", []), "answer")
+        for i, step in enumerate(data.get("marking_steps", [])):
+            self._validate_math_parts(step.get("parts", []), f"marking_steps[{i}]")
+
         question = GeneratedQuestion(
             archetype_id=archetype.archetype_id,
             question_text=data["question"],
@@ -319,6 +386,32 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
         )
         question.marking_fidelity_warning = self._check_marking_fidelity(question, archetype)
         return question
+
+    def _validate_math_parts(self, parts: list, context_label: str):
+        """
+        Run every "math"-type part through the real OMML converter before
+        accepting this question -- an unsupported LaTeX construct here would
+        otherwise ship as a silently-broken (or missing) equation in the
+        final .docx. Raising here feeds into the existing generate_question()
+        retry loop, same as a sympy verification failure or a JSON parse error.
+        """
+        if not isinstance(parts, list):
+            raise ValueError(f"{context_label}: expected a list of parts, got {type(parts).__name__}")
+        for i, part in enumerate(parts):
+            if not isinstance(part, dict) or "type" not in part or "value" not in part:
+                raise ValueError(f"{context_label}[{i}]: malformed part, expected {{type, value}}: {part}")
+            if part["type"] == "math":
+                try:
+                    latex_to_omath(part["value"])
+                except Exception as e:
+                    raise ValueError(
+                        f"{context_label}[{i}]: math part {part['value']!r} failed to render as a "
+                        f"Word math object ({type(e).__name__}: {e}) -- only the supported DSL subset "
+                        f"is allowed (^{{}}, _{{}}, \\frac{{}}{{}}, \\sqrt{{}}, \\sqrt[n]{{}}, \\cdot, and "
+                        f"unicode symbols typed directly for everything else)"
+                    ) from e
+            elif part["type"] != "text":
+                raise ValueError(f"{context_label}[{i}]: unknown part type {part['type']!r}, expected 'text' or 'math'")
 
     def _check_marking_fidelity(self, question: "GeneratedQuestion", archetype) -> Optional[str]:
         """

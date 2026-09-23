@@ -24,6 +24,23 @@ COGNITIVE_LEVELS = ['knowledge', 'routine', 'complex', 'problem_solving']
 COGNITIVE_GRID_COL_WIDTHS_IN = [1.3, 0.85, 0.85, 0.85, 1.15, 0.7]
 
 
+def parts_to_cell_content(parts: list) -> list:
+    """
+    Convert generation.py's {"type": "text"|"math", "value": str} parts into
+    the format add_cell_content() expects: a list of plain strings and/or
+    ('math', latex) tuples. This is what actually routes math content through
+    insert_inline_math() into real native Word equation objects, instead of
+    every equation being flattened to plain text.
+    """
+    content = []
+    for part in parts:
+        if part.get("type") == "math":
+            content.append(("math", part.get("value", "")))
+        else:
+            content.append(part.get("value", ""))
+    return content
+
+
 class DocumentGenerator:
     def __init__(self, template_path: str = None):
         """
@@ -230,7 +247,7 @@ class DocumentGenerator:
         for qnum, questions in question_groups:
             add_question_heading(doc, f"QUESTION {qnum}")
             rows = [
-                {'num': f'{qnum}.{i}', 'parts': [q.question_text], 'marks': q.marks}
+                {'num': f'{qnum}.{i}', 'parts': parts_to_cell_content(q.question_parts), 'marks': q.marks}
                 for i, q in enumerate(questions, 1)
             ]
             table = add_question_table(doc, rows)
@@ -252,13 +269,13 @@ class DocumentGenerator:
         for qnum, questions in question_groups:
             step_groups = []
             for i, q in enumerate(questions, 1):
-                steps = q.marking_steps or [{"text": q.answer_text, "tick_label": "answer", "tick_count": 1}]
+                steps = q.marking_steps or [{"parts": q.answer_parts, "tick_label": "answer", "tick_count": 1}]
                 step_tuples = []
                 for step in steps:
                     count = step.get("tick_count", 0)
                     label = step.get("tick_label")
                     tick_display = f"{'✓' * count} {label}" if count > 0 and label else None
-                    step_tuples.append(([step.get("text", "")], tick_display))
+                    step_tuples.append((parts_to_cell_content(step.get("parts", [])), tick_display))
                 step_groups.append({
                     'num': f'{qnum}.{i}',
                     'steps': step_tuples,
