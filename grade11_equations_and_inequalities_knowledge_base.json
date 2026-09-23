@@ -1,0 +1,207 @@
+{
+  "grade": "11",
+  "topic": "Equations and Inequalities",
+  "scope_note": "Per the 2026 Grade 11 ATP, this is a Term 1 topic (Weeks 4-8, before the June exam) covering: (1) complete the square; (2) solve quadratic equations by factorisation and by the quadratic formula; (3) solve quadratic inequalities in one unknown, interpreted graphically; (4) equations in two unknowns, one linear and one quadratic; (5) nature of roots. It is examined in Paper 1 (the ATP's Paper 1 topic list groups it under 'Algebraic expressions, equations and inequalities', 45 of 150 marks). Because this is Term 1 content, May/June mid-year papers and March common tests legitimately examine it (same situation as the Term 1 Trigonometry reduction/equations topic) -- there is no pacing exclusion. Surd equations, exponential equations, and other content belonging to the 'Exponents and Surds' ATP topic were excluded throughout, even when they appeared alongside this topic's content in the same Question 1, to avoid double-counting against that separate knowledge base.",
+  "source_papers_analyzed": [
+    {"year": 2019, "paper": "Paper 1, Nov (Eastern Cape/DBE)", "questions_extracted": 6, "notes": "Q1 in full except 1.1.4 (surd, excluded). File note: the question paper used is '2019_GRADE_11_FINAL_EXAM_NOV_MATH_PAPER_1.pdf', which correctly pairs with 'Grade_11_Mathematics_P1_November_2019_Memo.pdf' -- the file originally named 'Grade_11_Mathematics_P1_November_2019.pdf' is mislabeled and is actually the Nov 2018 Paper 2 memo; it was not used."},
+    {"year": 2021, "paper": "Paper 1, Nov (Gauteng)", "questions_extracted": 6, "notes": "Q1 in full except 1.2.3-1.2.4 (surd/exponential, excluded)."},
+    {"year": 2022, "paper": "Paper 1, Nov (Gauteng)", "questions_extracted": 6, "notes": "Q1 in full except 1.1 (surd, excluded)."},
+    {"year": 2023, "paper": "Paper 1, Nov (Gauteng)", "questions_extracted": 6, "notes": "Q1 in full except 1.1 and 1.2.3-1.2.4 (surd/exponential, excluded)."},
+    {"year": 2025, "paper": "Paper 1, Nov (Eastern Cape)", "questions_extracted": 4, "notes": "Q1 in full except 1.1.4 (surd/domain, excluded). Off-series source (ecexams.co.za); content/structure matched cleanly, consistent with other topics' knowledge bases in this project."},
+    {"year": 2019, "paper": "Paper 1, May/June (Gauteng)", "questions_extracted": 8, "notes": "Q1 in full except 1.1.3 and 1.1.5 (surd/exponential, excluded); Q2.1, Q2.2, Q2.4 also included (Q2.3 exponential, excluded). Legitimately in scope -- Term 1 content."},
+    {"year": 2022, "paper": "Paper 1, May/June (Gauteng)", "questions_extracted": 5, "notes": "Q1 in full except 1.1 (surd/domain) and 1.2.4-1.2.5 (surd/exponential, excluded)."},
+    {"year": 2023, "paper": "Paper 1, May/June (Gauteng)", "questions_extracted": 6, "notes": "Q1 in full except 1.1 and 1.2.4 (surd/domain, excluded)."},
+    {"year": 2024, "paper": "Paper 1, June Common Test (KZN provincial)", "questions_extracted": 8, "notes": "Q1 in full except 1.2.1 (surd, excluded); Q2 (Exponents/Surds) excluded entirely."},
+    {"year": 2025, "paper": "Paper 1, June Examination (KZN provincial)", "questions_extracted": 7, "notes": "Q1 in full; Q2 (Exponents/Surds) excluded entirely."},
+    {"year": 2026, "paper": "Paper 1, June Provincial Standardised Assessment (KZN)", "questions_extracted": 8, "notes": "Q1 in full except 1.1.5 (surd, excluded); Q2 (Exponents/Surds) excluded entirely."},
+    {"year": 2025, "paper": "March Common Assessment Task (KZN, combined 75-mark Term-1 test)", "questions_extracted": 8, "notes": "Q1 in full except 1.2 (surd, excluded); Q2 (Exponents/Surds) and Q3 (Trigonometry) excluded entirely."},
+    {"year": 2026, "paper": "March Provincial Standardised Assessment (KZN, combined 75-mark Term-1 test)", "questions_extracted": 6, "notes": "Q1 in full except 1.1.4 (surd, already counted in the Exponents and Surds knowledge base, excluded here); Q2 (Exponents/Surds) excluded entirely."}
+  ],
+  "excluded_papers": [
+    {"file": "Grade_11_Mathematics_P1_November_2019.pdf", "reason": "Mislabeled -- this file is actually the Nov 2018 Paper 2 marking guideline, not a Nov 2019 Paper 1 question paper. Not used; replaced by the correct Nov 2019 Paper 1 file (see source list)."},
+    {"file": "MathsGrade11June2021QPandMemo.pdf", "reason": "Confirmed genuine 50-mark/1-hour KZN common test, but contains no Equations and Inequalities content at all -- its five questions cover number patterns, a quadratic Functions-topic question (graph transformation, not equation-solving), a hyperbola, analytical geometry, and a trig equation."},
+    {"file": "MathsGr11June2022QP1andMemo.pdf", "reason": "Confirmed genuine Paper 1 (KZN June 2022 common test), but its six questions cover Number Patterns, Functions (x2), Analytical Geometry (x2), and Trigonometry -- none of this topic's content. One Functions sub-question (2.5, 'for which values of k will -x²+3x+10=k have two positive, unequal real roots?') superficially resembles a nature-of-roots question, but its memo solves it purely graphically off the sketched parabola rather than via discriminant/Vieta's algebra, confirming it as a Functions-topic technique, not this topic's."},
+    {"file": "KZNMathsGrade11September2025QPandMemo.pdf", "reason": "Term 3 common test (Finance, Probability, Statistics, Trigonometric Functions, Trigonometry sine/cosine/area rules) -- no Equations and Inequalities content, consistent with correct Term 1 pacing (this topic is completed well before September)."}
+  ],
+  "archetypes": [
+    {
+      "archetype_id": "eqineq_001",
+      "name": "Solve a quadratic equation by factorisation",
+      "description": "Solve a quadratic equation for x by factorising it into two linear factors and applying the zero-product law. Presentation varies: sometimes already given in factored form (e.g. 'x(2x+6)=0'), sometimes needing rearrangement to standard form first, and occasionally as a difference-of-squares special case (e.g. 'x²-100=0').",
+      "evidence_count": 13,
+      "low_evidence": false,
+      "cognitive_level_distribution": {"knowledge": 0, "routine": 13, "complex": 0, "problem_solving": 0},
+      "command_verbs_used": ["Solve for x", "Determine the value(s) of x"],
+      "marking_pattern": {
+        "typical_total_marks": 2,
+        "typical_breakdown": ["A1: correct factors (or correct rearrangement to standard form if not pre-factored)", "A1 (or A1+A1): both value(s) of x"],
+        "consensus": "Consistent across all 13 examples -- one mark for the factorisation/rearrangement step, one or two marks for the answer(s).",
+        "notes": "One example (KZN June 2026, x²-100=0) is a difference-of-squares special case; its memo accepts an alternative method of isolating x² and taking square roots of both sides as equally valid."
+      },
+      "language_notes": "Almost always phrased as 'Solve for x:' as a lead-in to a sub-list of parts 1.1.1, 1.1.2, etc.",
+      "source_examples": ["Nov 2019 P1 Q1.1.1", "Nov 2025 P1 Q1.1.1", "Jun 2019 P1 Q1.1.1", "Jun 2022 P1 Q1.2.1", "Jun 2023 P1 Q1.2.1", "KZN Jun 2024 Q1.1.1", "KZN Jun 2024 Q1.1.2", "KZN Jun 2025 Q1.1.1", "KZN Jun 2025 Q1.1.2", "KZN Jun 2026 Q1.1.1", "KZN Jun 2026 Q1.1.2", "KZN Mar 2025 Q1.1.1", "KZN Mar 2026 Q1.1.1"]
+    },
+    {
+      "archetype_id": "eqineq_002",
+      "name": "Solve a quadratic equation using the quadratic formula, rounded to two decimal places",
+      "description": "Solve a quadratic equation whose roots are irrational, using the quadratic formula, with the answer required correct to two decimal places. Sometimes the equation must first be rearranged to standard form or cleared of a fraction before the formula is applied.",
+      "evidence_count": 13,
+      "low_evidence": false,
+      "cognitive_level_distribution": {"knowledge": 0, "routine": 13, "complex": 0, "problem_solving": 0},
+      "command_verbs_used": ["Solve for x ... (correct to TWO decimal places)"],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": ["A1: standard form (if rearrangement needed)", "A1 (CA): correct substitution into the quadratic formula", "A1+A1 (CA): the two answers"],
+        "consensus": "Very consistent across all 13 examples.",
+        "notes": "An explicit memo instruction appears in nearly every source: 'Penalise ONE mark for incorrect rounding, in this question ONLY.' One example (KZN June 2026, '3x-5=3/x') requires clearing a fraction to reach standard form first, rather than a simple rearrangement."
+      },
+      "language_notes": "The parenthetical instruction '(correct to TWO decimal places)' or '(answer correct to TWO decimal places)' is used verbatim across nearly all sources.",
+      "source_examples": ["Nov 2019 P1 Q1.1.2", "Nov 2021 P1 Q1.2.1", "Nov 2022 P1 Q1.3.1", "Nov 2023 P1 Q1.2.1", "Nov 2025 P1 Q1.1.2", "Jun 2019 P1 Q1.1.2", "Jun 2022 P1 Q1.2.2", "Jun 2023 P1 Q1.2.2", "KZN Jun 2024 Q1.1.3", "KZN Jun 2025 Q1.1.3", "KZN Jun 2026 Q1.1.3", "KZN Mar 2025 Q1.1.2", "KZN Mar 2026 Q1.1.2"]
+    },
+    {
+      "archetype_id": "eqineq_003",
+      "name": "Solve a quadratic inequality already reducible to standard/factored form",
+      "description": "Solve a quadratic inequality where the expression is either already factored or already in simple standard form (ax²+bx+c compared to 0), requiring only factorisation, critical values, and sign-diagram or sketch-based interval selection.",
+      "evidence_count": 7,
+      "low_evidence": false,
+      "cognitive_level_distribution": {"knowledge": 0, "routine": 6, "complex": 1, "problem_solving": 0},
+      "command_verbs_used": ["Solve for x"],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": ["A1: correct factors", "A1 (CA): critical values (accepted if shown on a sketch or number line)", "A1+A1 (CA): the final answer, both bounds"],
+        "consensus": "Consistent across 6 of the 7 examples.",
+        "notes": "One example (Nov 2021 Q1.3.2, 'x²+8x+16>0') is a perfect-square edge case where the solution is 'all reals except one point' rather than an interval -- the memo explicitly requires both criteria (x∈R AND x≠-4) for the answer mark, a genuinely different-shaped answer from the rest of this archetype's evidence."
+      },
+      "language_notes": "Answers are accepted either as a compound inequality (e.g. '-11<x<-8') or in interval notation (e.g. 'x∈(-11;-8)'); memos consistently accept both forms interchangeably.",
+      "source_examples": ["Nov 2019 P1 Q1.1.3", "Jun 2019 P1 Q1.1.4", "Jun 2022 P1 Q1.2.6(a)", "KZN Jun 2025 Q1.1.4", "KZN Mar 2025 Q1.1.3", "KZN Mar 2026 Q1.1.3", "Nov 2021 P1 Q1.3.2"]
+    },
+    {
+      "archetype_id": "eqineq_004",
+      "name": "Solve a quadratic inequality requiring expansion or rearrangement before standard form",
+      "description": "Solve a quadratic inequality where the expression must first be expanded (e.g. a product of two binomials compared to a nonzero constant) or rearranged/factored by grouping before it can be reduced to standard form and solved.",
+      "evidence_count": 7,
+      "low_evidence": false,
+      "cognitive_level_distribution": {"knowledge": 0, "routine": 6, "complex": 1, "problem_solving": 0},
+      "command_verbs_used": ["Solve for x"],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": ["A1: standard form after expansion", "A1 (CA): correct factors", "A1+A1 (CA): the answer, both parts"],
+        "consensus": "Consistent across all 7 examples.",
+        "notes": "Two memos (Nov 2021 and Nov 2023) explicitly penalise a mark for writing 'AND' instead of 'OR' between disjoint solution branches (or vice versa for a single compound interval) -- this OR/AND distinction is treated strictly. One example (Nov 2025 Q1.1.3, 'x(x-4)+2(4-x)>0') requires factoring by grouping rather than simple expansion, a slightly less routine variant."
+      },
+      "language_notes": "Where the solution set is two disjoint rays, the answer is written with 'or' between them (e.g. 'x<-3 or x>5'); memos are strict that 'and' is incorrect there.",
+      "source_examples": ["Nov 2021 P1 Q1.2.2", "Nov 2022 P1 Q1.3.2", "Nov 2023 P1 Q1.2.2", "Nov 2025 P1 Q1.1.3", "Jun 2023 P1 Q1.2.3", "KZN Jun 2024 Q1.1.4", "KZN Jun 2026 Q1.1.4"]
+    },
+    {
+      "archetype_id": "eqineq_005",
+      "name": "Solve a system of equations simultaneously, one linear and one quadratic in two unknowns",
+      "description": "Solve for x and y given one linear and one quadratic (or quadratic-shaped) equation, by making one variable the subject of the linear equation and substituting into the second, reducing to a quadratic in one variable. Includes variants where the second equation is given in a 'messier' unexpanded form, as a product-form equation (e.g. '(x-y)(5y-3x)=0'), or where a homogeneous-ratio shortcut is available.",
+      "evidence_count": 12,
+      "low_evidence": false,
+      "cognitive_level_distribution": {"knowledge": 0, "routine": 3, "complex": 9, "problem_solving": 0},
+      "command_verbs_used": ["Solve for x and y", "Solve simultaneously for x and y"],
+      "marking_pattern": {
+        "typical_total_marks": 6,
+        "typical_breakdown": ["A1: one variable made the subject of the linear equation", "A1 (CA): substitution into the second equation", "A1 (CA): standard form", "A1 (CA): factors", "A1+A1 (CA): both values of each variable"],
+        "consensus": "Consistent across most examples; several memos explicitly offer 'any other valid method' as an alternative route (e.g. solving for the other variable first).",
+        "notes": "One example (KZN Jun 2024 Q1.3) presents the second equation in product form '(x-y)(5y-3x)=0', which can be solved either by direct substitution or by first solving the product-form equation for one variable in terms of the other -- both methods appear in the memo. One example (Jun 2019 Q1.2) is preceded by a homogeneous-ratio step (finding x/y from a homogeneous quadratic relation) before the linear constraint is applied."
+      },
+      "language_notes": "Consistently phrased as 'Solve for x and y' or 'Solve simultaneously for x and y', with the two equations given as a numbered pair.",
+      "source_examples": ["Nov 2019 P1 Q1.2", "Nov 2021 P1 Q1.4", "Nov 2022 P1 Q1.4.2", "Nov 2023 P1 Q1.3.1", "Nov 2025 P1 Q1.2", "Jun 2019 P1 Q1.2.1-1.2.2", "Jun 2019 P1 Q2.2", "Jun 2023 P1 Q1.3", "KZN Jun 2024 Q1.3", "KZN Jun 2025 Q1.2", "KZN Mar 2025 Q1.3", "KZN Mar 2026 Q1.2"]
+    },
+    {
+      "archetype_id": "eqineq_006",
+      "name": "Reduce a non-standard equation to a quadratic via a structural technique (rational equation with LCD, or substitution of a repeated expression)",
+      "description": "Solve an equation that is not immediately quadratic in form -- either a rational equation with a factorable quadratic denominator (solved via LCD), an equation containing a repeated sub-expression that can be replaced by a single substituted variable (e.g. letting k=x²-2x, or u=x²), or two structurally identical equations where a known root of one directly yields an unknown in the other via the matching substitution. All variants reduce to a standard quadratic equation as the key intermediate step, often followed by a rejection of an extraneous or restricted value.",
+      "evidence_count": 6,
+      "low_evidence": false,
+      "cognitive_level_distribution": {"knowledge": 0, "routine": 0, "complex": 5, "problem_solving": 1},
+      "command_verbs_used": ["Solve for x", "Determine the value of t/y ... hence"],
+      "marking_pattern": {
+        "typical_total_marks": 5,
+        "typical_breakdown": ["A1/M1: correct method or factorisation of denominator/recognition of the substitution", "A1 (CA): standard form after substitution or LCD", "A1 (CA): factors", "A1 (CA): answer(s), with rejection of any restricted or extraneous value where applicable"],
+        "consensus": "The mechanic (reduce to quadratic, then back-substitute or reject) is consistent, though the specific technique varies by example -- rational-equation LCD (2 examples), same-equation substitution of a repeated expression (2 examples, one of which is a biquadratic via u=x²), and cross-equation structural substitution using a previously-found root (2 examples).",
+        "notes": "This archetype deliberately groups several structurally-related but individually low-evidence techniques (each with only 1-2 examples alone) under one umbrella, since they share the same core skill of recognising and executing a substitution to reach a solvable quadratic. Anne-Marie may wish to review whether these should eventually be split into finer sub-archetypes once more evidence accumulates for each."
+      },
+      "language_notes": "Rational-equation variants restate the LCD explicitly; substitution variants often use 'let k=...' or 'let u=...' in the memo even when the question paper does not suggest it.",
+      "source_examples": ["KZN Jun 2024 Q1.1.5", "KZN Mar 2026 Q1.1.5", "Jun 2022 P1 Q1.2.3", "KZN Jun 2025 Q1.1.5", "Jun 2023 P1 Q1.2.5", "KZN Jun 2024 Q1.2.2"]
+    },
+    {
+      "archetype_id": "eqineq_007",
+      "name": "Determine or prove the nature of the roots of a (often parametric) quadratic equation",
+      "description": "Use the discriminant (or, in some variants, the sum/product of roots) to determine or prove a stated property of a quadratic equation's roots: non-real, equal, real, real-and-unequal (sometimes proved for all values of a parameter), real-rational-and-unequal, opposite in sign, or equal in magnitude but opposite in sign. Some variants ask for a parameter value or range; others ask for a general proof valid for all real values of a parameter; one variant asks for the roots to be left in symbolic quadratic-formula form before a follow-up question asks for a specific condition.",
+      "evidence_count": 11,
+      "low_evidence": false,
+      "cognitive_level_distribution": {"knowledge": 0, "routine": 3, "complex": 5, "problem_solving": 3},
+      "command_verbs_used": ["Discuss the nature of the roots", "Determine the value(s) of p for which the roots are equal", "Prove that ... the roots are non-real/real and unequal", "Determine the value(s) of m for which the equation has real roots", "For which value(s) will the equation have roots opposite in sign / equal in magnitude but opposite in sign"],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": ["A1 (CA): substitution into the discriminant Δ=b²-4ac", "A1 (CA): simplified expression for Δ", "A1 (CA): the condition applied to Δ (=0, ≥0, or an inequality)", "A1 (CA): the final answer or conclusion"],
+        "consensus": "The discriminant mechanic is consistent, but the specific condition applied (and hence the final answer's shape) varies considerably across the 11 examples -- this is a topic-wide skill with many distinct question shapes rather than one repeated pattern.",
+        "notes": "Two general 'prove for all real p' proofs (Nov 2021 Q1.5, Jun 2023 Q1.4) were classified as Problem Solving (Level 4) rather than Complex, since they require a non-routine general argument about a parameter rather than a specific numeric answer -- Anne-Marie may want to sanity-check this classification. One example (Nov 2022 Q1.5.2, 'real, rational and unequal') has a memo that only checks Δ>0, without an explicit separate check that Δ is a perfect square (the actual requirement for rational roots) -- flagged as a possible memo gap, not a genuine disagreement in the pattern."
+      },
+      "language_notes": "'Discuss' is used once (Nov 2019) where other papers use 'Determine'; the shorthand 'Δ' for the discriminant is used throughout memos even when question papers write it out.",
+      "source_examples": ["Nov 2019 P1 Q1.3", "Nov 2021 P1 Q1.5", "Nov 2022 P1 Q1.5.1", "Nov 2022 P1 Q1.5.2", "Nov 2023 P1 Q1.4.1", "Nov 2023 P1 Q1.4.2", "Jun 2019 P1 Q2.4", "Jun 2023 P1 Q1.4", "KZN Mar 2025 Q1.4.1", "KZN Mar 2025 Q1.4.2", "KZN Mar 2026 Q1.3"]
+    },
+    {
+      "archetype_id": "eqineq_008",
+      "name": "Real-world word problem reducing to a quadratic equation",
+      "description": "A word problem (numbers with a given sum and product, ages with a fractional relationship, or a fencing/area optimisation) that must be translated into one or two equations and solved, generally reducing to a quadratic equation. The optimisation variant explicitly uses completing the square, directly matching the ATP's 'complete the square' skill.",
+      "evidence_count": 3,
+      "low_evidence": false,
+      "cognitive_level_distribution": {"knowledge": 0, "routine": 0, "complex": 3, "problem_solving": 0},
+      "command_verbs_used": ["Determine the value of the two numbers", "How old was each child", "Calculate the dimensions ... to obtain the maximum enclosed area"],
+      "marking_pattern": {
+        "typical_total_marks": 5,
+        "typical_breakdown": ["A1: setting up the equation(s) from the word description", "A1 (CA): substitution", "A1 (CA): standard form / completing the square", "A1+A1 (CA): the final answer(s)"],
+        "consensus": "The translate-then-solve mechanic is consistent across all three examples.",
+        "notes": "One example (Jun 2023 Q1.5) is worth 7 marks and uses completing the square explicitly rather than factorisation or the formula, matching the ATP's item 1 directly; the other two are worth 4-5 marks and reduce to a straightforward quadratic. One example (KZN Jun 2026 Q1.3, natural-number-constrained maximum of xy) is a related but distinct optimisation flavour and was excluded from this archetype's evidence count -- see excluded_archetypes."
+      },
+      "language_notes": "Word problems in this topic are self-contained short paragraphs, occasionally illustrated (e.g. a family image for the ages problem).",
+      "source_examples": ["Jun 2022 P1 Q1.3", "Jun 2023 P1 Q1.5", "KZN Jun 2026 Q1.2"]
+    }
+  ],
+  "excluded_archetypes": [
+    {
+      "description": "Determine values of x for which a rational algebraic expression is equal to zero, or undefined",
+      "evidence_count": 1,
+      "source_examples": ["Nov 2021 P1 Q1.1.1-1.1.2"],
+      "reason": "Only one example found; dropped per this project's established convention of excluding archetypes with fewer than 3 supporting examples rather than merely flagging them."
+    },
+    {
+      "description": "Solve for two independent unknowns from a single zero-product equation where each factor contains a different variable, e.g. '(3a-8)(2b+7)=0'",
+      "evidence_count": 1,
+      "source_examples": ["Nov 2022 P1 Q1.2"],
+      "reason": "Only one example found; dropped per the same low-evidence convention."
+    },
+    {
+      "description": "Given that a specific value is a root of (or satisfies) a quadratic equation, find an unknown parameter by direct substitution, then find the other root or solution",
+      "evidence_count": 2,
+      "source_examples": ["Jun 2019 P1 Q2.1.1-2.1.2", "Nov 2022 P1 Q1.4.1"],
+      "reason": "Only two examples found; dropped per the low-evidence convention, though close to the threshold -- worth watching for a third example in future papers."
+    },
+    {
+      "description": "Using a previously-solved quadratic inequality's solution set, apply a horizontal shift to solve a transformed inequality (e.g. f(x-3)≤0 given the solution of f(x)≤0)",
+      "evidence_count": 1,
+      "source_examples": ["Jun 2022 P1 Q1.2.6(b)"],
+      "reason": "Only one example found (a direct follow-up to a Q1.2.6(a) instance already counted in eqineq_003); dropped per the low-evidence convention."
+    },
+    {
+      "description": "Determine the maximum value of a quantity defined by an equation, subject to both variables being restricted to natural numbers",
+      "evidence_count": 1,
+      "source_examples": ["KZN Jun 2026 P1 Q1.3"],
+      "reason": "Only one example found; dropped per the low-evidence convention, though it is a distinctive and pedagogically interesting variant worth watching for future evidence."
+    },
+    {
+      "description": "Solve an equation containing a nested/continued fraction, without a calculator, by simplifying step-by-step",
+      "evidence_count": 1,
+      "source_examples": ["Nov 2025 P1 Q1.3"],
+      "reason": "Only one example found, and it is atypical for this topic in that it reduces to a linear equation rather than a quadratic one -- dropped per the low-evidence convention and flagged separately as not fitting cleanly into any archetype (see Step 6)."
+    }
+  ],
+  "style_profile": {
+    "typical_sequencing": "This topic is almost always Question 1 of Paper 1. It typically opens with a run of 'Solve for x' sub-questions moving from simplest to hardest (factorable equation, then quadratic formula, then a quadratic inequality, with surd/exponential equations from the separate Exponents and Surds topic often interleaved in the same numbered list), then moves to a simultaneous linear-quadratic system, and closes with either a nature-of-roots question or a word problem -- generally the most demanding sub-question in Q1.",
+    "scaffolding_pattern": "Sub-questions frequently build on each other via 'hence' or by reusing a previously-found value (e.g. a found root substituted into a structurally identical second equation, or a discriminant expression from part (a) reused in part (b) to find equal roots). Many multi-mark items show two full alternative memo methods side by side, explicitly credited as equally valid.",
+    "notation_conventions": "The instruction '(correct to TWO decimal places)' or '(answer correct to TWO decimal places)' is used verbatim wherever the quadratic formula gives irrational roots, paired with an explicit memo penalty for incorrect rounding, applied only to that specific sub-question. Inequality answers are accepted as either a compound inequality or interval notation; memos are strict that disjoint (outside-root) solution branches must be joined with 'OR', never 'AND', and vice versa for a single compound (between-root) interval."
+  }
+}

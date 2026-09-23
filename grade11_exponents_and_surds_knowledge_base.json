@@ -1,0 +1,804 @@
+{
+  "grade": "11",
+  "topic": "Exponents and Surds",
+  "source_papers_analyzed": [
+    {
+      "year": 2021,
+      "paper": "Paper 1, Nov (Gauteng Provincial)",
+      "questions_extracted": 4,
+      "questions_excluded": 0
+    },
+    {
+      "year": 2022,
+      "paper": "Paper 1, Nov (Gauteng Provincial)",
+      "questions_extracted": 3,
+      "questions_excluded": 0
+    },
+    {
+      "year": 2023,
+      "paper": "Paper 1, Nov (Gauteng Provincial)",
+      "questions_extracted": 4,
+      "questions_excluded": 0
+    },
+    {
+      "year": 2022,
+      "paper": "Paper 1, May/June (Gauteng Provincial)",
+      "questions_extracted": 9,
+      "questions_excluded": 0
+    },
+    {
+      "year": 2023,
+      "paper": "Paper 1, May/June (Gauteng Provincial)",
+      "questions_extracted": 9,
+      "questions_excluded": 0
+    },
+    {
+      "year": 2019,
+      "paper": "Paper 1, May/June (Gauteng Provincial)",
+      "questions_extracted": 3,
+      "questions_excluded": 0
+    },
+    {
+      "year": 2019,
+      "paper": "Paper 1, Nov (Eastern Cape / national DBE)",
+      "questions_extracted": 6,
+      "questions_excluded": 0
+    },
+    {
+      "year": 2024,
+      "paper": "Paper 1, June Common Test (KwaZulu-Natal Province)",
+      "questions_extracted": 7,
+      "questions_excluded": 0
+    }
+  ],
+  "notes_on_source_material": "The Nov 2025 paper analyzed in an earlier run has been removed from this knowledge base (different exam board, structurally different layout). This version covers 8 papers across 3 boards: Nov 2021/2022/2023 and May/June 2019/2022/2023 (all Gauteng Provincial); Nov 2019 (Eastern Cape / national DBE paper); and a June 2024 'Common Test' from KwaZulu-Natal Province. Only Paper 1 was analyzed throughout, since Exponents and Surds is a Paper 1 topic in this curriculum. Two other KZN 'Common Test' papers (June 2021 and June 2022) were checked and excluded entirely - both were confirmed, question by question, to cover only Patterns, Functions, Analytical Geometry, and Trigonometry, with no Exponents/Surds content anywhere. This means the KZN board's mid-year common tests are inconsistent from year to year in whether they test this topic at all - the June 2024 one happens to test it heavily, but 2021 and 2022 did not. A file named 'Grade_11_Mathematics_P1_November_2019.pdf' was also found to contain mismatched content (a Nov 2018 Paper 2 memo, not a Nov 2019 Paper 1 question paper) and was not used; the correct Nov 2019 P1 question paper was subsequently supplied separately.",
+  "archetypes": [
+    {
+      "archetype_id": "exp_surd_001",
+      "name": "Simplify algebraic exponential expression with negative/fractional exponents",
+      "description": "Simplify an expression where an algebraic term (containing a variable) is raised to a negative or fractional index, requiring application of exponent laws (negative index, power of a power, etc.) without a calculator.",
+      "evidence_count": 2,
+      "low_evidence": true,
+      "low_evidence_note": "Only 2 examples, but the difference between them is now explained (see marking_pattern.consensus) rather than an open discrepancy. Still worth a 3rd example to confirm the pattern generalises.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 2,
+        "complex": 0,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Simplify WITHOUT the use of a calculator"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": null,
+        "typical_breakdown": [
+          "M1: rewrite the numeric coefficients as powers of a common prime base, if they are not already recognisable roots (e.g. 512=2^9, 64=2^6) - only needed when the coefficients aren't perfect squares/cubes",
+          "M1: combine the x terms and apply the negative outer index (flip the fraction)",
+          "A1: final simplified answer"
+        ],
+        "consensus": "Resolved - not a genuine disagreement. The 2021 example (2 marks) uses coefficients (16, 81) that are perfect squares, so the square root resolves in one direct step. The 2023 example (3 marks) uses coefficients (512, 64) that are not perfect cubes at a glance, so the memo explicitly awards a separate 'prime bases' mark for rewriting them as powers of 2 first. The mark difference tracks a genuine extra step, not inconsistent marking - this archetype has a 2-mark 'clean coefficients' variant and a 3-mark 'coefficients need prime-factorising first' variant. A generator should pick the mark allocation to match which variant it's producing, not treat 2 vs 3 as arbitrary.",
+        "notes": "Both examples reward the base-conversion/index-manipulation step before the final answer mark."
+      },
+      "language_notes": "Expression given in a fraction-with-negative-index or brace/bracket form, e.g. {A/B}^(-1/n); instruction stem is always 'Simplify WITHOUT the use of a calculator.'",
+      "source_examples": [
+        "Nov 2021 P1 Q2.1.1",
+        "Nov 2023 P1 Q2.1.1"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "2 examples from credible final-exam sources - fine to use occasionally, not as a dominant pattern."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_002",
+      "name": "Evaluate numeric expression combining surd and fractional/negative exponent notation",
+      "description": "Simplify an expression that mixes root (radical) notation with negative or fractional exponents, without a calculator, where the difficulty comes from reconciling several different radical/index forms rather than from an algebraic variable.",
+      "evidence_count": 2,
+      "low_evidence": true,
+      "low_evidence_note": "Fewer than 3 examples support this archetype and its marking pattern - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 1,
+        "complex": 1,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Simplify WITHOUT the use of a calculator",
+        "Simplify completely WITHOUT the use of a calculator"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": [
+          "M1: convert root terms to fractional-exponent or prime-base form",
+          "M1: simplify each term",
+          "M1: simplify further",
+          "A1: final answer"
+        ],
+        "consensus": "both examples are worth 4 marks with a similar 4-step convert-simplify-simplify-answer structure.",
+        "notes": "The Nov 2022 example is purely numeric (no variable) and was classified Routine (Level 2); the May/June 2022 example nests a square root, a cube root, and an outer fractional exponent together and was classified Complex (Level 3) - cognitive demand rises with how many radical types are stacked."
+      },
+      "language_notes": "Combines root notation (square root, cube root, fifth root) directly with negative or fractional exponents in the same expression.",
+      "source_examples": [
+        "Nov 2022 P1 Q2.1.2",
+        "May/June 2022 P1 Q2.1.2"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "2 examples from credible final-exam sources - fine to use occasionally, not as a dominant pattern."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_003",
+      "name": "Simplify exponential expression with variable or large numeric exponent via common-base conversion and factorisation",
+      "description": "Simplify an expression where the exponent is either a variable (e.g. n or x) appearing across terms with different numeric bases, or a large fixed numeric exponent, requiring every term to be rewritten to a common prime base and then factorised or cancelled.",
+      "evidence_count": 9,
+      "low_evidence": false,
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 4,
+        "complex": 5,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Simplify WITHOUT the use of a calculator",
+        "Simplify completely WITHOUT the use of a calculator"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 3,
+        "typical_breakdown": [
+          "M1: convert all terms to a common prime base (or factor out the smallest shared power)",
+          "M1: factorise / cancel common factor",
+          "A1: final simplified answer"
+        ],
+        "consensus": "9 examples now. Most are worth 3-4 marks with a consistent common-base-conversion-then-factorise breakdown. The two KZN 2024 examples are the most elaborate seen in this archetype - one reconciles FIVE different numeric bases (2, 9, 6, 27, 3) in a single expression, the other factors out a very large common power (3^2017) similar to the May/June 2019 example. Marks range 3-4 across the set; the underlying technique (common base, then factor/cancel) is identical throughout.",
+        "notes": "The two Nov 2021/2022 examples and the May/June 2023 example were classified Routine (Level 2); the Nov 2023 (algebraic exponent n in a rational expression) and May/June 2022 (very large literal exponents) examples required more integration and were classified Complex (Level 3). May/June 2019 example asks for the answer with positive exponents only (root notation converted to a fourth-root/fractional exponent first) - same core technique as the rest of the archetype."
+      },
+      "language_notes": "Always introduced with a 'Simplify WITHOUT the use of a calculator' stem; algebraic-exponent versions use a variable like n or x in the index itself, while the large-numeric-exponent version uses fixed but unusually large exponents (e.g. 5^2006) to force the same factor-out-the-common-power technique.",
+      "source_examples": [
+        "Nov 2021 P1 Q2.1.2",
+        "Nov 2022 P1 Q2.1.1",
+        "Nov 2023 P1 Q2.1.2",
+        "May/June 2022 P1 Q2.1.3",
+        "May/June 2023 P1 Q2.1.1",
+        "May/June 2019 P1 Q2.3",
+        "Nov 2019 P1 Q2.1",
+        "June 2024 P1 (KZN) Q2.1.1",
+        "June 2024 P1 (KZN) Q2.1.2"
+      ],
+      "usage_guidance": {
+        "tier": "core",
+        "rationale": "9 examples across multiple independent papers/years - safe to draw on freely."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_004",
+      "name": "Simplify a sum/difference of unlike surds by rewriting each with a common radicand",
+      "description": "Simplify an expression that adds or subtracts several square-root terms with different numbers under the root, by factoring each radicand to expose a common square factor so all terms can be expressed as a multiple of the same simplest surd, then combined like terms.",
+      "evidence_count": 1,
+      "low_evidence": true,
+      "low_evidence_note": "Only one example found - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 1,
+        "complex": 0,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Simplify completely WITHOUT the use of a calculator"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 3,
+        "typical_breakdown": [
+          "M1: simplify each surd to its simplest form (first step)",
+          "M1: further simplification",
+          "A1: combine like surds to final answer"
+        ],
+        "consensus": "single example only.",
+        "notes": ""
+      },
+      "language_notes": "Terms given as 2√8 - 4√32 + 3√50 style; no algebraic variable involved.",
+      "source_examples": [
+        "May/June 2022 P1 Q2.1.1"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "1 example(s) - use sparingly, not yet corroborated by a second source."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_005",
+      "name": "Substitute a given surd value into an algebraic expression and simplify by rationalising",
+      "description": "Given that a variable equals a specific surd expression (e.g. x = 1 + √3), substitute it into a rational algebraic expression and simplify, typically requiring rationalisation of a resulting surd denominator.",
+      "evidence_count": 1,
+      "low_evidence": true,
+      "low_evidence_note": "Only one example found - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 1,
+        "complex": 0,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Simplify WITHOUT the use of a calculator"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": [
+          "M1: substitute the given surd value",
+          "M1: simplify the resulting expression",
+          "M1: rationalise the denominator / factorise",
+          "A1: final answer"
+        ],
+        "consensus": "single example only.",
+        "notes": ""
+      },
+      "language_notes": "Phrased as 'Simplify [expression] if x = [surd value]' rather than a bare simplify instruction.",
+      "source_examples": [
+        "May/June 2023 P1 Q2.1.2"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "1 example(s) - use sparingly, not yet corroborated by a second source."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_006",
+      "name": "Simplify algebraic expression combining a surd of a difference of two squares with fractional exponents of related binomials",
+      "description": "Simplify an expression where a square root of a difference of two squares (e.g. √(a²-b²)) is multiplied and divided by related binomial factors (a+b), (a-b) raised to fractional exponents, requiring the surd to be rewritten as a product of fractional-exponent binomials before the exponent laws can be applied.",
+      "evidence_count": 1,
+      "low_evidence": true,
+      "low_evidence_note": "Only one example found - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 0,
+        "complex": 1,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Simplify WITHOUT the use of a calculator"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": [
+          "M1: factorise the difference of two squares under the root",
+          "M1: rewrite the surd as fractional-exponent binomial factors",
+          "M1: simplify/combine exponents",
+          "A1: expand to final answer"
+        ],
+        "consensus": "single example only.",
+        "notes": "Memo carries the simplification through to a fully expanded binomial cube - a more demanding final step than most archetypes in this topic."
+      },
+      "language_notes": "Given with a restriction (a ≠ b) to keep the expression defined.",
+      "source_examples": [
+        "May/June 2023 P1 Q2.1.3"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "1 example(s) - use sparingly, not yet corroborated by a second source."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_007",
+      "name": "Simplify a product of conjugate nested-surd expressions",
+      "description": "Simplify the product of two conjugate expressions, each itself containing a nested surd, using the difference-of-two-squares pattern to eliminate the outer root.",
+      "evidence_count": 1,
+      "low_evidence": true,
+      "low_evidence_note": "Only one example found - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 0,
+        "complex": 1,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Simplify WITHOUT the use of a calculator"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": [
+          "M1: rewrite as a single surd / recognise conjugate pair",
+          "M1: apply difference of two squares",
+          "M1: simplify resulting quadratic expression",
+          "A1: factorise to final answer"
+        ],
+        "consensus": "single example only.",
+        "notes": ""
+      },
+      "language_notes": "Nested surd form: sqrt(a + sqrt(2a-1)) . sqrt(a - sqrt(2a-1)).",
+      "source_examples": [
+        "Nov 2023 P1 Q2.1.3"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "1 example(s) - use sparingly, not yet corroborated by a second source."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_008",
+      "name": "Solve exponential equation via substitution to a quadratic",
+      "description": "Solve an exponential equation by letting a substitution variable (e.g. k = a^x) turn the equation into a quadratic, then factorising and rejecting any invalid solution.",
+      "evidence_count": 3,
+      "low_evidence": false,
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 0,
+        "complex": 3,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Solve for x"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": [
+          "M1: substitution / rearrangement to reveal a quadratic in disguise",
+          "M1: standard form or factorise",
+          "A1: values from the substituted variable, or roots",
+          "A1: final answer(s)"
+        ],
+        "consensus": "consistent across all 3 examples now - all worth 4-5 marks with a substitution-then-factorise structure and all classified Complex (Level 3).",
+        "notes": "Both memos explicitly accept an alternative 'let k = a^x' method as equally valid to direct factorisation."
+      },
+      "language_notes": "Exponential equation written so two terms share a base but different exponents (e.g. 3^(2-x) and 3^x, or 3^(2x+1) and 3^x).",
+      "source_examples": [
+        "Nov 2022 P1 Q2.2",
+        "May/June 2022 P1 Q1.2.5",
+        "Nov 2019 P1 Q2.2.3"
+      ],
+      "usage_guidance": {
+        "tier": "core",
+        "rationale": "3 examples across multiple independent papers/years - safe to draw on freely."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_009",
+      "name": "Solve equation combining a surd and an algebraic/exponential term (isolate, square, reject)",
+      "description": "Solve an equation where a square-root (surd) term is combined with an exponential or algebraic term, requiring the surd to be isolated, both sides squared, the resulting equation solved (usually a quadratic), and any extraneous root rejected by checking it against the original equation.",
+      "evidence_count": 6,
+      "low_evidence": false,
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 0,
+        "complex": 6,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Solve for x"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 5,
+        "typical_breakdown": [
+          "M1: isolate the surd",
+          "M1: square both sides",
+          "M1: standard/factorised form",
+          "A1: answer with explicit rejection of the extraneous root"
+        ],
+        "consensus": "the isolate-square-solve-reject structure is identical across all 6 examples now, spanning 4 of the now-8 papers in this knowledge base. Marks are mostly 4-5, with a consistent pattern of explicitly stating the rejected root.",
+        "notes": "All three memos explicitly require the rejected root to be stated (e.g. 'x = 1 (NA)'), not merely omitted."
+      },
+      "language_notes": "The surd is sometimes nested with an exponential term (Nov 2021), sometimes a plain linear expression under the root (both May/June examples: √(5-x)+1=-x and √(2-x)+2=x) - same solving skill regardless of dressing.",
+      "source_examples": [
+        "Nov 2021 P1 Q2.1.3",
+        "May/June 2022 P1 Q1.2.4",
+        "May/June 2023 P1 Q1.2.4",
+        "May/June 2019 P1 Q1.1.3",
+        "Nov 2019 P1 Q1.1.4",
+        "June 2024 P1 (KZN) Q1.2.1"
+      ],
+      "usage_guidance": {
+        "tier": "core",
+        "rationale": "6 examples across multiple independent papers/years - safe to draw on freely."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_010",
+      "name": "Determine the value of x defined by an infinite (recurring) nested surd",
+      "description": "Given x defined as an infinitely recurring nested square root (x = √(6+√(6+√(6+...)))), first express x² in terms of x by recognising that the expression under the outermost root is itself equal to x, then solve the resulting quadratic and select the valid (positive) root.",
+      "evidence_count": 1,
+      "low_evidence": true,
+      "low_evidence_note": "Only one example found (spanning two linked sub-questions within the same problem) - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 1,
+        "complex": 1,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Write x² in terms of x",
+        "Hence determine the value of x"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 6,
+        "typical_breakdown": [
+          "Sub-part (a), 2 marks - M1: recognise the recursive structure, A1: state x² = 6 + x",
+          "Sub-part (b), 4 marks - M1: standard form, M1: factorise, A1: roots, A1: rejection of the negative root"
+        ],
+        "consensus": "single worked example only.",
+        "notes": "The conceptual leap of recognising the infinite pattern equals x was classified Complex (Level 3); the follow-on quadratic-solving step was classified Routine (Level 2)."
+      },
+      "language_notes": "Split into two explicitly linked sub-questions ('write x² in terms of x' then 'hence determine x') rather than posed as a single instruction.",
+      "source_examples": [
+        "May/June 2022 P1 Q2.2.1-2.2.2"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "1 example(s) - use sparingly, not yet corroborated by a second source."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_011",
+      "name": "Verify a surd identity/equation by squaring or rationalising, without a calculator",
+      "description": "Verify a given equality involving surds by rationalising denominators, squaring, or algebraically expanding one or both sides, without using a calculator.",
+      "evidence_count": 3,
+      "low_evidence": false,
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 0,
+        "complex": 3,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Verify, WITHOUT using a calculator, that...",
+        "Prove that..."
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": [
+          "M1: recognise need to square/expand/rationalise and set up the working",
+          "M1: multiply out or rationalise",
+          "M1: simplify",
+          "A1: simplify to match the given target value/expression"
+        ],
+        "consensus": "all 3 examples worth 4-5 marks with a similar recognise-manipulate-simplify-match structure, and all classified Complex (Level 3).",
+        "notes": ""
+      },
+      "language_notes": "Command verb 'Verify...that' or 'Prove that' rather than 'Simplify' or 'Solve' - the answer is already given and must be shown to be true.",
+      "source_examples": [
+        "Nov 2021 P1 Q2.2",
+        "May/June 2023 P1 Q2.2",
+        "Nov 2019 P1 Q2.3"
+      ],
+      "usage_guidance": {
+        "tier": "core",
+        "rationale": "3 examples across multiple independent papers/years - safe to draw on freely."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_012",
+      "name": "Determine unknown rational/irrational components by rationalising and equating parts",
+      "description": "Given an equation of the form (rational ± surd)(x + y·surd_z) = rational ± surd, determine the unknown values (e.g. x, y, z) by isolating the unknown bracket (rationalising a denominator where needed) and equating the rational and irrational parts on each side.",
+      "evidence_count": 1,
+      "low_evidence": true,
+      "low_evidence_note": "Only one example found - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 0,
+        "complex": 1,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Determine WITHOUT the use of a calculator the values of..."
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": [
+          "M1: isolate the unknown bracket and rationalise",
+          "M1: simplify",
+          "M1: simplify further",
+          "A1: read off values by matching rational/irrational parts"
+        ],
+        "consensus": "single example only.",
+        "notes": ""
+      },
+      "language_notes": "Requires matching an irrational coefficient (e.g. the coefficient of a given surd on each side) rather than solving a standard equation.",
+      "source_examples": [
+        "Nov 2023 P1 Q2.2"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "1 example(s) - use sparingly, not yet corroborated by a second source."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_013",
+      "name": "Determine values for which a surd expression is real/defined (continuous domain restriction)",
+      "description": "Given a function or expression containing a square root (and possibly a denominator), determine the value(s) of the variable, over the real numbers, for which the expression is real (radicand non-negative) and/or defined (denominator non-zero).",
+      "evidence_count": 1,
+      "low_evidence": true,
+      "low_evidence_note": "Only one example found - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 1,
+        "complex": 0,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "For which values of x is [expression] real?"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 2,
+        "typical_breakdown": [
+          "A1: radicand ≥ 0 condition",
+          "A1: denominator ≠ 0 condition"
+        ],
+        "consensus": "single example only.",
+        "notes": ""
+      },
+      "language_notes": "Phrased as 'For which values of x is [expression] real?' - the variable ranges over all real numbers, unlike exp_surd_014 below where x is restricted to a finite given set.",
+      "source_examples": [
+        "May/June 2022 P1 Q1.1"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "1 example(s) - use sparingly, not yet corroborated by a second source."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_014",
+      "name": "Classify a surd expression's value (undefined / natural / irrational) for x drawn from a given finite set",
+      "description": "Given a surd expression and a small finite set of possible x-values (e.g. x ∈ {0;1;2;3;4;5}), determine which of those specific values make the expression undefined, a natural number, or an irrational number - a discrete classification task rather than solving a continuous inequality.",
+      "evidence_count": 3,
+      "low_evidence": true,
+      "low_evidence_note": "All 3 examples come from the sub-parts of a single question in a single paper (May/June 2023), not from independent papers across different years - treat this as one well-scaffolded worked example rather than three independent confirmations of the pattern. Recommend human review before treating this as a reliably recurring archetype across sittings.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 3,
+        "complex": 0,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "is not defined",
+        "is a natural number",
+        "is an irrational number"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 2,
+        "typical_breakdown": [
+          "A1, A1: one mark per correctly identified value in the given set (values given as a set, e.g. x ∈ {4;5})"
+        ],
+        "consensus": "consistent across all 3 sub-parts - each worth 2 marks, awarded as two separate correct-value ticks.",
+        "notes": "All three sub-parts share the same stem expression (a square root of a fraction) and only the classification target changes."
+      },
+      "language_notes": "Answers are expressed as sets, e.g. 'x ∈ {4;5}', rather than as an inequality or single value.",
+      "source_examples": [
+        "May/June 2023 P1 Q1.1.1",
+        "May/June 2023 P1 Q1.1.2",
+        "May/June 2023 P1 Q1.1.3"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "Evidence count (3) would suggest Core, but all 3 examples come from sub-parts of one question in one paper (May/June 2023), not independent corroboration - capped at Supplementary."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_015",
+      "name": "Apply Pythagoras' theorem / area formulae to surd-valued side lengths in a geometric figure",
+      "description": "Given a geometric figure (e.g. a rectangle or triangle) with one or more side lengths expressed as surds, apply Pythagoras' theorem and/or an area formula to determine an unknown length or the area, simplifying surd arithmetic (including cross-terms from squaring a binomial surd) throughout, with the final answer left in simplest surd form.",
+      "evidence_count": 2,
+      "low_evidence": true,
+      "low_evidence_note": "Fewer than 3 examples support this archetype and its marking pattern - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 0,
+        "complex": 1,
+        "problem_solving": 1
+      },
+      "command_verbs_used": [
+        "Determine the length of...",
+        "Calculate the area of... correct to ONE decimal place"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": null,
+        "typical_breakdown": [
+          "M1: substitute into Pythagoras / the relevant formula",
+          "M1: expand and simplify surd arithmetic",
+          "A1: final answer, in simplest surd form or rounded as instructed"
+        ],
+        "consensus": "disagreement in scale rather than structure - the May/June 2022 example is a single direct Pythagoras substitution (3 marks, rectangle diagonal), while the May/June 2023 example requires first deriving one unknown side via Pythagoras before applying the area formula (6 marks, isosceles triangle) - genuinely more scaffolding, not just a different mark count for the same steps.",
+        "notes": "This is the only archetype in the whole topic (across all 5 papers analyzed) that produced a Problem Solving (Level 4) classification - the May/June 2023 triangle-area example requires breaking the problem into constituent parts (find one side, then apply Pythagoras, then apply the area formula) in a way that isn't telegraphed by the question itself."
+      },
+      "language_notes": "The only archetype in this topic that is consistently wrapped in a geometric diagram/context rather than posed as bare algebra.",
+      "source_examples": [
+        "May/June 2022 P1 Q2.3",
+        "May/June 2023 P1 Q2.3"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "2 examples from credible final-exam sources - fine to use occasionally, not as a dominant pattern."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_016",
+      "name": "Solve exponential equation by factoring out a common power term",
+      "description": "Solve an exponential equation where terms share a base but have exponents differing by a constant (e.g. 3^(x+3) - 3^(x+2) = 486), by factoring out the lowest common power, simplifying the resulting numeric coefficient, and equating to the same base raised to a numeric power to solve directly - without needing a substitution-to-quadratic step.",
+      "evidence_count": 2,
+      "low_evidence": true,
+      "low_evidence_note": "Only 2 examples found - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 1,
+        "complex": 1,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Solve for x"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 4,
+        "typical_breakdown": [
+          "M1: factorise out the common (lowest) power",
+          "A1: simplify the numeric coefficient",
+          "M1: rewrite the target number as the same prime base raised to a power",
+          "A1: equate exponents and solve"
+        ],
+        "consensus": "both examples factor out the lowest common power of the shared base, but the KZN 2024 example is more elaborate (3 terms including one with a negative-exponent factor, vs. 2 terms in the May/June 2019 example) and was classified Complex (Level 3) rather than Routine (Level 2) - record as a difficulty spread within the same technique.",
+        "notes": "Distinct from exp_surd_008 (substitution to a quadratic) - here the equation resolves directly to a single linear equation in x once the common power is factored out, with no quadratic step needed."
+      },
+      "language_notes": "Equation written as a difference of two exponential terms with the same base and consecutive/related exponents, set equal to a plain number (e.g. 3^(x+3) - 3^(x+2) = 486).",
+      "source_examples": [
+        "May/June 2019 P1 Q1.1.5",
+        "June 2024 P1 (KZN) Q2.2.2"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "2 example(s) - use sparingly, not yet corroborated by a second source."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_017",
+      "name": "Solve a direct exponential equation by converting to a common base and equating exponents",
+      "description": "Solve a simple exponential equation of the form a^x = b (a single exponential term equal to a plain number), by rewriting both sides as powers of the same prime base, then equating the exponents directly - no substitution or quadratic step required. Includes the special case where b = 1: since 1 can always be written as a^0 for a valid base a, the equation reduces to setting the exponent expression equal to zero. This is the same underlying skill (common base, equate exponents) with a specific, easily-missed value of b.",
+      "evidence_count": 2,
+      "low_evidence": false,
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 2,
+        "complex": 0,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Solve for x"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": null,
+        "typical_breakdown": [
+          "M1: rewrite both sides (or the number 1) with the same base",
+          "M1: equate the exponents (setting the exponent to 0 in the b=1 case)",
+          "A1: final answer"
+        ],
+        "consensus": "Both examples worth 3 marks with an identical 2-step-then-answer structure. The Nov 2019 example (b=32) is the general case; the KZN 2024 example (b=1, base given as an unspecified variable m) is the special case that trips students up if they don't recall a^0=1 - worth teaching explicitly as a named trap rather than assuming it's obvious from the general rule.",
+        "notes": "Previously tracked as two separate archetypes (general case vs. equals-1 case) - merged since they are the same technique, not different skills."
+      },
+      "language_notes": "General case: one side may need rewriting as a base to a negative power (e.g. (1/2)^x) before matching. Equals-1 case: base is often given as a general/unspecified variable rather than a specific number, testing whether the rule is understood to hold for any valid base.",
+      "source_examples": [
+        "Nov 2019 P1 Q2.2.1",
+        "June 2024 P1 (KZN) Q2.2.1"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "2 example(s) - use sparingly, not yet corroborated by a second source."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_018",
+      "name": "Solve an equation with a root of a rational-power expression by raising to the reciprocal power",
+      "description": "Solve an equation where a root (e.g. a cube root) is applied to a variable raised to a power (e.g. cube-root(1/x^2) = 4), by rewriting the left side as a single fractional/negative exponent, then raising both sides to the reciprocal exponent to isolate x.",
+      "evidence_count": 1,
+      "low_evidence": true,
+      "low_evidence_note": "Only one example found - recommend human review before relying on this pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 1,
+        "complex": 0,
+        "problem_solving": 0
+      },
+      "command_verbs_used": [
+        "Solve for x"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 3,
+        "typical_breakdown": [
+          "M1: rewrite as a single fractional/negative exponent",
+          "M1: raise both sides to the reciprocal power",
+          "A1: final answer"
+        ],
+        "consensus": "single example only.",
+        "notes": ""
+      },
+      "language_notes": "Root notation (cube root) wraps a fraction with a squared variable in the denominator - the fractional-exponent rewrite is the key recognition step.",
+      "source_examples": [
+        "Nov 2019 P1 Q2.2.2"
+      ],
+      "usage_guidance": {
+        "tier": "supplementary",
+        "rationale": "1 example(s) - use sparingly, not yet corroborated by a second source."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_019",
+      "name": "'Hence' - use a solved basic surd equation's answer to solve a structurally analogous nested-radical equation",
+      "description": "Having solved a basic surd equation of the form x - a = b*sqrt(x) in one sub-question, use a 'hence' instruction to recognise that a more complex nested-radical equation is structurally identical (with a root expression standing in for x), substitute the valid answer from the first part accordingly, and solve for the new unknown.",
+      "evidence_count": 1,
+      "low_evidence": true,
+      "low_evidence_note": "Only one example found - recommend human review before relying on this pattern. This is a genuinely advanced, multi-step archetype; treat it as a single well-scaffolded worked example rather than an established recurring pattern.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 0,
+        "complex": 0,
+        "problem_solving": 1
+      },
+      "command_verbs_used": [
+        "Hence, if ... determine the value of..."
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 3,
+        "typical_breakdown": [
+          "M1: recognise the nested radical plays the role of x from the previous part (consistent-accuracy carried forward)",
+          "M1: cube (or otherwise resolve) both sides using the previous part's answer",
+          "A1: final answer"
+        ],
+        "consensus": "single example only.",
+        "notes": "The preceding sub-question (solving x - 3 = 2*sqrt(x)) is itself an ordinary example of exp_surd_009 and is counted there; this archetype covers only the 'hence' extension step, which is what makes the problem genuinely non-routine."
+      },
+      "language_notes": "The 'hence' instruction is the signal that the structure of the new equation should be matched against the previous part rather than solved from scratch.",
+      "source_examples": [
+        "June 2024 P1 (KZN) Q1.2.2"
+      ],
+      "usage_guidance": {
+        "tier": "rare_enrichment_only",
+        "rationale": "Single example, sourced from a mid-year Common Test rather than a final NSC exam, and classified Problem Solving (Level 4) with no corroborating example anywhere else in the knowledge base. This is exactly the kind of item a generator could over-sample if it treats all archetypes as equally representative. Recommend capping deliberately rather than relying on evidence_count alone.",
+        "frequency_cap": "Recommend no more than 1 appearance in every 5-10 generated assessments, and only in an explicit 'challenge/extension' slot, not as a stand-in for typical topic coverage."
+      }
+    },
+    {
+      "archetype_id": "exp_surd_021",
+      "name": "Solve an equation of the form x^x = k by iteratively matching bases",
+      "description": "Solve an unfamiliar equation of the form x^x = k (where k is a large numeric power) by repeatedly re-expressing both sides using progressively larger common bases (e.g. rewriting 2^2048 as 4^1024, then 16^512, then 256^256) until the base and exponent on the right match the form needed to read off x directly - a non-routine, exploratory technique rather than a fixed procedure.",
+      "evidence_count": 1,
+      "low_evidence": true,
+      "low_evidence_note": "Only one example found - recommend human review before relying on this pattern. This is the most unfamiliar/non-routine question type found anywhere in this topic.",
+      "cognitive_level_distribution": {
+        "knowledge": 0,
+        "routine": 0,
+        "complex": 0,
+        "problem_solving": 1
+      },
+      "command_verbs_used": [
+        "Solve for x"
+      ],
+      "marking_pattern": {
+        "typical_total_marks": 3,
+        "typical_breakdown": [
+          "M1: rewrite the exponent as a product revealing a doubling pattern",
+          "M1: repeat the base-doubling rewrite until base and exponent match",
+          "A1: final answer"
+        ],
+        "consensus": "single example only. The memo shows two alternative but equally valid step sequences, both converging on the same iterative base-matching idea.",
+        "notes": "Unlike every other equation-solving archetype in this topic, there is no fixed algorithm here - the memo's own alternative method confirms multiple valid paths exist, which is the hallmark of a genuine Problem Solving (Level 4) item."
+      },
+      "language_notes": "Equation form x^x = k, with k given as a specific base-2 power engineered to make the base-doubling trick work out exactly.",
+      "source_examples": [
+        "June 2024 P1 (KZN) Q2.2.3"
+      ],
+      "usage_guidance": {
+        "tier": "rare_enrichment_only",
+        "rationale": "Single example, sourced from a mid-year Common Test rather than a final NSC exam, and classified Problem Solving (Level 4) with no corroborating example anywhere else in the knowledge base. This is exactly the kind of item a generator could over-sample if it treats all archetypes as equally representative. Recommend capping deliberately rather than relying on evidence_count alone.",
+        "frequency_cap": "Recommend no more than 1 appearance in every 5-10 generated assessments, and only in an explicit 'challenge/extension' slot, not as a stand-in for typical topic coverage."
+      }
+    }
+  ],
+  "style_profile": {
+    "typical_sequencing": "The three Gauteng November papers keep the topic entirely inside a self-contained Question 2 (11-14 marks): 2-3 rising-difficulty 'simplify' sub-questions, then one heavier 'solve'/'verify' sub-question. The Nov 2019 (Eastern Cape/DBE) paper breaks this pattern - like the May/June papers, it seeds one surd equation into Question 1 in addition to a full Question 2 block - so the 'topic lives only in Q2' pattern is specific to the Gauteng November papers, not a general November-sitting rule. The Gauteng May/June papers seed 1-3 topic-relevant sub-questions into Question 1's general 'solve for x' list, alongside a Question 2 block whose size and focus varies by year (2019 light, 2022/2023 much richer, including an infinite-surd problem and a geometry application). The KZN June 2024 Common Test is the richest and most unusual source in the set: it places a linked pair of surd equations (culminating in a 'hence' question) inside Question 1, and dedicates the whole of Question 2 (18 marks) to exponents, including two genuinely novel non-routine items (an equation equal to 1, and an x^x = k equation solved by iterative base-matching) not seen in any Gauteng paper in this sample.",
+    "scaffolding_pattern": "Sub-questions build from mechanical law-application toward multi-step equation solving via one of three now clearly-distinguished techniques for 'equal base, related exponent' equations: substitution to a disguised quadratic (exp_surd_008), factoring out a common power term for a direct linear solve (exp_surd_016), or - for the simplest cases - directly equating exponents after a common-base rewrite (exp_surd_017), including the special case where the equation equals 1 (exp_surd_020). The Gauteng May/June 2022/2023 and KZN June 2024 papers additionally reach into applied or genuinely non-routine territory: infinite recurring surds, geometry applications, a 'hence'-linked pair of nested-radical equations, and an x^x=k equation solved by trial/iterative reasoning. Across all 8 papers, no Level 1 (pure recall) sub-question was found in this topic; three Level 4 (Problem Solving) sub-questions were found, all in the newest two additions (one in May/June 2023's geometry problem, two in the KZN June 2024 common test) - the earlier Gauteng November papers in this sample contain no Level 4 content in this topic at all.",
+    "notation_conventions": "The instruction 'Simplify WITHOUT the use of a calculator' (or 'Simplify completely WITHOUT the use of a calculator') is the fixed stem for every pure-simplification sub-question across all 5 papers. Root notation (√, ∛) and fractional-exponent notation are used interchangeably, sometimes within the same expression. Any solution obtained by squaring must show an explicit rejection statement for extraneous roots in the memo (not a silent drop). Domain-style questions are phrased as 'for which value(s) of x is [expression] real?' rather than 'write down the domain'. Marking guidelines award marks as a short, ordered sequence of ticks (method/setup steps followed by a final answer tick); memos do not label ticks 'M' or 'A' explicitly, but the ordering and function of each tick maps cleanly onto that convention.",
+    "equation_technique_hierarchy": "This topic's exponential-equation archetypes form a natural three-tier hierarchy, useful for sequencing instruction: (1) exp_surd_017 - a single exponential term already equals a number (or 1); rewrite to a common base and equate exponents directly, no combining needed. (2) exp_surd_016 - multiple terms sharing a base must first be combined by factoring out their common (lowest) power before the equation reduces to Tier 1 form. (3) exp_surd_008 - multiple terms sharing a base combine into a disguised quadratic (via a squared or reciprocal exponential term), requiring substitution and quadratic factorisation, usually with a root to reject. Each tier is a genuinely different resolution technique, not a cosmetic variant of the others - exp_surd_020 (equation equal to 1) was previously tracked as a fourth archetype but has been folded into Tier 1 (exp_surd_017) since it is the same technique applied to a specific, easily-missed value of b."
+  },
+  "usage_guidance_key": {
+    "purpose": "Every archetype carries a usage_guidance.tier so a downstream generator (or Anne-Marie) can distinguish well-corroborated, safe-to-draw-on patterns from thin or unusually advanced ones, without having to infer this from evidence_count alone (which can be misleading - see exp_surd_014, where a count of 3 is still single-paper).",
+    "tiers": {
+      "core": "3+ examples from independent papers/years. Safe to draw on freely and treat as representative of the topic.",
+      "supplementary": "1-2 examples from credible final-exam sources. Fine to use occasionally; should not dominate a generated assessment.",
+      "rare_enrichment_only": "Single example, from a non-final-exam source (e.g. a mid-year Common Test) and/or unusually advanced (Level 4) with no corroboration. Carries an explicit frequency_cap. Intended for optional 'challenge' or 'extension' content only - using these as if they were typical topic coverage risks the generator over-indexing on one test-setter's style."
+    }
+  }
+}
