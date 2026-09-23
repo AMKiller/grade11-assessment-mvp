@@ -1,6 +1,7 @@
 import ast
 import json
 import os
+from types import SimpleNamespace
 from typing import Optional
 from anthropic import Anthropic
 from sympy import (
@@ -273,17 +274,28 @@ class QuestionGenerator:
         )
 
     def generate_question(self, archetype_id: str, marks: int = None,
-                         max_retries: int = 3) -> Optional[GeneratedQuestion]:
+                         cognitive_targets: dict = None,
+                         max_retries: int = 3) -> Optional[dict]:
         """
-        Generate a single question from an archetype, with sympy verification.
+        Generate a single (possibly hierarchical) question from an
+        archetype, with sympy verification of every leaf.
 
         Args:
             archetype_id: Which archetype to generate from
             marks: Marks for this question (if None, inferred from archetype pattern)
-            max_retries: How many times to retry if verification fails
+            cognitive_targets: {level: marks} dict fixing, BEFORE the call,
+                how this slot's marks split across cognitive levels. This
+                is the leaf plan's output for this slot -- see
+                _build_leaf_plan / generate_paper. If None, defaults to
+                all marks at "routine" (matches old flat-question behavior).
+            max_retries: How many times to retry if any leaf fails verification
 
         Returns:
-            GeneratedQuestion if successful, None if all retries exhausted
+            The numbered hierarchical dict (question_structure + total_marks)
+            if successful (or after retries are exhausted, with failing
+            leaves flagged manual_review_required=True), None only if every
+            attempt raised (malformed JSON, failed validation, unsupported
+            math) rather than merely failing verification.
         """
         archetype = self.kb.get_archetype(self.topic, archetype_id)
 
@@ -292,34 +304,14 @@ class QuestionGenerator:
             if marks is None:
                 marks = 3
 
+        if cognitive_targets is None:
+            cognitive_targets = {'knowledge': 0, 'routine': marks, 'complex': 0, 'problem_solving': 0}
+
         last_exception = None
 
         for attempt in range(max_retries):
             try:
-                question = self._call_claude(archetype, marks, attempt=attempt)
-
-                if question.problem_type == "unverifiable":
-                    question.manual_review_required = True
-                    question.sympy_error = (
-                        "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) "
-                        "-- flagged for manual review, not independently confirmed."
-                    )
-                    return question
-
-                verified, detail = self._verify_answer(question)
-                if verified:
-                    question.sympy_verified = True
-                    return question
-                else:
-                    question.sympy_error = f"Independent SymPy solve disagreed with claimed answer: {detail}"
-                    if attempt < max_retries - 1:
-                        print(f"  Attempt {attempt + 1}/{max_retries}: verification failed ({detail}), retrying...")
-                        continue
-                    else:
-                        print(f"  All {max_retries} attempts exhausted. Flagging for manual review.")
-                        question.manual_review_required = True
-                        return question
-
+                data = self._call_claude(archetype, marks, cognitive_targets, attempt=attempt)
             except Exception as e:
                 last_exception = e
                 print(f"  Attempt {attempt + 1}/{max_retries}: {type(e).__name__}: {e}")
@@ -327,8 +319,73 @@ class QuestionGenerator:
                     raise RuntimeError(
                         f"All {max_retries} attempts failed. Last error: {type(last_exception).__name__}: {last_exception}"
                     ) from last_exception
+                continue
+
+            data["archetype_id"] = archetype.archetype_id
+            all_verified, failed_leaves = self._verify_all_leaves(data)
+
+            if all_verified:
+                return data
+            elif attempt < max_retries - 1:
+                print(f"  Attempt {attempt + 1}/{max_retries}: {len(failed_leaves)} leaf(s) failed verification "
+                      f"({', '.join(failed_leaves)}), retrying...")
+                continue
+            else:
+                print(f"  All {max_retries} attempts exhausted. "
+                      f"{len(failed_leaves)} leaf(s) flagged for manual review.")
+                return data
 
         return None
+
+    def _verify_all_leaves(self, data: dict) -> tuple[bool, list]:
+        """
+        Independently verify every leaf (a flat row, or one of a stem's
+        children) in a hierarchical question structure. Mutates each leaf
+        dict in place with sympy_verified / manual_review_required /
+        sympy_error -- the same contract flat GeneratedQuestion verification
+        used, now applied per-leaf since a single Claude call can return
+        several independently-markable leaves.
+
+        Returns (all_verified, failed_leaf_labels).
+        """
+        all_ok = True
+        failures = []
+
+        def verify_leaf(leaf: dict, label: str):
+            nonlocal all_ok
+            if leaf.get("problem_type") == "unverifiable":
+                leaf["manual_review_required"] = True
+                leaf["sympy_verified"] = False
+                leaf["sympy_error"] = (
+                    "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) "
+                    "-- flagged for manual review, not independently confirmed."
+                )
+                return
+
+            ns = SimpleNamespace(
+                problem_type=leaf.get("problem_type"),
+                sympy_problem=leaf.get("sympy_problem", ""),
+                claimed_solution=leaf.get("claimed_solution", "")
+            )
+            verified, detail = self._verify_answer(ns)
+            leaf["sympy_verified"] = verified
+            if verified:
+                leaf["manual_review_required"] = False
+                leaf["sympy_error"] = None
+            else:
+                leaf["manual_review_required"] = True
+                leaf["sympy_error"] = f"Independent SymPy solve disagreed with claimed answer: {detail}"
+                all_ok = False
+                failures.append(label)
+
+        for i, row in enumerate(data.get("question_structure", [])):
+            if row.get("is_stem"):
+                for j, child in enumerate(row.get("children", [])):
+                    verify_leaf(child, f"row[{i}].child[{j}]")
+            else:
+                verify_leaf(row, f"row[{i}]")
+
+        return all_ok, failures
 
     def _call_claude(self, archetype, marks: int, cognitive_targets: dict = None, attempt: int = 0) -> dict:
         """Call Claude to generate a question structure from an archetype.
@@ -494,12 +551,25 @@ Language notes: {archetype.language_notes}
 
 Marks for this question: {marks}
 
-Cognitive level targets: {json.dumps(cognitive_targets or {'knowledge': 0, 'routine': marks, 'complex': 0, 'problem_solving': 0})}
-(You should generate leaves whose marks sum to these targets by cognitive level.)
+Cognitive level targets (REQUIRED, not a hint): {json.dumps(cognitive_targets or {'knowledge': 0, 'routine': marks, 'complex': 0, 'problem_solving': 0})}
+This was computed by the paper's mark-allocation plan BEFORE this archetype was chosen for this
+slot -- your leaves' marks MUST sum to these targets, level by level. If this archetype's usual
+examples sit at a different level than what's required here (e.g. the target calls for "complex"
+but this archetype's typical instance is "knowledge"/"routine"), you MUST REDESIGN the question to
+genuinely reach that level per the COGNITIVE LEVEL definitions above -- add a decision point the
+question doesn't name outright, combine two of the archetype's skills into one sub-question,
+remove a cue that tells the learner which method to use, etc. Do NOT simply keep the archetype's
+usual routine question and relabel cognitive_level to something higher; that mislabels the paper's
+actual difficulty and defeats the point of this target. If a target level genuinely cannot be
+reached within this archetype's scope even after a real redesign attempt, generate the closest
+legitimate level instead of a false label -- an honest mismatch is preferred over a fake one, and
+will be visible in the paper's printed grid rather than silently hidden.
 
 Generate ONE new question in this archetype's style.
 Vary the numbers and specific context - do NOT use the exact past-paper examples.
-Your output may use flat rows (independent sub-questions) or hierarchical (stem + children).
+Your output may use flat rows (independent sub-questions) or hierarchical (stem + children) --
+a natural way to hit multiple cognitive levels in one slot is a stem with children at different
+levels (e.g. a "routine" first part and a "complex" second part), matching the target's split.
 """
 
         message = client.messages.create(
@@ -760,6 +830,83 @@ Your output may use flat rows (independent sub-questions) or hierarchical (stem 
 
 
 MIN_MARKS_PER_QUESTION = 2
+COGNITIVE_LEVELS = ["knowledge", "routine", "complex", "problem_solving"]
+
+
+def _allocate_marks_by_cognitive_level(target_marks: int, target_distribution: dict) -> dict:
+    """
+    Split target_marks across the four cognitive levels according to
+    target_distribution percentages, using largest-remainder rounding so
+    the integer totals sum EXACTLY to target_marks.
+
+    This is the top of the grid-first pipeline: the whole-paper level
+    totals are fixed here, before any archetype is selected for a
+    specific slot or any leaf's level is decided. Archetype selection
+    (select_archetypes) still uses target_distribution for its own
+    sampling bias, but the marks-per-level plan computed here is the one
+    actually carried through to leaf generation via _build_leaf_plan.
+    """
+    raw = {level: target_marks * target_distribution.get(level, 0) / 100 for level in COGNITIVE_LEVELS}
+    floors = {level: int(raw[level]) for level in COGNITIVE_LEVELS}
+    remainder = target_marks - sum(floors.values())
+
+    by_largest_remainder = sorted(COGNITIVE_LEVELS, key=lambda l: raw[l] - floors[l], reverse=True)
+    for i in range(remainder):
+        floors[by_largest_remainder[i % len(by_largest_remainder)]] += 1
+
+    return floors
+
+
+def _build_leaf_plan(archetypes: list, marks_plan: list, level_totals: dict) -> list:
+    """
+    Assign each archetype slot a cognitive_targets dict (marks per
+    cognitive level within that slot's marks) that draws down the
+    whole-paper level_totals pool, so that summed across every slot, the
+    planned distribution exactly matches level_totals.
+
+    This is the leaf plan: archetype + marks + per-level target are all
+    fixed here, BEFORE any Claude call is made for that slot. The
+    rotating start level per slot avoids always draining the same level
+    first, so early slots don't systematically starve later ones of a
+    level they need.
+
+    Returns a list of {"archetype", "marks", "cognitive_targets"} dicts,
+    same length and order as `archetypes`.
+    """
+    pool = dict(level_totals)
+    plan = []
+
+    for i, (archetype, marks) in enumerate(zip(archetypes, marks_plan)):
+        slot_targets = {level: 0 for level in COGNITIVE_LEVELS}
+        remaining = marks
+        start = i % len(COGNITIVE_LEVELS)
+        order = COGNITIVE_LEVELS[start:] + COGNITIVE_LEVELS[:start]
+
+        for level in order:
+            if remaining == 0:
+                break
+            take = min(pool.get(level, 0), remaining)
+            if take > 0:
+                slot_targets[level] += take
+                pool[level] -= take
+                remaining -= take
+
+        if remaining > 0:
+            # Pool exhausted early (can happen at the rounding edge) --
+            # assign the leftover to whichever level still has room,
+            # falling back to "routine" if every pool is drained.
+            fallback = next((l for l in COGNITIVE_LEVELS if pool.get(l, 0) > 0), "routine")
+            slot_targets[fallback] += remaining
+            pool[fallback] = max(0, pool.get(fallback, 0) - remaining)
+            remaining = 0
+
+        plan.append({
+            "archetype": archetype,
+            "marks": marks,
+            "cognitive_targets": slot_targets
+        })
+
+    return plan
 
 
 def _distribute_marks(archetypes: list, target_marks: int) -> list:
@@ -822,9 +969,10 @@ def generate_paper(topic: str, num_questions: int = 5,
     Returns:
         {
             "topic": topic,
-            "questions": [GeneratedQuestion.to_dict(), ...],
+            "questions": [hierarchical question_structure dict, ...],
             "total_marks": int,
-            "cognitive_analysis": {...}
+            "cognitive_analysis": {...},   # computed from actual generated leaves
+            "planned_level_totals": {...}  # what (a) targeted, for comparison
         }
     """
     if target_distribution is None:
@@ -848,22 +996,44 @@ def generate_paper(topic: str, num_questions: int = 5,
             )
         marks_plan = _distribute_marks(gen.selected_archetypes, target_marks)
     else:
-        marks_plan = [None] * len(gen.selected_archetypes)
+        # No explicit total requested -- fall back to each archetype's own
+        # historical typical mark value, and let the paper total be
+        # whatever that happens to sum to.
+        marks_plan = []
+        for a in gen.selected_archetypes:
+            w = a.marking_pattern.get("typical_total_marks")
+            marks_plan.append(w if w else 3)
+        target_marks = sum(marks_plan)
+
+    # (a) Whole-paper mark allocation by cognitive level -- fixed before any
+    # archetype/leaf decision. This is what the printed grid is measured
+    # against, and what every slot's cognitive_targets is carved out of.
+    level_totals = _allocate_marks_by_cognitive_level(target_marks, target_distribution)
+
+    # (b) Leaf plan: archetype + marks + per-level cognitive_targets fixed
+    # per slot, BEFORE any Claude call for that slot.
+    leaf_plan = _build_leaf_plan(gen.selected_archetypes, marks_plan, level_totals)
 
     questions = []
     total_marks = 0
     generation_errors = []
 
-    for i, (archetype, planned_marks) in enumerate(zip(gen.selected_archetypes, marks_plan), 1):
-        print(f"Generating question {i}/{num_questions} ({archetype.name}, target {planned_marks or 'archetype default'} marks)...")
+    for i, slot in enumerate(leaf_plan, 1):
+        archetype = slot["archetype"]
+        print(f"Generating question {i}/{num_questions} ({archetype.name}, "
+              f"{slot['marks']} marks, targets {slot['cognitive_targets']})...")
         try:
-            q = gen.generate_question(archetype.archetype_id, marks=planned_marks)
+            q = gen.generate_question(
+                archetype.archetype_id,
+                marks=slot["marks"],
+                cognitive_targets=slot["cognitive_targets"]
+            )
             if q:
                 questions.append(q)
-                total_marks += q.marks
-                print(f"  ✓ Question {i} generated and verified")
+                total_marks += q.get("total_marks", 0)
+                print(f"  ✓ Question {i} generated")
             else:
-                error_msg = f"Question {i} ({archetype.archetype_id}): generation/verification failed after retries"
+                error_msg = f"Question {i} ({archetype.archetype_id}): generation failed after retries"
                 print(f"  ✗ {error_msg}")
                 generation_errors.append(error_msg)
         except Exception as e:
@@ -871,6 +1041,8 @@ def generate_paper(topic: str, num_questions: int = 5,
             print(f"  ✗ {error_msg}")
             generation_errors.append(error_msg)
 
+    # (d) Grid computed from the leaves as actually generated -- not from
+    # the plan -- so any gap between planned and achieved is visible.
     cognitive_analysis = _analyze_cognitive_distribution(questions, target_distribution)
     usage_summary = print_usage_summary(gen.usage_log, label=topic)
 
@@ -878,9 +1050,9 @@ def generate_paper(topic: str, num_questions: int = 5,
         "topic": topic,
         "num_questions": len(questions),
         "total_marks": total_marks,
-        "questions": [q.to_dict() for q in questions],
-        "question_objects": questions,
+        "questions": questions,
         "cognitive_analysis": cognitive_analysis,
+        "planned_level_totals": level_totals,
         "generation_errors": generation_errors,
         "usage_summary": usage_summary,
         "usage_log": gen.usage_log
@@ -888,20 +1060,27 @@ def generate_paper(topic: str, num_questions: int = 5,
 
 
 def _analyze_cognitive_distribution(questions: list, targets: dict) -> dict:
-    """Analyze the cognitive distribution of generated questions."""
-    distribution = {
-        "knowledge": 0,
-        "routine": 0,
-        "complex": 0,
-        "problem_solving": 0
-    }
-
-    total_marks = sum(q.marks for q in questions)
+    """
+    Analyze the cognitive distribution of generated questions, computed
+    from the ACTUAL leaves Claude produced (a hierarchical question's
+    flat rows and stem children), not from the plan handed to it. This is
+    what the document's cognitive grid is built from, and what the app
+    shows next to the target split so any shortfall from the plan --
+    e.g. an archetype that couldn't be redesigned to reach its target
+    level -- is visible rather than hidden.
+    """
+    distribution = {level: 0 for level in COGNITIVE_LEVELS}
 
     for q in questions:
-        level = q.cognitive_level
-        if level in distribution:
-            distribution[level] += q.marks
+        for row in q.get("question_structure", []):
+            leaves = row.get("children", []) if row.get("is_stem") else [row]
+            for leaf in leaves:
+                level = leaf.get("cognitive_level")
+                marks = leaf.get("marks")
+                if level in distribution and isinstance(marks, int):
+                    distribution[level] += marks
+
+    total_marks = sum(distribution.values())
 
     percentages = {}
     for level, marks in distribution.items():

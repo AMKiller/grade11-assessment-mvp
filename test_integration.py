@@ -133,39 +133,21 @@ def test_cognitive_analysis():
 
     from generation import _analyze_cognitive_distribution
 
+    # _analyze_cognitive_distribution now reads leaves out of hierarchical
+    # question_structure dicts (flat rows and stem children), not flat
+    # GeneratedQuestion objects -- see generation.py's grid-first redesign.
+    def flat_leaf(num, marks, level):
+        return {
+            "num": num, "is_stem": False, "parts": [{"type": "text", "value": f"Q{num}"}],
+            "marks": marks, "cognitive_level": level,
+            "answer": [{"type": "text", "value": f"A{num}"}], "marking_steps": []
+        }
+
     questions = [
-        GeneratedQuestion(
-            archetype_id="q1",
-            question_text="Q1",
-            answer_text="A1",
-            answer_expression="x=1",
-            marks=5,
-            cognitive_level="knowledge"
-        ),
-        GeneratedQuestion(
-            archetype_id="q2",
-            question_text="Q2",
-            answer_text="A2",
-            answer_expression="x=2",
-            marks=20,
-            cognitive_level="routine"
-        ),
-        GeneratedQuestion(
-            archetype_id="q3",
-            question_text="Q3",
-            answer_text="A3",
-            answer_expression="x=3",
-            marks=15,
-            cognitive_level="complex"
-        ),
-        GeneratedQuestion(
-            archetype_id="q4",
-            question_text="Q4",
-            answer_text="A4",
-            answer_expression="x=4",
-            marks=10,
-            cognitive_level="problem_solving"
-        ),
+        {"question_structure": [flat_leaf(1, 5, "knowledge")], "total_marks": 5},
+        {"question_structure": [flat_leaf(2, 20, "routine")], "total_marks": 20},
+        {"question_structure": [flat_leaf(3, 15, "complex")], "total_marks": 15},
+        {"question_structure": [flat_leaf(4, 10, "problem_solving")], "total_marks": 10},
     ]
 
     targets = {
