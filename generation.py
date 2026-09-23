@@ -1,8 +1,12 @@
+import ast
 import json
 import os
 from typing import Optional
 from anthropic import Anthropic
-from sympy import sympify, solve, symbols, simplify, Eq, sqrt, oo, S, lambdify
+from sympy import (
+    sympify, solve, solveset, solve_univariate_inequality, symbols, simplify,
+    Eq, Interval, Union, FiniteSet, S, oo
+)
 from sympy.parsing.sympy_parser import parse_expr
 from knowledge_base import KnowledgeBase
 
@@ -13,14 +17,20 @@ kb = KnowledgeBase()
 
 class GeneratedQuestion:
     def __init__(self, archetype_id: str, question_text: str, answer_text: str,
-                 answer_expression: str, marks: int, cognitive_level: str):
+                 answer_expression: str, marks: int, cognitive_level: str,
+                 problem_type: str = "unverifiable", sympy_problem: str = "",
+                 claimed_solution: str = ""):
         self.archetype_id = archetype_id
         self.question_text = question_text
         self.answer_text = answer_text
         self.answer_expression = answer_expression
         self.marks = marks
         self.cognitive_level = cognitive_level
+        self.problem_type = problem_type
+        self.sympy_problem = sympy_problem
+        self.claimed_solution = claimed_solution
         self.sympy_verified = False
+        self.manual_review_required = False
         self.sympy_error = None
 
     def to_dict(self):
@@ -31,7 +41,9 @@ class GeneratedQuestion:
             "answer_expression": self.answer_expression,
             "marks": self.marks,
             "cognitive_level": self.cognitive_level,
+            "problem_type": self.problem_type,
             "sympy_verified": self.sympy_verified,
+            "manual_review_required": self.manual_review_required,
             "sympy_error": self.sympy_error
         }
 
@@ -96,16 +108,26 @@ class QuestionGenerator:
             try:
                 question = self._call_claude(archetype, marks)
 
-                if self._verify_answer(question):
+                if question.problem_type == "unverifiable":
+                    question.manual_review_required = True
+                    question.sympy_error = (
+                        "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) "
+                        "-- flagged for manual review, not independently confirmed."
+                    )
+                    return question
+
+                verified, detail = self._verify_answer(question)
+                if verified:
                     question.sympy_verified = True
                     return question
                 else:
-                    question.sympy_error = "Verification failed: answer does not match expected form"
+                    question.sympy_error = f"Independent SymPy solve disagreed with claimed answer: {detail}"
                     if attempt < max_retries - 1:
-                        print(f"  Attempt {attempt + 1}/{max_retries}: verification failed, retrying...")
+                        print(f"  Attempt {attempt + 1}/{max_retries}: verification failed ({detail}), retrying...")
                         continue
                     else:
-                        print(f"  All {max_retries} attempts exhausted. Returning unverified question.")
+                        print(f"  All {max_retries} attempts exhausted. Flagging for manual review.")
+                        question.manual_review_required = True
                         return question
 
             except Exception as e:
@@ -128,16 +150,48 @@ varying the numbers and context freely within the archetype's scope.
 Respond ONLY with valid JSON, no other text, in this exact structure:
 {{
     "question": "The complete question text, including any setup or numbers",
-    "answer": "The final answer in plain text (e.g., 'x = 2' or 'x ∈ (-3; 5)')",
-    "answer_expression": "A Python/SymPy-parseable form of the answer for verification",
+    "answer": "The final answer exactly as it should appear on the marking guide (human-readable, e.g. 'x = 1.35 or x = -1.85')",
+    "problem_type": "equation | inequality | system | unverifiable",
+    "sympy_problem": "A machine-parseable statement of the underlying math problem -- see rules below",
+    "claimed_solution": "A machine-parseable Python literal of your claimed solution -- see rules below",
     "cognitive_level": "knowledge|routine|complex|problem_solving"
 }}
 
-For answer_expression:
-- For equations: use 'x = 3' or 'x = (1, 2)' for multiple solutions
-- For inequalities: use interval notation like '(-3, 5)' or '(-oo, -3) | (5, oo)'
-- Surds and radicals: use 'sqrt(2)' notation
-- Be careful with decimal approximations: include them in answer_expression if the question asks for them
+CRITICAL: "sympy_problem" and "claimed_solution" exist so your answer can be independently
+re-solved and checked by SymPy before this question is accepted into a real assessment.
+Get these exactly right -- a wrong answer that passes this check ships to real students.
+
+Rules for "problem_type" and the two machine-readable fields:
+
+1. problem_type = "equation" (single-variable equation solved for x):
+   - sympy_problem: the equation rearranged to "<expr> = 0" form, giving ONLY the left side
+     expression using Python/SymPy syntax (x**2 for powers, sqrt(x) for roots, no "=0" needed
+     -- just the expression that equals zero). Example: for "2x+1=5/x" write "2*x**2 + x - 5"
+     (after clearing the fraction: 2x^2+x-5=0). If a fraction can't be cleared to a polynomial
+     (e.g. it has a sqrt of x), still provide a single expression equal to zero.
+   - claimed_solution: a Python list of the numeric x-values you claim solve it, e.g. "[1.35, -1.85]".
+     If the question asks for 2 decimal places, round to match. If a value must be REJECTED
+     (e.g. makes a denominator zero, or is negative for a surd/geometric-length problem), DO NOT
+     include the rejected value in claimed_solution -- only include values that are actually the
+     final accepted answer.
+
+2. problem_type = "inequality" (single-variable inequality solved for x):
+   - sympy_problem: the inequality in Python/SymPy syntax, one side vs 0, e.g. "2*x**2 - 5*x - 12 <= 0"
+   - claimed_solution: a SymPy Interval/Union expression as a string representing your claimed
+     solution set, e.g. "Interval(-1.5, 4)" or "Union(Interval.open(-oo,-3), Interval.open(5,oo))"
+
+3. problem_type = "system" (simultaneous equations in x and y):
+   - sympy_problem: two equations separated by a semicolon, each in "<expr>=0" form using x and y,
+     e.g. "y - 2*x + 1; x**2 + y**2 - 10"
+   - claimed_solution: a Python list of (x, y) tuples you claim solve the system, e.g. "[(1, 1), (-2.2, -5.4)]"
+
+4. problem_type = "unverifiable" (use ONLY when none of the above apply -- proofs, "verify that"
+   identities, general parametric proofs, geometry/word problems requiring real-world interpretation
+   that can't be reduced to a clean symbolic equation/inequality/system):
+   - sympy_problem: leave as empty string ""
+   - claimed_solution: leave as empty string ""
+   - Prefer problem_type "equation"/"inequality"/"system" whenever the archetype allows it --
+     only use "unverifiable" when there is genuinely no clean symbolic form.
 """
 
         archetype_context = f"""
@@ -155,7 +209,7 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
 
         message = client.messages.create(
             model="claude-opus-5-5",
-            max_tokens=1024,
+            max_tokens=1500,
             messages=[
                 {
                     "role": "user",
@@ -175,6 +229,13 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
         if not response_text:
             raise ValueError("No text content in Claude response")
 
+        # Strip markdown code fences if Claude wraps the JSON in ```json ... ```
+        if response_text.startswith("```"):
+            response_text = response_text.strip("`")
+            if response_text.startswith("json"):
+                response_text = response_text[4:]
+            response_text = response_text.strip()
+
         try:
             data = json.loads(response_text)
         except json.JSONDecodeError as e:
@@ -184,44 +245,150 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
             archetype_id=archetype.archetype_id,
             question_text=data["question"],
             answer_text=data["answer"],
-            answer_expression=data["answer_expression"],
+            answer_expression=data.get("claimed_solution", ""),
             marks=marks,
-            cognitive_level=data.get("cognitive_level", "routine")
+            cognitive_level=data.get("cognitive_level", "routine"),
+            problem_type=data.get("problem_type", "unverifiable"),
+            sympy_problem=data.get("sympy_problem", ""),
+            claimed_solution=data.get("claimed_solution", "")
         )
 
-    def _verify_answer(self, question: GeneratedQuestion) -> bool:
+    NUMERIC_TOLERANCE = 0.02  # allows for 2-d.p. rounding in either direction
+
+    def _verify_answer(self, question: GeneratedQuestion) -> tuple[bool, str]:
         """
-        Independently re-solve the question using sympy to verify the answer.
+        Independently re-solve question.sympy_problem with SymPy and compare
+        the result against question.claimed_solution.
 
-        This is the critical safety net: if Claude says x=2, we solve the
-        equation independently and check if x=2 is indeed a solution.
+        This is the critical safety net: we do NOT trust Claude's stated
+        answer -- we re-derive it from scratch and check the two agree.
 
-        Returns True if verification succeeds, False otherwise.
+        Returns (verified: bool, detail: str) where detail explains any mismatch.
         """
         try:
-            expr_str = question.answer_expression
-
-            if '=' not in expr_str and '(' not in expr_str:
-                return False
-
-            if '=' in expr_str:
-                parts = expr_str.split('=')
-                if len(parts) == 2:
-                    lhs = sympify(parts[0].strip())
-                    rhs = sympify(parts[1].strip())
-                    eq = Eq(lhs, rhs)
-                    x = symbols('x')
-                    solutions = solve(eq, x)
-                    return len(solutions) > 0
-
-            if '|' in expr_str or 'oo' in expr_str or '(-' in expr_str:
-                return True
-
-            return True
-
+            if question.problem_type == "equation":
+                return self._verify_equation(question)
+            elif question.problem_type == "inequality":
+                return self._verify_inequality(question)
+            elif question.problem_type == "system":
+                return self._verify_system(question)
+            else:
+                return False, f"Unknown problem_type '{question.problem_type}'"
         except Exception as e:
             question.sympy_error = str(e)
-            return False
+            return False, f"{type(e).__name__}: {e}"
+
+    def _verify_equation(self, question: GeneratedQuestion) -> tuple[bool, str]:
+        x = symbols('x', real=True)
+        expr = parse_expr(question.sympy_problem, local_dict={'x': x})
+
+        independent_solutions = solve(Eq(expr, 0), x)
+        independent_numeric = sorted(
+            float(s.evalf()) for s in independent_solutions if s.is_real
+        )
+
+        claimed = ast.literal_eval(question.claimed_solution)
+        if not isinstance(claimed, (list, tuple)):
+            claimed = [claimed]
+        claimed_numeric = sorted(float(v) for v in claimed)
+
+        if len(claimed_numeric) > len(independent_numeric):
+            return False, (
+                f"SymPy found only {len(independent_numeric)} real solution(s) "
+                f"{independent_numeric}, but {len(claimed_numeric)} were claimed {claimed_numeric}"
+            )
+
+        # Claimed values must be a subset of the independently-solved set (within
+        # tolerance) -- this allows legitimate rejection of extraneous/invalid
+        # roots (e.g. a negative length, or a root that fails the original
+        # unsquared equation), while still catching invented or wrong values.
+        unmatched = []
+        remaining_independent = list(independent_numeric)
+        for claim in claimed_numeric:
+            match = next(
+                (v for v in remaining_independent if abs(v - claim) <= self.NUMERIC_TOLERANCE),
+                None
+            )
+            if match is None:
+                unmatched.append(claim)
+            else:
+                remaining_independent.remove(match)
+
+        if unmatched:
+            return False, (
+                f"Claimed value(s) {unmatched} not found among SymPy's independent solutions {independent_numeric}"
+            )
+
+        if not claimed_numeric:
+            return False, "No claimed solution values provided"
+
+        return True, "OK"
+
+    def _verify_inequality(self, question: GeneratedQuestion) -> tuple[bool, str]:
+        x = symbols('x', real=True)
+        relation = parse_expr(question.sympy_problem, local_dict={'x': x})
+
+        independent_set = solve_univariate_inequality(relation, x, relational=False)
+        claimed_set = sympify(
+            question.claimed_solution,
+            locals={'x': x, 'oo': oo, 'Interval': Interval, 'Union': Union, 'S': S}
+        )
+
+        if independent_set == claimed_set:
+            return True, "OK"
+
+        # Fall back to a numeric sanity check across a coarse sample grid,
+        # in case the two are equal sets expressed in different (but valid) forms.
+        sample_points = [p / 10 for p in range(-500, 501)]
+        mismatches = 0
+        for p in sample_points:
+            in_indep = independent_set.contains(p)
+            in_claim = claimed_set.contains(p)
+            if bool(in_indep) != bool(in_claim):
+                mismatches += 1
+
+        if mismatches == 0:
+            return True, "OK (verified via sample-point agreement)"
+
+        return False, f"SymPy solved {independent_set}, claimed {claimed_set} -- sets disagree at {mismatches} sample points"
+
+    def _verify_system(self, question: GeneratedQuestion) -> tuple[bool, str]:
+        x, y = symbols('x y', real=True)
+        parts = [p.strip() for p in question.sympy_problem.split(';')]
+        if len(parts) != 2:
+            return False, f"Expected 2 equations separated by ';', got: {question.sympy_problem}"
+
+        eq1 = Eq(parse_expr(parts[0], local_dict={'x': x, 'y': y}), 0)
+        eq2 = Eq(parse_expr(parts[1], local_dict={'x': x, 'y': y}), 0)
+
+        raw_solutions = solve([eq1, eq2], [x, y])
+        if isinstance(raw_solutions, dict):
+            raw_solutions = [raw_solutions]
+
+        independent_pairs = []
+        for sol in raw_solutions:
+            sx, sy = (sol.get(x), sol.get(y)) if isinstance(sol, dict) else (sol[0], sol[1])
+            if sx is None or sy is None:
+                continue
+            if not (sx.is_real and sy.is_real):
+                continue
+            independent_pairs.append((round(float(sx.evalf()), 2), round(float(sy.evalf()), 2)))
+        independent_pairs.sort()
+
+        claimed = ast.literal_eval(question.claimed_solution)
+        claimed_pairs = sorted((round(float(px), 2), round(float(py), 2)) for px, py in claimed)
+
+        if len(independent_pairs) != len(claimed_pairs):
+            return False, (
+                f"SymPy found {len(independent_pairs)} solution pair(s) {independent_pairs}, "
+                f"but {len(claimed_pairs)} were claimed {claimed_pairs}"
+            )
+
+        for indep, claim in zip(independent_pairs, claimed_pairs):
+            if abs(indep[0] - claim[0]) > self.NUMERIC_TOLERANCE or abs(indep[1] - claim[1]) > self.NUMERIC_TOLERANCE:
+                return False, f"SymPy solved {independent_pairs}, claimed {claimed_pairs} -- mismatch beyond tolerance"
+
+        return True, "OK"
 
 
 def generate_paper(topic: str, num_questions: int = 5,

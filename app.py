@@ -207,9 +207,14 @@ if "generation_result" in st.session_state:
             st.markdown(f"**Cognitive Level:** {q['cognitive_level']}")
 
             if q.get('sympy_verified'):
-                st.success("✓ Answer verified with SymPy")
+                st.success("✓ Answer independently re-solved and confirmed by SymPy")
+            elif q.get('manual_review_required'):
+                if q.get('problem_type') == 'unverifiable':
+                    st.info(f"ℹ Not mechanically verifiable ({q.get('problem_type')} archetype) — requires manual review before use")
+                else:
+                    st.error(f"⚠️ SymPy's independent solve DISAGREED with Claude's claimed answer — requires manual review: {q.get('sympy_error', '')}")
             else:
-                st.warning(f"⚠ Not verified: {q.get('sympy_error', 'Unknown error')}")
+                st.warning(f"⚠ Verification incomplete: {q.get('sympy_error', 'Unknown error')}")
 
     # Download section
     st.subheader("📥 Download Papers")
