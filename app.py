@@ -5,8 +5,10 @@ from datetime import datetime
 import json
 
 from knowledge_base import KnowledgeBase
-from generation import generate_paper
+from generation import generate_paper, _analyze_cognitive_distribution
 from docgen import DocumentGenerator
+
+AVAILABLE_TOPICS = ["Equations and Inequalities", "Exponents and Surds"]
 
 
 st.set_page_config(
@@ -24,14 +26,22 @@ independently verified answers via SymPy.
 with st.sidebar:
     st.header("Assessment Configuration")
 
-    topic = st.selectbox(
-        "Topic",
-        ["Equations and Inequalities", "Exponents and Surds"],
-        help="Grade 11 topics available in this MVP"
+    st.markdown("**Topics** (select one or more)")
+    selected_topics = []
+    for t in AVAILABLE_TOPICS:
+        if st.checkbox(t, value=(t == AVAILABLE_TOPICS[0]), key=f"topic_{t}"):
+            selected_topics.append(t)
+
+    if not selected_topics:
+        st.warning("Select at least one topic.")
+
+    st.caption(
+        "Each selected topic becomes its own QUESTION block (QUESTION 1, QUESTION 2, ...), "
+        "with the settings below applied **per topic**."
     )
 
     num_questions = st.slider(
-        "Number of Questions",
+        "Number of Questions per topic",
         min_value=2,
         max_value=8,
         value=5,
@@ -39,7 +49,7 @@ with st.sidebar:
     )
 
     total_marks = st.number_input(
-        "Total Marks",
+        "Total Marks per topic",
         min_value=10,
         max_value=100,
         value=50,
@@ -91,15 +101,18 @@ st.header("Generation Settings")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.metric("Topic", topic)
-    st.metric("Questions", num_questions)
-    st.metric("Total Marks", total_marks)
+    st.metric("Topics", len(selected_topics))
+    st.metric("Questions per topic", num_questions)
+    st.metric("Total Marks", total_marks * len(selected_topics) if selected_topics else 0)
 
 with col2:
     st.metric("Duration", f"{time_minutes} min")
     st.metric("Tier Filter", "Core + Supplementary" if not prefer_core else "Core Only")
     if use_seed:
         st.metric("Seed", seed)
+
+if selected_topics:
+    st.caption("Selected: " + ", ".join(selected_topics))
 
 # Cognitive targets (CAPS balanced mode)
 st.subheader("Cognitive Distribution Targets (CAPS Balanced Mode)")
@@ -124,10 +137,9 @@ The generator aims to hit these percentages across the selected questions.
 """)
 
 # Generate button
-if st.button("🚀 Generate Assessment", use_container_width=True, type="primary"):
-    st.spinner("Generating assessment...")
+if st.button("🚀 Generate Assessment", use_container_width=True, type="primary", disabled=not selected_topics):
 
-    with st.spinner("🧠 Sampling archetypes..."):
+    with st.spinner(f"🧠 Sampling archetypes across {len(selected_topics)} topic(s)..."):
         try:
             target_distribution = {
                 'knowledge': 20,
@@ -136,14 +148,37 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
                 'problem_solving': 15
             }
 
-            marks_per_question = total_marks // num_questions
+            topics_data = []
+            combined_question_dicts = []
+            combined_errors = []
+            combined_total_marks = 0
 
-            result = generate_paper(
-                topic=topic,
-                num_questions=num_questions,
-                target_distribution=target_distribution,
-                prefer_core=prefer_core
-            )
+            for t in selected_topics:
+                st.write(f"Generating **{t}**...")
+                topic_result = generate_paper(
+                    topic=t,
+                    num_questions=num_questions,
+                    target_distribution=target_distribution,
+                    prefer_core=prefer_core
+                )
+                topics_data.append((t, topic_result['question_objects']))
+                combined_question_dicts.extend(topic_result['questions'])
+                combined_total_marks += topic_result['total_marks']
+                combined_errors.extend(
+                    f"[{t}] {err}" for err in topic_result.get('generation_errors', [])
+                )
+
+            all_question_objects = [q for _, qs in topics_data for q in qs]
+            cognitive_analysis = _analyze_cognitive_distribution(all_question_objects, target_distribution)
+
+            result = {
+                "topics": selected_topics,
+                "topics_data": topics_data,
+                "questions": combined_question_dicts,
+                "total_marks": combined_total_marks,
+                "cognitive_analysis": cognitive_analysis,
+                "generation_errors": combined_errors
+            }
 
             st.session_state.generation_result = result
 
@@ -156,7 +191,7 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
                 for err in result['generation_errors']:
                     st.code(err)
             else:
-                st.success(f"✓ Generated {len(result['questions'])} questions")
+                st.success(f"✓ Generated {len(result['questions'])} questions across {len(selected_topics)} topic(s)")
 
         except Exception as e:
             st.error(f"❌ Generation failed: {e}")
@@ -226,8 +261,7 @@ if "generation_result" in st.session_state:
                 gen = DocumentGenerator(template_path=None)
 
                 doc_bytes = gen.generate_full_assessment(
-                    questions=result['question_objects'],
-                    topic=topic,
+                    topics_data=result['topics_data'],
                     total_marks=result['total_marks'],
                     task=task or None,
                     term=term if term else None,
@@ -237,10 +271,11 @@ if "generation_result" in st.session_state:
                     grade=grade
                 )
 
+                topics_slug = "_".join(t.replace(' ', '_') for t in result['topics'])
                 st.download_button(
                     label="💾 Download Assessment",
                     data=doc_bytes,
-                    file_name=f"Grade_{grade}_{topic.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.docx",
+                    file_name=f"Grade_{grade}_{topics_slug}_{datetime.now().strftime('%Y%m%d')}.docx",
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                     use_container_width=True
                 )

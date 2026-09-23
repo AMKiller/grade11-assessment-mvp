@@ -103,8 +103,7 @@ def test_document_generation():
 
         # Try to generate the full assessment (QP + marking guide + cognitive grid)
         qp_bytes = gen.generate_full_assessment(
-            questions=questions,
-            topic="Equations and Inequalities",
+            topics_data=[("Equations and Inequalities", questions)],
             total_marks=6,
             task="Task 2",
             term="Term 1",

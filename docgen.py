@@ -36,7 +36,7 @@ class DocumentGenerator:
         self.template_path = template_path
         self.info_sheet_path = Path(__file__).parent / "information_sheet_gr11_gr12.png"
 
-    def generate_full_assessment(self, questions: list, topic: str,
+    def generate_full_assessment(self, topics_data: list,
                                 total_marks: int, task: str = None,
                                 term: str = None, time_minutes: int = None,
                                 examiner: str = None, moderator: str = None,
@@ -51,10 +51,13 @@ class DocumentGenerator:
         product as one downloadable document per generated assessment.
 
         Args:
-            questions: List of GeneratedQuestion objects (already sympy-verified
-                       or flagged for manual review upstream)
-            topic: Topic name
-            total_marks: Total marks on paper
+            topics_data: List of (topic_name: str, questions: list[GeneratedQuestion])
+                       tuples, in the order they should appear. Each topic becomes
+                       its own QUESTION N group (QUESTION 1, QUESTION 2, ...), each
+                       internally sub-numbered N.1, N.2... -- matching how a real
+                       multi-topic DBE paper structures one Question block per topic.
+                       Single-topic papers just pass a one-item list.
+            total_marks: Total marks across all topics combined
             task, term, time_minutes, examiner, moderator: Metadata for cover page/header
             grade: Grade (default "11")
             target_distribution: Cognitive % targets for the FET TARGET row (defaults
@@ -66,10 +69,11 @@ class DocumentGenerator:
             .docx file as bytes
         """
         target_distribution = target_distribution or DEFAULT_COGNITIVE_TARGETS
+        topic_display = " & ".join(name for name, _ in topics_data)
 
         if self.template_path:
             doc = self._load_and_replace_template(
-                topic, task, term, time_minutes, total_marks, examiner,
+                topic_display, task, term, time_minutes, total_marks, examiner,
                 moderator, grade
             )
             # Per format_SKILL.md: a real template supplies its own header/footer/
@@ -78,7 +82,7 @@ class DocumentGenerator:
             doc = Document()
             set_document_page_setup(doc)
             set_document_default_font(doc)
-            self._add_generic_cover_page(doc, topic, task, term, time_minutes,
+            self._add_generic_cover_page(doc, topic_display, task, term, time_minutes,
                                          total_marks, examiner, moderator, grade)
             # Per today's ruling: header text + page-number footer apply even
             # in the no-template path (task_SKILL.md's frame elements, applied
@@ -87,14 +91,15 @@ class DocumentGenerator:
             right_header = term or ""
             self._set_header_footer(doc, left_header, right_header)
 
-        # MVP: every generated question bundles under a single shared QUESTION 1,
-        # numbered 1.1, 1.2, 1.3... (see audit note: real DBE papers sometimes
-        # group same-flavour "solve for x" items under a shared 1.1 stem with
-        # 1.1.1/1.1.2 children -- that stem-grouping heuristic is a follow-up
-        # enhancement, not implemented here; flat depth-0 sub-numbering under one
-        # QUESTION heading is fully spec-compliant per format_SKILL.md's own
-        # column-merge and blank-spacer-row rules).
-        question_groups = [(1, questions)]
+        # Each selected topic becomes its own QUESTION N group, sub-numbered
+        # N.1, N.2, N.3... (see audit note: real DBE papers sometimes group
+        # same-flavour "solve for x" items under a shared N.1 stem with
+        # N.1.1/N.1.2 children within a topic -- that finer stem-grouping
+        # heuristic is a follow-up enhancement, not implemented here; flat
+        # depth-0 sub-numbering under each QUESTION heading is fully
+        # spec-compliant per format_SKILL.md's own column-merge and
+        # blank-spacer-row rules).
+        question_groups = [(i + 1, questions) for i, (_, questions) in enumerate(topics_data)]
 
         self._add_question_paper_body(doc, question_groups, total_marks)
         doc.add_page_break()
