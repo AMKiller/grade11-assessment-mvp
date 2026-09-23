@@ -372,7 +372,7 @@ JSON STRUCTURE:
     "total_marks": 6
 }}
 
-DO NOT generate numbering strings (no "1.1", "1.5.1"). Python assigns numbers."""
+DO NOT generate numbering strings (no "1.1", "1.5.1"). Python assigns numbers.
 
 CRITICAL: "sympy_problem" and "claimed_solution" exist so your answer can be independently
 re-solved and checked by SymPy before this question is accepted into a real assessment.
