@@ -17,6 +17,8 @@
 
 1. **SymPy verification is non-negotiable.** Every answer must be independently re-solved before acceptance. The human build session (Task 7) did this by hand; we do it in code.
 
+   **Gotcha (found + fixed Sept 23, 2026):** an early implementation of `_verify_answer()` was a stub that looked convincing but did nothing real — it parsed Claude's own `answer_expression` string and checked if *that* had solutions, which is circular (verifies the answer is self-consistent, not that it's correct). If you're touching verification logic, the actual design is: Claude emits a separate machine-parseable `sympy_problem` (the equation/inequality/system, distinct from the human-readable question) plus a `claimed_solution`, tagged by `problem_type`. We solve `sympy_problem` from scratch with SymPy and numerically compare against `claimed_solution`. `problem_type: "unverifiable"` (proofs, "verify that" identities, word problems with no clean symbolic form) is explicitly flagged `manual_review_required=True`, never silently passed. See `test_verification.py` for the contract this must keep satisfying — it includes a deliberately-wrong-answer case that must fail, and a legitimate-root-rejection case (e.g. discarding a negative length) that must still pass.
+
 2. **Claude varies numbers/context freely within archetypes.** KB archetypes are technique sources, not exact question templates. Do not invent question types without archetype backing.
 
 3. **CAPS balanced cognitive mode only** (MVP). K20/R35/C30/PS15 targets. Scaffold/Challenge are post-MVP.
