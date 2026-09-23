@@ -249,7 +249,7 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
 
         message = client.messages.create(
             model="claude-opus-5-5",
-            max_tokens=1500,
+            max_tokens=4096,
             messages=[
                 {
                     "role": "user",
@@ -279,6 +279,11 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
         try:
             data = json.loads(response_text)
         except json.JSONDecodeError as e:
+            if getattr(message, 'stop_reason', None) == 'max_tokens':
+                raise ValueError(
+                    f"Response truncated (hit max_tokens limit) before valid JSON completed -- "
+                    f"increase max_tokens. Truncated text: {response_text[-200:]}"
+                ) from e
             raise ValueError(f"Claude response was not valid JSON: {response_text}") from e
 
         return GeneratedQuestion(
@@ -432,11 +437,65 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
         return True, "OK"
 
 
+MIN_MARKS_PER_QUESTION = 2
+
+
+def _distribute_marks(archetypes: list, target_marks: int) -> list:
+    """
+    Compute an integer mark value per archetype that sums EXACTLY to
+    target_marks, proportional to each archetype's own historical
+    typical_total_marks (so a naturally-4-mark archetype still ends up
+    bigger than a naturally-2-mark one, just scaled to hit the target,
+    rather than every question being squeezed/stretched to the same size).
+
+    Returns a list of ints, same length and order as `archetypes`.
+    """
+    weights = []
+    for a in archetypes:
+        w = a.marking_pattern.get("typical_total_marks")
+        weights.append(w if w else 3)
+
+    total_weight = sum(weights)
+    raw = [target_marks * w / total_weight for w in weights]
+
+    marks = [max(MIN_MARKS_PER_QUESTION, round(r)) for r in raw]
+
+    # Rounding (and the MIN_MARKS_PER_QUESTION floor) can leave the sum
+    # off-target by a few marks -- close the gap by adjusting the
+    # largest-weight question(s), which absorbs the adjustment with the
+    # least proportional distortion.
+    diff = target_marks - sum(marks)
+    order = sorted(range(len(marks)), key=lambda i: weights[i], reverse=True)
+    idx_cycle = 0
+    while diff != 0 and order:
+        i = order[idx_cycle % len(order)]
+        if diff > 0:
+            marks[i] += 1
+            diff -= 1
+        elif marks[i] > MIN_MARKS_PER_QUESTION:
+            marks[i] -= 1
+            diff += 1
+        idx_cycle += 1
+        if idx_cycle > 10000:  # safety valve, should never trigger
+            break
+
+    return marks
+
+
 def generate_paper(topic: str, num_questions: int = 5,
                   target_distribution: dict = None,
-                  prefer_core: bool = True) -> dict:
+                  prefer_core: bool = True,
+                  target_marks: int = None) -> dict:
     """
     Generate a complete set of questions for a paper.
+
+    Args:
+        target_marks: If given, the paper's marks are distributed across the
+                     selected archetypes (proportional to each archetype's own
+                     typical mark value) so the total EXACTLY equals this
+                     number. If omitted, each question falls back to its
+                     archetype's own historical typical mark value and the
+                     paper total is whatever that happens to sum to.
 
     Returns:
         {
@@ -457,14 +516,26 @@ def generate_paper(topic: str, num_questions: int = 5,
     gen = QuestionGenerator(topic)
     gen.select_archetypes(num_questions, target_distribution, prefer_core)
 
+    if target_marks is not None:
+        min_possible = len(gen.selected_archetypes) * MIN_MARKS_PER_QUESTION
+        if target_marks < min_possible:
+            raise ValueError(
+                f"Cannot fit {len(gen.selected_archetypes)} questions into {target_marks} marks "
+                f"(each question needs at least {MIN_MARKS_PER_QUESTION} marks, so {min_possible} is the "
+                f"minimum for this many questions). Reduce the number of questions or increase total marks."
+            )
+        marks_plan = _distribute_marks(gen.selected_archetypes, target_marks)
+    else:
+        marks_plan = [None] * len(gen.selected_archetypes)
+
     questions = []
     total_marks = 0
     generation_errors = []
 
-    for i, archetype in enumerate(gen.selected_archetypes, 1):
-        print(f"Generating question {i}/{num_questions} ({archetype.name})...")
+    for i, (archetype, planned_marks) in enumerate(zip(gen.selected_archetypes, marks_plan), 1):
+        print(f"Generating question {i}/{num_questions} ({archetype.name}, target {planned_marks or 'archetype default'} marks)...")
         try:
-            q = gen.generate_question(archetype.archetype_id)
+            q = gen.generate_question(archetype.archetype_id, marks=planned_marks)
             if q:
                 questions.append(q)
                 total_marks += q.marks

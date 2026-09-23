@@ -36,8 +36,7 @@ with st.sidebar:
         st.warning("Select at least one topic.")
 
     st.caption(
-        "Each selected topic becomes its own QUESTION block (QUESTION 1, QUESTION 2, ...), "
-        "with the settings below applied **per topic**."
+        "Each selected topic becomes its own QUESTION block (QUESTION 1, QUESTION 2, ...)."
     )
 
     num_questions = st.slider(
@@ -48,13 +47,40 @@ with st.sidebar:
         step=1
     )
 
-    total_marks = st.number_input(
-        "Total Marks per topic",
+    grand_total_marks = st.number_input(
+        "Total Marks (grand total across all selected topics)",
         min_value=10,
-        max_value=100,
+        max_value=300,
         value=50,
         step=5
     )
+
+    # Per-topic mark allocation: with 1 topic it's trivially 100%; with 2+,
+    # let the user set the split (e.g. 50:50, 25:75) for every topic except
+    # the last, whose share is computed as the remainder -- guarantees the
+    # allocation always sums exactly to grand_total_marks by construction,
+    # no separate validation step needed.
+    marks_per_topic = {}
+    if len(selected_topics) == 1:
+        marks_per_topic[selected_topics[0]] = grand_total_marks
+    elif len(selected_topics) > 1:
+        st.markdown("**Mark allocation per topic**")
+        remaining = grand_total_marks
+        for t in selected_topics[:-1]:
+            default_share = grand_total_marks // len(selected_topics)
+            share = st.number_input(
+                f"Marks: {t}",
+                min_value=0,
+                max_value=remaining,
+                value=min(default_share, remaining),
+                step=5,
+                key=f"marks_{t}"
+            )
+            marks_per_topic[t] = share
+            remaining -= share
+        last_topic = selected_topics[-1]
+        marks_per_topic[last_topic] = remaining
+        st.caption(f"{last_topic}: **{remaining} marks** (remainder, auto-computed)")
 
     time_minutes = st.number_input(
         "Duration (minutes)",
@@ -103,7 +129,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.metric("Topics", len(selected_topics))
     st.metric("Questions per topic", num_questions)
-    st.metric("Total Marks", total_marks * len(selected_topics) if selected_topics else 0)
+    st.metric("Total Marks (target)", grand_total_marks)
 
 with col2:
     st.metric("Duration", f"{time_minutes} min")
@@ -154,12 +180,13 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
             combined_total_marks = 0
 
             for t in selected_topics:
-                st.write(f"Generating **{t}**...")
+                st.write(f"Generating **{t}** (target: {marks_per_topic[t]} marks)...")
                 topic_result = generate_paper(
                     topic=t,
                     num_questions=num_questions,
                     target_distribution=target_distribution,
-                    prefer_core=prefer_core
+                    prefer_core=prefer_core,
+                    target_marks=marks_per_topic[t]
                 )
                 topics_data.append((t, topic_result['question_objects']))
                 combined_question_dicts.extend(topic_result['questions'])
