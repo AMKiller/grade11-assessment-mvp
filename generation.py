@@ -15,6 +15,94 @@ from mathml_omml import latex_to_omath
 client = Anthropic()
 kb = KnowledgeBase()
 
+# ============================================================
+# Hierarchical Structure Support
+# ============================================================
+
+def validate_hierarchical_structure(data: dict, target_marks: int) -> tuple[bool, list[str]]:
+    """Validate hierarchical question structure before sending to docgen."""
+    errors = []
+
+    if not isinstance(data, dict) or "question_structure" not in data:
+        return False, ["Missing 'question_structure' key"]
+
+    structure = data.get("question_structure", [])
+    if not isinstance(structure, list) or not structure:
+        return False, ["'question_structure' must be a non-empty list"]
+
+    total_leaf_marks = 0
+
+    for i, row in enumerate(structure):
+        if not isinstance(row, dict):
+            errors.append(f"Row {i}: must be a dict")
+            continue
+
+        is_stem = row.get("is_stem", False)
+        marks = row.get("marks")
+        cognitive_level = row.get("cognitive_level")
+
+        if is_stem:
+            if marks is not None:
+                errors.append(f"Row {i}: stem row must have marks=null, got {marks}")
+            if cognitive_level is not None:
+                errors.append(f"Row {i}: stem row must have cognitive_level=null")
+
+            children = row.get("children", [])
+            if not isinstance(children, list) or len(children) < 2:
+                errors.append(f"Row {i}: stem must have ≥2 children, got {len(children)}")
+
+            for j, child in enumerate(children):
+                if not isinstance(child.get("marks"), int) or child.get("marks", 0) <= 0:
+                    errors.append(f"Row {i}, child {j}: marks must be >0")
+                else:
+                    total_leaf_marks += child.get("marks")
+
+                if child.get("cognitive_level") not in ["knowledge", "routine", "complex", "problem_solving"]:
+                    errors.append(f"Row {i}, child {j}: invalid cognitive_level")
+
+                tick_sum = sum(s.get("tick_count", 0) for s in child.get("marking_steps", []))
+                if tick_sum != child.get("marks"):
+                    errors.append(f"Row {i}, child {j}: tick_count {tick_sum} != marks {child.get('marks')}")
+        else:
+            if not isinstance(marks, int) or marks <= 0:
+                errors.append(f"Row {i}: flat row marks must be >0")
+            else:
+                total_leaf_marks += marks
+
+            if cognitive_level not in ["knowledge", "routine", "complex", "problem_solving"]:
+                errors.append(f"Row {i}: invalid cognitive_level")
+
+            tick_sum = sum(s.get("tick_count", 0) for s in row.get("marking_steps", []))
+            if tick_sum != marks:
+                errors.append(f"Row {i}: tick_count {tick_sum} != marks {marks}")
+
+    if total_leaf_marks != target_marks:
+        errors.append(f"Total leaf marks {total_leaf_marks} != target {target_marks}")
+
+    return len(errors) == 0, errors
+
+
+def _generate_numbering_for_hierarchy(hierarchy: dict) -> dict:
+    """Add Python-generated numbering to hierarchical structure."""
+    numbered = {"question_structure": [], "total_marks": hierarchy.get("total_marks", 0)}
+    question_num = 1
+
+    for row in hierarchy.get("question_structure", []):
+        if row.get("is_stem"):
+            row["num"] = str(question_num)
+            numbered["question_structure"].append(row)
+
+            for child_idx, child in enumerate(row.get("children", []), 1):
+                child["num"] = f"{question_num}.{child_idx}"
+
+            question_num += 1
+        else:
+            row["num"] = str(question_num)
+            numbered["question_structure"].append(row)
+            question_num += 1
+
+    return numbered
+
 
 def _normalize_parts(value) -> list:
     """
@@ -94,6 +182,61 @@ class GeneratedQuestion:
         }
 
 
+def _log_api_call(message, purpose: str, attempt: int = 0) -> dict:
+    """
+    Extract usage stats from an Anthropic API response and print a one-line
+    log entry. Returns a plain dict record for later summarization -- no
+    new dependencies, just stdlib.
+    """
+    usage = getattr(message, 'usage', None)
+    record = {
+        "purpose": purpose,
+        "attempt": attempt + 1,
+        "model": getattr(message, 'model', 'unknown'),
+        "input_tokens": getattr(usage, 'input_tokens', 0) or 0,
+        "output_tokens": getattr(usage, 'output_tokens', 0) or 0,
+        "cache_read_input_tokens": getattr(usage, 'cache_read_input_tokens', 0) or 0,
+        "cache_creation_input_tokens": getattr(usage, 'cache_creation_input_tokens', 0) or 0,
+    }
+    print(
+        f"  [usage] {purpose} (attempt {record['attempt']}): "
+        f"in={record['input_tokens']} out={record['output_tokens']} "
+        f"cache_read={record['cache_read_input_tokens']} "
+        f"cache_write={record['cache_creation_input_tokens']}"
+    )
+    return record
+
+
+def _summarize_usage(usage_log: list) -> dict:
+    """Roll up a list of _log_api_call records into per-paper totals."""
+    total_calls = len(usage_log)
+    total_input = sum(r["input_tokens"] for r in usage_log)
+    total_output = sum(r["output_tokens"] for r in usage_log)
+    total_cache_read = sum(r["cache_read_input_tokens"] for r in usage_log)
+    total_cache_write = sum(r["cache_creation_input_tokens"] for r in usage_log)
+    retries = sum(1 for r in usage_log if r["attempt"] > 1)
+
+    return {
+        "total_calls": total_calls,
+        "retries": retries,
+        "total_input_tokens": total_input,
+        "total_output_tokens": total_output,
+        "total_cache_read_tokens": total_cache_read,
+        "total_cache_creation_tokens": total_cache_write,
+    }
+
+
+def print_usage_summary(usage_log: list, label: str = "Paper"):
+    s = _summarize_usage(usage_log)
+    print(f"\n=== API Usage Summary: {label} ===")
+    print(f"  Total calls: {s['total_calls']} ({s['retries']} were retries)")
+    print(f"  Total input tokens:  {s['total_input_tokens']}")
+    print(f"  Total output tokens: {s['total_output_tokens']}")
+    print(f"  Cache read tokens:     {s['total_cache_read_tokens']}")
+    print(f"  Cache creation tokens: {s['total_cache_creation_tokens']}")
+    return s
+
+
 class QuestionGenerator:
     def __init__(self, topic: str, api_key: str = None):
         self.topic = topic
@@ -103,6 +246,7 @@ class QuestionGenerator:
 
         self.kb = kb
         self.selected_archetypes = []
+        self.usage_log = []
 
     def select_archetypes(self, num_questions: int,
                          target_distribution: dict = None,
@@ -152,7 +296,7 @@ class QuestionGenerator:
 
         for attempt in range(max_retries):
             try:
-                question = self._call_claude(archetype, marks)
+                question = self._call_claude(archetype, marks, attempt=attempt)
 
                 if question.problem_type == "unverifiable":
                     question.manual_review_required = True
@@ -186,23 +330,49 @@ class QuestionGenerator:
 
         return None
 
-    def _call_claude(self, archetype, marks: int) -> GeneratedQuestion:
-        """Call Claude to generate a question from an archetype."""
+    def _call_claude(self, archetype, marks: int, cognitive_targets: dict = None, attempt: int = 0) -> dict:
+        """Call Claude to generate a question structure from an archetype.
+
+        Returns a dict with question_structure (list of rows) and total_marks.
+        Rows may be flat or stems with children; numbering is added by Python."""
         system_prompt = f"""You are a Grade 11 Mathematics assessment generator for {self.topic}.
 
 You will generate realistic exam-style questions based on established archetypes,
 varying the numbers and context freely within the archetype's scope.
 
-Respond ONLY with valid JSON, no other text, in this exact structure:
+Respond ONLY with valid JSON, no other text. Generate ONE QUESTION block (hierarchical or flat).
+
+JSON STRUCTURE:
 {{
-    "question": "A list of {{type, value}} parts -- see MATH NOTATION rules below -- do NOT state the mark value anywhere inside this text (no '(4 marks)', no '[4]'); marks are shown separately in the document and must never be duplicated in the question wording",
-    "answer": "A list of {{type, value}} parts, exactly as the final answer should appear on the marking guide -- see MATH NOTATION rules below",
-    "marking_steps": "A list of ordered working steps for the marking guide -- see rules below",
-    "problem_type": "equation | inequality | system | unverifiable",
-    "sympy_problem": "A machine-parseable statement of the underlying math problem -- see rules below",
-    "claimed_solution": "A machine-parseable Python literal of your claimed solution -- see rules below",
-    "cognitive_level": "knowledge|routine|complex|problem_solving"
+    "question_structure": [
+        {{
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [{{"type": "text", "value": "context text"}}],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+                {{"parts": [...], "marks": 2, "cognitive_level": "routine", "answer": [...], "marking_steps": [...], "problem_type": "...", "sympy_problem": "...", "claimed_solution": "..."}},
+                {{"parts": [...], "marks": 3, "cognitive_level": "complex", ...}}
+            ]
+        }},
+        {{
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [{{"type": "text", "value": "Solve: "}}],
+            "marks": 2,
+            "cognitive_level": "routine",
+            "answer": [...],
+            "marking_steps": [...],
+            "problem_type": "equation",
+            "sympy_problem": "...",
+            "claimed_solution": "..."
+        }}
+    ],
+    "total_marks": 6
 }}
+
+DO NOT generate numbering strings (no "1.1", "1.5.1"). Python assigns numbers."""
 
 CRITICAL: "sympy_problem" and "claimed_solution" exist so your answer can be independently
 re-solved and checked by SymPy before this question is accepted into a real assessment.
@@ -324,8 +494,12 @@ Language notes: {archetype.language_notes}
 
 Marks for this question: {marks}
 
+Cognitive level targets: {json.dumps(cognitive_targets or {'knowledge': 0, 'routine': marks, 'complex': 0, 'problem_solving': 0})}
+(You should generate leaves whose marks sum to these targets by cognitive level.)
+
 Generate ONE new question in this archetype's style.
 Vary the numbers and specific context - do NOT use the exact past-paper examples.
+Your output may use flat rows (independent sub-questions) or hierarchical (stem + children).
 """
 
         message = client.messages.create(
@@ -339,6 +513,10 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
             ],
             system=system_prompt
         )
+
+        self.usage_log.append(_log_api_call(
+            message, purpose=f"generate_question:{archetype.archetype_id}", attempt=attempt
+        ))
 
         # Extract text from response, skipping thinking blocks
         response_text = None
@@ -367,25 +545,30 @@ Vary the numbers and specific context - do NOT use the exact past-paper examples
                 ) from e
             raise ValueError(f"Claude response was not valid JSON: {response_text}") from e
 
-        self._validate_math_parts(data.get("question", []), "question")
-        self._validate_math_parts(data.get("answer", []), "answer")
-        for i, step in enumerate(data.get("marking_steps", [])):
-            self._validate_math_parts(step.get("parts", []), f"marking_steps[{i}]")
+        # Validate hierarchical structure
+        is_valid, errors = validate_hierarchical_structure(data, marks)
+        if not is_valid:
+            raise ValueError(f"Invalid hierarchical structure: {'; '.join(errors)}")
 
-        question = GeneratedQuestion(
-            archetype_id=archetype.archetype_id,
-            question_text=data["question"],
-            answer_text=data["answer"],
-            answer_expression=data.get("claimed_solution", ""),
-            marks=marks,
-            cognitive_level=data.get("cognitive_level", "routine"),
-            problem_type=data.get("problem_type", "unverifiable"),
-            sympy_problem=data.get("sympy_problem", ""),
-            claimed_solution=data.get("claimed_solution", ""),
-            marking_steps=data.get("marking_steps", [])
-        )
-        question.marking_fidelity_warning = self._check_marking_fidelity(question, archetype)
-        return question
+        # Validate all math parts across the hierarchy
+        for i, row in enumerate(data.get("question_structure", [])):
+            self._validate_math_parts(row.get("parts", []), f"row[{i}].parts")
+            if row.get("is_stem"):
+                for j, child in enumerate(row.get("children", [])):
+                    self._validate_math_parts(child.get("parts", []), f"row[{i}].child[{j}].parts")
+                    self._validate_math_parts(child.get("answer", []), f"row[{i}].child[{j}].answer")
+                    for k, step in enumerate(child.get("marking_steps", [])):
+                        self._validate_math_parts(step.get("parts", []), f"row[{i}].child[{j}].marking_steps[{k}]")
+            else:
+                self._validate_math_parts(row.get("answer", []), f"row[{i}].answer")
+                for k, step in enumerate(row.get("marking_steps", [])):
+                    self._validate_math_parts(step.get("parts", []), f"row[{i}].marking_steps[{k}]")
+
+        # Add Python-generated numbering
+        numbered_data = _generate_numbering_for_hierarchy(data)
+
+        # Return the hierarchical structure (will be processed by docgen)
+        return numbered_data
 
     def _validate_math_parts(self, parts: list, context_label: str):
         """
@@ -689,6 +872,7 @@ def generate_paper(topic: str, num_questions: int = 5,
             generation_errors.append(error_msg)
 
     cognitive_analysis = _analyze_cognitive_distribution(questions, target_distribution)
+    usage_summary = print_usage_summary(gen.usage_log, label=topic)
 
     return {
         "topic": topic,
@@ -697,7 +881,9 @@ def generate_paper(topic: str, num_questions: int = 5,
         "questions": [q.to_dict() for q in questions],
         "question_objects": questions,
         "cognitive_analysis": cognitive_analysis,
-        "generation_errors": generation_errors
+        "generation_errors": generation_errors,
+        "usage_summary": usage_summary,
+        "usage_log": gen.usage_log
     }
 
 
