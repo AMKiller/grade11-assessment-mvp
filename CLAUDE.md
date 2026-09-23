@@ -35,6 +35,12 @@
 
 4. **No database, no user accounts.** Every paper is a download. Rate limiting is deferred (not forgotten).
 
+5. **Every equation must be a real native Word Math object (OMML), never plain text.** This is a PROJECT_BRIEF requirement, not optional polish.
+
+   **Gotcha (found + fixed Sept 23, 2026):** `mathml_omml.py`'s LaTeX-DSL → MathML → OMML pipeline was fully built and tested from the prior session, but `generation.py`/`docgen.py` never imported it or called `insert_inline_math` anywhere — every equation was plain unicode text typed directly into a string (e.g. `"x² - 3x - 10 = 0"`). Confirmed via direct XML inspection: 0 `<m:oMath>` elements in any document generated before this fix. If you're touching question/answer/marking-step generation, the actual design is: `"question"`/`"answer"`/every `marking_steps[].parts` are JSON lists of `{"type": "text"|"math", "value": str}` parts, not flat strings — Claude tags exactly where math starts/stops. The prompt restricts math parts to the DSL's real supported subset (`^{}`, `_{}`, `\frac{}{}`, `\sqrt{}`, `\sqrt[n]{}`, `\cdot`, unicode typed directly for everything else — confirmed by direct testing that `\leq`, `\left(`, `\text{}`, `\dfrac` etc. are NOT supported and raise). Every math part is run through the real `latex_to_omath()` converter before acceptance (`_validate_math_parts`) — an unsupported construct triggers a retry, same shape as the sympy verification retry, rather than shipping a broken or missing equation. `docgen.py`'s `parts_to_cell_content()` converts these tagged parts into `add_cell_content()`'s existing `('math', latex)` tuple format. Don't go back to flat strings for these fields — that's exactly the regression this fix corrected.
+
+   **Related gotcha:** `lxml` (required by `mathml_omml.py`) was removed from `requirements.txt` earlier for an unrelated Streamlit Cloud deployment failure, then had to be re-added once OMML was actually wired in. The old pin (`5.2.2`) failed to build on Streamlit Cloud's Python 3.14 (no prebuilt wheel, and the sandbox lacks the libxml2/libxslt dev headers needed to build from source) — same root cause as an earlier `anthropic` pin issue. Fixed by pinning to a modern release (`6.1.3`) with prebuilt wheels for current Python. If a future session sees an lxml build failure on deploy, check the pinned version is recent before assuming lxml itself is the problem.
+
 ## Critical Gotchas (from prior build session)
 
 **LibreOffice Math requirement (dev-time only):**
