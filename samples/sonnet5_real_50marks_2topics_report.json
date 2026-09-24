@@ -1,0 +1,240 @@
+{
+  "model": "claude-sonnet-5",
+  "topics": [
+    "Equations and Inequalities",
+    "Exponents and Surds"
+  ],
+  "num_questions_per_topic": 5,
+  "target_marks_per_topic": 25,
+  "usage": {
+    "total_calls": 19,
+    "retries": 9,
+    "total_input_tokens": 89122,
+    "total_output_tokens": 65889,
+    "cache_read_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cost_usd": 0.8371,
+    "pricing_used": {
+      "input": 2.0,
+      "output": 10.0
+    }
+  },
+  "cognitive_distribution": {
+    "marks_by_level": {
+      "knowledge": 0,
+      "routine": 13,
+      "complex": 14,
+      "problem_solving": 0
+    },
+    "percentages_by_level": {
+      "knowledge": 0.0,
+      "routine": 48.1,
+      "complex": 51.9,
+      "problem_solving": 0.0
+    },
+    "target_distribution": {
+      "knowledge": 20,
+      "routine": 35,
+      "complex": 30,
+      "problem_solving": 15
+    },
+    "variance": {
+      "knowledge": -20.0,
+      "routine": 13.1,
+      "complex": 21.9,
+      "problem_solving": -15.0
+    }
+  },
+  "verification": {
+    "total_leaves": 8,
+    "sympy_verified": 7,
+    "manual_review_required": 1,
+    "unverifiable_by_design": 1,
+    "failed_detail": [
+      {
+        "archetype_id": "exp_surd_004",
+        "problem_type": "unverifiable",
+        "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+      }
+    ]
+  },
+  "generation_errors": [
+    "[Equations and Inequalities] Question 1 (eqineq_005): RuntimeError: All 3 attempts failed. Last error: ValueError: No text content in Claude response",
+    "[Equations and Inequalities] Question 4 (eqineq_006): RuntimeError: All 3 attempts failed. Last error: ValueError: No text content in Claude response",
+    "[Exponents and Surds] Question 1 (exp_surd_003): RuntimeError: All 3 attempts failed. Last error: ValueError: Response truncated (hit max_tokens limit) before valid JSON completed -- increase max_tokens. Truncated text: [\n    {\n      \"type\": \"flat_row\",\n      \"is_stem\": false,\n      \"parts\": [\n        {\"type\": \"text\", \"value\": \"Simplify WITHOUT the use of a calculator: \"},\n        {\"type\": \"math\", \"value\": \"\\frac{2^{",
+    "[Exponents and Surds] Question 4 (exp_surd_002): RuntimeError: All 3 attempts failed. Last error: ValueError: No text content in Claude response"
+  ],
+  "raw_usage_log": [
+    {
+      "purpose": "generate_question:eqineq_005",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4741,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_005",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4741,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_005",
+      "attempt": 3,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4741,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_001",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4586,
+      "output_tokens": 1672,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_002",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4571,
+      "output_tokens": 2152,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_006",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4859,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_006",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4859,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_006",
+      "attempt": 3,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4859,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_003",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4614,
+      "output_tokens": 3641,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_003",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4844,
+      "output_tokens": 2031,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_003",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4844,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_003",
+      "attempt": 3,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4844,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_004",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4432,
+      "output_tokens": 1313,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_008",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4528,
+      "output_tokens": 1915,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_002",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4561,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_002",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4561,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_002",
+      "attempt": 3,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4561,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_016",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4688,
+      "output_tokens": 4096,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_016",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "input_tokens": 4688,
+      "output_tokens": 4013,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    }
+  ]
+}

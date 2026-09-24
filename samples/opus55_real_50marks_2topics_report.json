@@ -1,0 +1,184 @@
+{
+  "model": "claude-opus-5-5",
+  "topics": [
+    "Equations and Inequalities",
+    "Exponents and Surds"
+  ],
+  "num_questions_per_topic": 5,
+  "target_marks_per_topic": 25,
+  "usage": {
+    "total_calls": 10,
+    "retries": 0,
+    "total_input_tokens": 45989,
+    "total_output_tokens": 18187,
+    "cache_read_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cost_usd": 0.5477,
+    "pricing_used": {
+      "input": 4.0,
+      "output": 20.0
+    }
+  },
+  "cognitive_distribution": {
+    "marks_by_level": {
+      "knowledge": 6,
+      "routine": 22,
+      "complex": 14,
+      "problem_solving": 8
+    },
+    "percentages_by_level": {
+      "knowledge": 12.0,
+      "routine": 44.0,
+      "complex": 28.0,
+      "problem_solving": 16.0
+    },
+    "target_distribution": {
+      "knowledge": 20,
+      "routine": 35,
+      "complex": 30,
+      "problem_solving": 15
+    },
+    "variance": {
+      "knowledge": -8.0,
+      "routine": 9.0,
+      "complex": -2.0,
+      "problem_solving": 1.0
+    }
+  },
+  "verification": {
+    "total_leaves": 20,
+    "sympy_verified": 13,
+    "manual_review_required": 7,
+    "unverifiable_by_design": 7,
+    "failed_detail": [
+      {
+        "archetype_id": "eqineq_006",
+        "problem_type": "unverifiable",
+        "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+      },
+      {
+        "archetype_id": "eqineq_008",
+        "problem_type": "unverifiable",
+        "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+      },
+      {
+        "archetype_id": "exp_surd_006",
+        "problem_type": "unverifiable",
+        "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+      },
+      {
+        "archetype_id": "exp_surd_006",
+        "problem_type": "unverifiable",
+        "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+      },
+      {
+        "archetype_id": "exp_surd_006",
+        "problem_type": "unverifiable",
+        "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+      },
+      {
+        "archetype_id": "exp_surd_006",
+        "problem_type": "unverifiable",
+        "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+      },
+      {
+        "archetype_id": "exp_surd_010",
+        "problem_type": "unverifiable",
+        "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+      }
+    ]
+  },
+  "generation_errors": [],
+  "raw_usage_log": [
+    {
+      "purpose": "generate_question:eqineq_006",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "input_tokens": 4861,
+      "output_tokens": 3150,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_003",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "input_tokens": 4616,
+      "output_tokens": 1168,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_004",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "input_tokens": 4614,
+      "output_tokens": 1440,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_008",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "input_tokens": 4667,
+      "output_tokens": 1893,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:eqineq_002",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "input_tokens": 4573,
+      "output_tokens": 1712,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_006",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "input_tokens": 4527,
+      "output_tokens": 2271,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_013",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "input_tokens": 4440,
+      "output_tokens": 994,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_005",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "input_tokens": 4438,
+      "output_tokens": 1607,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_016",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "input_tokens": 4690,
+      "output_tokens": 1704,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    },
+    {
+      "purpose": "generate_question:exp_surd_010",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "input_tokens": 4563,
+      "output_tokens": 2248,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    }
+  ]
+}

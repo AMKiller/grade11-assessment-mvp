@@ -454,11 +454,36 @@ Found during the Step 4 render/verify pass; checked against `format_SKILL.md` an
 
 Both fixes are in `samples/hierarchical_sample_QP_MG.docx`/`.pdf`.
 
-### Not Started (Awaiting API Credits)
+### DONE -- First Real Generation Run (2026-09-24, credits added)
 
-- Real generation run with usage log (the first real run happens once credits are added -- see below)
-- Cost validation against the estimate ($0.148 Opus 5.5 / $0.074 Sonnet 5 normal case, both still estimates until the usage log has real numbers)
-- SymPy verification and the retry policy exercised against real Claude output (only mocked/fixture-based so far)
+One 50-mark, 2-topic paper (Equations and Inequalities + Exponents and Surds, 5 questions/topic, 25 marks/topic target) generated against the live API on both `claude-sonnet-5` and `claude-opus-5-5`. Raw usage logs, per-leaf verification detail, and full JSON reports saved alongside the docs: `samples/sonnet5_real_50marks_2topics.{docx,pdf,_report.json}`, `samples/opus55_real_50marks_2topics.{docx,pdf,_report.json}`. No code was changed to produce these -- driver script only, at `scripts/run_real_generation.py`.
+
+| | Sonnet 5 | Opus 5.5 |
+|---|---|---|
+| Questions generated | **6 / 10** (4 slots failed all 3 retries) | 10 / 10 |
+| Total marks (actual leaves) | **27** (paper header still prints "50" -- see bug below) | 50 |
+| API calls | 19 (9 retries) | 10 (0 retries) |
+| Input tokens | 89,122 | 45,989 |
+| Output tokens | 65,889 | 18,187 |
+| Cost (list price) | **$0.84** | **$0.55** |
+| Cognitive split (target 20/35/30/15) | K0 / R48.1 / C51.9 / PS0 | K12 / R44 / C28 / PS16 |
+| Leaves verified by SymPy | 7 / 8 | 13 / 20 |
+| Leaves flagged `manual_review_required` | 1 (all `problem_type="unverifiable"` by design -- proofs/identities, not failures) | 7 (same -- all `unverifiable` by design) |
+| Leaves that failed a real SymPy re-solve | **0** | **0** |
+
+**Headline: Sonnet 5 was both more expensive and worse than planned.** Cost estimates above ($0.148 Opus 5.5 / $0.074 Sonnet 5) are now superseded by these measured numbers -- both came in higher (Sonnet 5 ~11x, Opus 5.5 ~3.7x the old estimate), driven almost entirely by output tokens per call running far above the old ~550-950 token assumption (Sonnet 5 averaged ~3,468 output tokens/call here; several calls hit the `max_tokens=4096` ceiling outright).
+
+**Root cause, found while reading the failure detail (not yet fixed, no code changed per this session's instruction):** Sonnet 5 and Opus 5.5 both run *adaptive thinking on by default* -- this is a model behavior change from whatever generation was current when `_call_claude()` (generation.py:658) was written and tuned. `_call_claude()` passes no `thinking` parameter and `max_tokens=4096` is shared between thinking and the visible JSON output on both models. On Sonnet 5 this produced two distinct failure modes, both present in `sonnet5_real_50marks_2topics_report.json`'s `generation_errors`:
+- **`ValueError: No text content in Claude response`** (2 of 4 failed slots) -- the model's thinking consumed the entire budget before any text block was ever emitted.
+- **`ValueError: Response truncated (hit max_tokens limit) before valid JSON completed`** (1 of 4 failed slots; a 4th failed slot hit the same "no text" error again on its final retry) -- thinking + partial JSON output together exceeded 4096 tokens.
+
+Opus 5.5 didn't fail outright in this run -- its highest single-call `output_tokens` was 3,150 (of 4,096), so it had headroom throughout this particular run. That's one run's margin, not proof of immunity: the same shared thinking/output budget applies to Opus 5.5's calls too, so a harder question mix or an unlucky draw could still hit the ceiling.
+
+**Second bug, found by inspecting the generated Sonnet 5 .docx directly:** `docgen.py`'s `generate_full_assessment(total_marks=...)` prints whatever `total_marks` it's handed on the cover page and both `TOTAL [ ]` cells verbatim -- it does not cross-check that value against the marks actually present in the leaves it renders. The Sonnet 5 sample document reads "Total Marks: 50" / "TOTAL [50]" twice, while the actual question table only contains 27 marks worth of leaves (the 4 failed slots were silently dropped by `generate_paper()`, which returns however many questions succeeded without adjusting the caller-supplied total). A teacher opening this specific document would see a paper that claims to be worth 50 marks but isn't -- this is a real, user-facing correctness bug, not a hypothetical.
+
+**SymPy verification worked correctly** in both runs: 0 leaves had their claimed answer independently contradicted by SymPy. Every `manual_review_required` flag was for `problem_type: "unverifiable"` (proofs/identities), which the design deliberately never scores as a failure -- see the `_verify_all_leaves` docstring. No evidence yet that the verification/retry contract itself is broken; the observed failures are all upstream of it (the model never producing parseable text at all).
+
+**Not done in this session (explicitly deferred):** prompt caching. The `system` prompt is resent in full, uncached, on every one of the 29 calls made across both runs (`cache_read_input_tokens` and `cache_creation_input_tokens` are 0 throughout both usage logs) -- confirms the earlier report's caveat that no caching lever has been pulled yet.
 
 ## Known Gaps & Scope Decisions
 
