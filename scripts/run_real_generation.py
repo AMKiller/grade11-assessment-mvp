@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """
 Real (non-mock) generation run: 2 topics x 5 questions, 50 marks total,
-against the live Claude API. Writes the combined .docx to samples/ and
+against the live Claude API. Writes the combined .docx/.pdf to samples/ and
 prints a full usage/cognitive/verification report to stdout as JSON
 (also saved as a sidecar .json next to the .docx).
 
-Model is controlled by the GENERATION_MODEL env var, read by generation.py
-at import time -- so this script must be invoked once per model in a
-separate process (a single run covers exactly one model).
+Model AND thinking/effort config are controlled by env vars read by
+generation.py at import time (GENERATION_MODEL, GENERATION_THINKING_MODE,
+GENERATION_EFFORT, GENERATION_MAX_TOKENS) -- so this script must be invoked
+once per configuration in a separate process.
 
 Usage:
     ANTHROPIC_API_KEY=... [GENERATION_MODEL=claude-opus-5-5] \
+        [GENERATION_THINKING_MODE=disabled] [GENERATION_EFFORT=low] \
         python3 scripts/run_real_generation.py <output_basename>
 """
 import json
@@ -19,8 +21,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from generation import generate_paper, GENERATION_MODEL
-from docgen import DocumentGenerator
+from generation import (
+    generate_paper, GENERATION_MODEL, GENERATION_THINKING_MODE,
+    GENERATION_EFFORT, GENERATION_MAX_TOKENS, MODELS_WITHOUT_DISABLED_THINKING,
+    _analyze_cognitive_distribution, _summarize_usage,
+)
+from docgen import DocumentGenerator, _compute_actual_marks
 
 TOPICS = ["Equations and Inequalities", "Exponents and Surds"]
 MARKS_PER_TOPIC = 25  # 50 total split evenly across 2 topics
@@ -33,36 +39,75 @@ PRICING = {
 }
 
 
-def collect_leaf_verification(questions: list) -> dict:
+def collect_leaf_detail(topics_data: list) -> dict:
+    """
+    Walk every generated leaf and record, per leaf: which archetype/topic it
+    came from, its planned cognitive target (the slot-level dict fixed before
+    generation -- see generate_paper()'s _planned_cognitive_targets tag) vs.
+    its actual cognitive_level, verification outcome, and problem_type.
+    """
     total_leaves = 0
     sympy_verified = 0
     manual_review = 0
     unverifiable = 0
-    failed_detail = []
+    real_verification_failures = 0
+    per_leaf = []
+    unverifiable_detail = []
+    failed_verification_detail = []
 
-    for q in questions:
-        for row in q.get("question_structure", []):
-            leaves = row.get("children", []) if row.get("is_stem") else [row]
-            for leaf in leaves:
-                total_leaves += 1
-                if leaf.get("problem_type") == "unverifiable":
-                    unverifiable += 1
-                if leaf.get("sympy_verified"):
-                    sympy_verified += 1
-                if leaf.get("manual_review_required"):
-                    manual_review += 1
-                    failed_detail.append({
-                        "archetype_id": q.get("archetype_id"),
-                        "problem_type": leaf.get("problem_type"),
-                        "sympy_error": leaf.get("sympy_error"),
-                    })
+    for topic, questions in topics_data:
+        for q in questions:
+            archetype_id = q.get("archetype_id")
+            planned = q.get("_planned_cognitive_targets", {})
+            for row in q.get("question_structure", []):
+                leaves = row.get("children", []) if row.get("is_stem") else [row]
+                for leaf in leaves:
+                    total_leaves += 1
+                    actual_level = leaf.get("cognitive_level")
+                    problem_type = leaf.get("problem_type")
+                    entry = {
+                        "topic": topic,
+                        "archetype_id": archetype_id,
+                        "num": leaf.get("num"),
+                        "marks": leaf.get("marks"),
+                        "problem_type": problem_type,
+                        "actual_cognitive_level": actual_level,
+                        "planned_cognitive_targets": planned,
+                        "sympy_verified": leaf.get("sympy_verified"),
+                        "manual_review_required": leaf.get("manual_review_required"),
+                    }
+                    per_leaf.append(entry)
+
+                    if problem_type == "unverifiable":
+                        unverifiable += 1
+                        unverifiable_detail.append({
+                            "topic": topic,
+                            "archetype_id": archetype_id,
+                            "num": leaf.get("num"),
+                            "marks": leaf.get("marks"),
+                        })
+                    if leaf.get("sympy_verified"):
+                        sympy_verified += 1
+                    if leaf.get("manual_review_required"):
+                        manual_review += 1
+                        if problem_type != "unverifiable":
+                            real_verification_failures += 1
+                            failed_verification_detail.append({
+                                "topic": topic,
+                                "archetype_id": archetype_id,
+                                "problem_type": problem_type,
+                                "sympy_error": leaf.get("sympy_error"),
+                            })
 
     return {
         "total_leaves": total_leaves,
         "sympy_verified": sympy_verified,
         "manual_review_required": manual_review,
         "unverifiable_by_design": unverifiable,
-        "failed_detail": failed_detail,
+        "real_verification_failures": real_verification_failures,
+        "unverifiable_detail": unverifiable_detail,
+        "failed_verification_detail": failed_verification_detail,
+        "per_leaf": per_leaf,
     }
 
 
@@ -72,7 +117,13 @@ def main():
         sys.exit(1)
 
     out_basename = sys.argv[1]
-    print(f"=== Real generation run -- model={GENERATION_MODEL} ===\n")
+    thinking_desc = (
+        f"effort={GENERATION_EFFORT} (thinking cannot be disabled on this model)"
+        if GENERATION_MODEL in MODELS_WITHOUT_DISABLED_THINKING
+        else f"thinking_mode={GENERATION_THINKING_MODE}, effort={GENERATION_EFFORT or '(unset)'}"
+    )
+    print(f"=== Real generation run -- model={GENERATION_MODEL}, {thinking_desc}, "
+          f"max_tokens={GENERATION_MAX_TOKENS} ===\n")
 
     topics_data = []
     combined_usage_log = []
@@ -93,60 +144,57 @@ def main():
         all_questions.extend(result["questions"])
         print(f"  -> {result['num_questions']} questions, {result['total_marks']} marks\n")
 
-    total_marks = sum(m for _, qs in topics_data for m in [sum(
-        leaf.get("marks", 0) or 0
-        for q in qs
-        for leaf in (
-            [c for row in q.get("question_structure", []) for c in (row.get("children", []) if row.get("is_stem") else [row])]
-        )
-    )])
+    # Single source of truth for the actual mark total -- same helper docgen
+    # itself now uses, so the report and the printed document can never
+    # disagree (see docgen.py's 2026-09-24 totals fix).
+    question_groups = [(i + 1, qs) for i, (_, qs) in enumerate(topics_data)]
+    actual_total_marks = _compute_actual_marks(question_groups)
 
-    # --- Usage / cost report ---
-    total_calls = len(combined_usage_log)
-    retries = sum(1 for r in combined_usage_log if r["attempt"] > 1)
-    total_input = sum(r["input_tokens"] for r in combined_usage_log)
-    total_output = sum(r["output_tokens"] for r in combined_usage_log)
-    total_cache_read = sum(r["cache_read_input_tokens"] for r in combined_usage_log)
-    total_cache_write = sum(r["cache_creation_input_tokens"] for r in combined_usage_log)
-
+    usage_summary = _summarize_usage(combined_usage_log)
     price = PRICING.get(GENERATION_MODEL)
     if price:
-        cost = (total_input / 1_000_000 * price["input"]) + (total_output / 1_000_000 * price["output"])
+        cost = (usage_summary["total_input_tokens"] / 1_000_000 * price["input"]) + \
+               (usage_summary["total_output_tokens"] / 1_000_000 * price["output"])
     else:
         cost = None
+    usage_summary["cost_usd"] = round(cost, 4) if cost is not None else None
+    usage_summary["pricing_used"] = price
 
-    # --- Cognitive distribution (actual, across both topics combined) ---
-    from generation import _analyze_cognitive_distribution
     cognitive = _analyze_cognitive_distribution(all_questions, TARGET_DISTRIBUTION)
-
-    # --- Verification / manual review ---
-    verification = collect_leaf_verification(all_questions)
+    leaf_detail = collect_leaf_detail(topics_data)
 
     report = {
         "model": GENERATION_MODEL,
+        "thinking_mode": GENERATION_THINKING_MODE,
+        "effort_applied": (
+            (GENERATION_EFFORT or "low") if GENERATION_MODEL in MODELS_WITHOUT_DISABLED_THINKING
+            else (GENERATION_EFFORT if GENERATION_THINKING_MODE != "disabled" and GENERATION_EFFORT else None)
+        ),
+        "max_tokens": GENERATION_MAX_TOKENS,
         "topics": TOPICS,
         "num_questions_per_topic": NUM_QUESTIONS_PER_TOPIC,
         "target_marks_per_topic": MARKS_PER_TOPIC,
-        "usage": {
-            "total_calls": total_calls,
-            "retries": retries,
-            "total_input_tokens": total_input,
-            "total_output_tokens": total_output,
-            "cache_read_tokens": total_cache_read,
-            "cache_creation_tokens": total_cache_write,
-            "cost_usd": round(cost, 4) if cost is not None else None,
-            "pricing_used": price,
-        },
+        "actual_total_marks": actual_total_marks,
+        "requested_total_marks": MARKS_PER_TOPIC * len(TOPICS),
+        "usage": usage_summary,
         "cognitive_distribution": cognitive,
-        "verification": verification,
+        "verification": leaf_detail,
         "generation_errors": combined_errors,
         "raw_usage_log": combined_usage_log,
     }
 
-    print("\n=== REPORT ===")
-    print(json.dumps(report, indent=2, default=str))
+    print("\n=== REPORT (summary) ===")
+    print(json.dumps({k: v for k, v in report.items() if k not in ("raw_usage_log", "verification")}, indent=2, default=str))
+    print(json.dumps({"usage": usage_summary}, indent=2, default=str))
 
     # --- Document generation ---
+    # Deliberately still builds/saves a document even when generation_errors
+    # is non-empty, so all configurations in this comparison run are
+    # visible side-by-side -- the app.py-level "don't silently ship a
+    # partial paper" gate belongs in the teacher-facing UI, not this
+    # internal comparison script. actual_total_marks is always correct
+    # regardless (see docgen.py's fix), so a partial paper's document will
+    # honestly show its own short total rather than the requested one.
     docgen = DocumentGenerator(template_path=None)
     docx_bytes = docgen.generate_full_assessment(
         topics_data=topics_data,
@@ -167,6 +215,12 @@ def main():
     report_path = samples_dir / f"{out_basename}_report.json"
     report_path.write_text(json.dumps(report, indent=2, default=str))
     print(f"Saved: {report_path}")
+
+    if combined_errors:
+        print(f"\n⚠ {len(combined_errors)} slot(s) failed -- paper is {actual_total_marks}/"
+              f"{MARKS_PER_TOPIC * len(TOPICS)} marks:")
+        for e in combined_errors:
+            print(f"  - {e}")
 
 
 if __name__ == "__main__":

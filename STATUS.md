@@ -485,6 +485,87 @@ Opus 5.5 didn't fail outright in this run -- its highest single-call `output_tok
 
 **Not done in this session (explicitly deferred):** prompt caching. The `system` prompt is resent in full, uncached, on every one of the 29 calls made across both runs (`cache_read_input_tokens` and `cache_creation_input_tokens` are 0 throughout both usage logs) -- confirms the earlier report's caveat that no caching lever has been pulled yet.
 
+**Correction to the "Second bug" above:** further investigation found the docgen bug was real but the specific Sonnet 5 sample document's wrong "50" was actually caused by `scripts/run_real_generation.py` itself hardcoding `total_marks=MARKS_PER_TOPIC * len(TOPICS)` when calling `generate_full_assessment()`, rather than the actual accumulated total -- `app.py`'s real UI path already passes the correct accumulated `result['total_marks']` (summed from each topic's `generate_paper()` return, which itself only counts successfully-generated leaves) and would not have shown this specific symptom. The underlying architectural gap was still real, though: `docgen.py` printed whatever `total_marks` it was handed without cross-checking it against the leaves actually rendered, so *any* caller passing a stale/wrong figure (not just this script's bug) would silently produce a mismatched document. Fixed below regardless, since the gap itself was genuine even though the original symptom's cause was misattributed.
+
+### DONE -- Fixes for the above, plus 3-way reconfiguration comparison run (2026-09-24)
+
+**1. Thinking/effort control (`generation.py`).** New config constants beside `GENERATION_MODEL`:
+- `GENERATION_THINKING_MODE` (`"adaptive"` default | `"disabled"`) and `GENERATION_EFFORT` (`"low"` default, `""` to omit) -- both env-overridable.
+- `claude-opus-5-5` cannot disable thinking at any effort level (confirmed against the SDK: `ThinkingConfigDisabledParam` exists but the model 400s on it) -- it always gets `output_config={"effort": GENERATION_EFFORT or "low"}`.
+- `claude-sonnet-5` can disable thinking (`thinking={"type": "disabled"}`, confirmed against `anthropic==1.8.0`'s `ThinkingConfigDisabledParam`) -- **but real data below shows this makes Sonnet 5 substantially worse, not better** (see the comparison table). The shipped default is therefore `GENERATION_THINKING_MODE="adaptive"` + `GENERATION_EFFORT="low"` for every model, applied via `output_config` so thinking stays on (avoiding the leakage failure mode) while capping how much of the budget it spends. `thinking={"type":"disabled"}` remains available via env var for anyone who wants to re-test it, but is not the default.
+
+**2. max_tokens raised to 8192, explicit truncation handling (`generation.py`).** `GENERATION_MAX_TOKENS` (default 8192, was hardcoded 4096). `_call_claude()` now checks `stop_reason` on every response; on `"max_tokens"` it logs clearly and retries the same slot **once** at double the cap (16384) inside the same call -- tagged `truncation_retry=True` in the usage log so it is never counted as one of `generate_question()`'s 3 quality retries. `_log_api_call()`/`_summarize_usage()`/`print_usage_summary()` now report `stop_reason` counts, thinking tokens (`usage.output_tokens_details.thinking_tokens`), and truncation retries separately from quality retries.
+
+**3. `docgen.py` totals fixed.** New `_compute_actual_marks(question_groups)` sums marks directly from the rendered leaves; `generate_full_assessment()` now uses this everywhere a total is printed (cover page, both grand `TOTAL [N]` paragraphs, the cognitive grid's `THIS TASK %` denominator) instead of the caller-supplied `total_marks`. If the caller's figure disagrees, a `[docgen] WARNING` is printed but generation proceeds and prints the real figure. Confirmed via `test_integration.py` (still passes -- its fixture's caller-supplied total already matched its leaves, so no behavior change there) and by direct inspection of the new sample documents.
+
+**`app.py` gate added.** If `generate_paper()` reports any `generation_errors`, the "Generate Full Assessment (.docx)" button is replaced with a hard `st.error` naming every failed question (topic + archetype id + error) and the real achieved mark total vs. the requested one -- no document can be built from a partial paper without the teacher seeing exactly what's missing first.
+
+All four changes verified against the existing test suites (`test_integration.py`, `test_retry_policy.py`, `test_verification.py`) -- all pass unchanged, no regressions.
+
+#### 3-way comparison run: 50-mark, 2-topic paper, same request each time
+
+| | Sonnet 5, thinking disabled | Sonnet 5, effort=low (adaptive) | Opus 5.5, effort=low |
+|---|---|---|---|
+| Questions generated | **0 / 10** | 8 / 10 | **10 / 10** |
+| Actual marks | **0 / 50** | 40 / 50 | **50 / 50** |
+| API calls | 30 (20 quality retries) | 18 (8 quality retries) | 11 (1 quality retry) |
+| **Truncation retries** | **0** | **0** | **0** |
+| **stop_reason breakdown** | 100% `end_turn` | 100% `end_turn` | 100% `end_turn` |
+| Thinking tokens | 0 (disabled) | 15,573 | 5,645 |
+| Cost (list price) | $0.68 (for a 0-question paper) | $0.49 | **$0.51** |
+| Cognitive split (target 20/35/30/15) | -- (no leaves) | K25/R40/C35/PS0 | K20/R36/C28/PS16 |
+
+**The max_tokens fix worked completely: zero truncations, zero `max_tokens` stop_reasons, across all 30+18+11 = 59 calls in this comparison.** The highest single-call `output_tokens` seen anywhere was 3,191 (Sonnet effort=low) -- comfortably under even the old 4096 cap, let alone the new 8192. That failure mode is closed.
+
+**Disabling thinking on Sonnet 5 was the wrong fix -- it made things dramatically worse, not better.** With `thinking={"type":"disabled"}`, Sonnet 5 started writing visible planning prose ("Let me design this carefully...", "Looking at the targets: routine=3 marks...") before its JSON instead of responding with JSON directly, breaking `json.loads()` on every single slot across two independent runs (first run: 8/10 failed this way; rerun: 10/10 failed). This is a real, documented Anthropic behavior (their own guidance: disabling thinking can cause a model to write what should be structured output into visible text instead, and the fix is lower effort, not disabling thinking) that this project's original code had no way to know about. **Sonnet 5, effort=low with thinking left adaptive, was far better** (8/10, real failures now being ordinary content-quality issues -- a tick_count mismatch and one use of unsupported `\left(` in a math part -- not thinking-budget problems at all) but still worse than Opus 5.5. **Recommendation: keep `GENERATION_THINKING_MODE="adaptive"` (the new default) for both models; if Sonnet 5 is used, expect a higher quality-retry rate than Opus 5.5 on this specific prompt.**
+
+**Opus 5.5 effort=low was the strongest result of the whole session: 10/10 questions, 50/50 marks, only 1 quality retry, cheapest of the three ($0.51), and the closest cognitive split to target yet seen (K20/R36/C28/PS16 vs. 20/35/30/15).**
+
+#### Item 4: planned vs. actual cognitive level, per leaf (Opus 5.5, effort=low run)
+
+*Note: this analysis uses the Opus 5.5 effort=low rerun above, not the original default-effort Opus run reported earlier in this file -- the original run's per-leaf detail (planned cognitive target vs. actual level per leaf) wasn't captured at the time (only aggregate stats were), and re-deriving it would require another paid API call. `generate_paper()` now tags each returned question with `_planned_cognitive_targets` (the slot-level target dict fixed before generation) specifically so this comparison doesn't require guesswork in future runs.*
+
+All 17 leaves generated in this run matched their planned slot exactly -- both the cognitive level **and** the mark split within multi-level slots:
+
+| Topic | Archetype | Marks | Actual level | Planned targets (nonzero) |
+|---|---|---|---|---|
+| Eq&Ineq | eqineq_003 | 4 | knowledge | {knowledge: 4} |
+| Eq&Ineq | eqineq_007 | 2+3 | routine, routine | {routine: 5} |
+| Eq&Ineq | eqineq_005 | 6 | complex | {complex: 6} |
+| Eq&Ineq | eqineq_004 | 1+4 | knowledge, problem_solving | {knowledge: 1, problem_solving: 4} |
+| Eq&Ineq | eqineq_002 | 4+1 | routine, complex | {routine: 4, complex: 1} |
+| Exp&Surds | exp_surd_015 | 2+2 | knowledge, knowledge | {knowledge: 4} |
+| Exp&Surds | exp_surd_002 | 3+3 | routine, routine | {routine: 6} |
+| Exp&Surds | exp_surd_008 | 5 | complex | {complex: 5} |
+| Exp&Surds | exp_surd_006 | 1+4 | knowledge, problem_solving | {knowledge: 1, problem_solving: 4} |
+| Exp&Surds | exp_surd_007 | 3+2 | routine, complex | {routine: 3, complex: 2} |
+
+**No drift and no relabeling observed in this run** -- every leaf's `cognitive_level` matched one of its slot's nonzero planned target levels, and where a slot split marks across two levels (e.g. `eqineq_004`: 1 mark knowledge + 4 marks problem_solving), the model's actual per-leaf marks matched that split exactly rather than rounding or redistributing. This is one 50-mark sample on one archetype mix, not a guarantee -- but it shows the "REDESIGN the question to genuinely reach that level" instruction in the system prompt (generation.py's `_call_claude`) is working as intended at effort=low, at least here.
+
+#### Item 4: which leaves were "unverifiable", by archetype
+
+Four leaves were flagged `problem_type: "unverifiable"` in the Opus 5.5 effort=low run (all correctly -- none were real SymPy disagreements):
+
+| Topic | Archetype | Marks | What the question actually asks |
+|---|---|---|---|
+| Eq&Ineq | `eqineq_007` | 2 | "Without solving the equation, determine the nature of the roots of [quadratic]" -- a discriminant-sign classification, not an equation to solve |
+| Eq&Ineq | `eqineq_004` | 1 | "Expand [expression]." -- a pure algebraic expansion, no equation |
+| Exp&Surds | `exp_surd_006` | 1 | "Factorise [expression] fully." -- a pure factorisation, no equation |
+| Exp&Surds | `exp_surd_007` | 3 | "Simplify [expression] fully" (without a calculator) -- a symbolic identity/simplification, no equation |
+
+#### Item 4: could numeric-substitution verification close any of these? (proposal only -- not implemented)
+
+Scoped to exactly the four archetypes above (not a general framework for every possible future "unverifiable" archetype):
+
+- **`exp_surd_007`-style "simplify fully" and similar identity/expression-reduction archetypes** are the strongest candidate. These give Claude a single expression in one or more free symbols (e.g. `a`, `b`, `x`) with no equation to solve -- currently `problem_type="unverifiable"` purely because the existing schema has no slot for "reduce this expression and confirm the reduction is correct." A new `problem_type: "identity"` could ask Claude for `sympy_problem` = the original expression and `claimed_solution` = its claimed simplified form (both as free-symbol expressions, same DSL-free Python/SymPy syntax already used for the other types). Verification: substitute several (5-10) random numeric values per free symbol -- chosen to avoid domain violations (no negative values under an even root, no denominator zeros; sympy's `solveset`/`is_positive` checks or simple rejection-sampling can enforce this) -- into both the original and claimed-simplified expressions via `sympify(...).evalf()`, and require numeric agreement to within tolerance at every sample point. This is standard randomized identity testing, and is *more* robust here than trying to prove exact symbolic equality with `sympy.simplify()`, which can fail to recognize valid but non-canonical forms (especially with nested radicals/fractional exponents, as seen in these very leaves) and would then wrongly fail a correct answer.
+- **`eqineq_004`-style "expand" and `exp_surd_006`-style "factorise"** are actually the easier case, since these are polynomial-only operations with no domain restrictions (no roots, no denominators) -- `sympy.expand(claimed) == sympy.expand(original)` (or `sympy.factor()` in the other direction) can check them by *exact* symbolic equality reliably, without needing the numeric-substitution fallback at all. Could reuse the same `"identity"` problem_type as above, just with a simpler/exact verification path selected when the expression is polynomial.
+- **`eqineq_007`-style "determine the nature of the roots"** is a different shape entirely -- not an identity, but a classification of a quadratic's discriminant sign (real & unequal / real & equal / non-real). This doesn't fit numeric-substitution at all; it would need its own `problem_type: "discriminant_classification"` where `sympy_problem` gives the coefficients (or the equation) and `claimed_solution` gives the claimed classification label, verified by computing the discriminant and checking its sign against the claim.
+- **Caveats if this is ever implemented:** domain-safe sampling is the main risk (a naive random substitution can silently evaluate to `nan`/complex for a real-valued expression and produce a false failure); genuine proofs, "show that" derivations, and word problems requiring real-world interpretation should stay flagged `unverifiable` for manual review -- this proposal only closes the specific "single expression/discriminant, no interpretation needed" gap actually observed, not the whole `unverifiable` category.
+
+### Data-loss incident during this session (unresolved, flagging for awareness)
+
+Two newly-generated `.docx` files (`sonnet5_thinkingdisabled_50marks_2topics.docx`, `sonnet5_effortlow_50marks_2topics.docx`) vanished from `samples/` on disk sometime after being written successfully (confirmed via the run's own "Saved: .../X.docx" log line) and before they could be committed -- they are simply gone, not recoverable. A third, already-*committed* file (`samples/opus55_real_50marks_2topics.docx`) also disappeared from the working tree (showed as an unstaged deletion in `git status`) and was recovered via `git checkout`. Checked and ruled out: disk full (86% free), OOM kills (none in `dmesg`/`journalctl`), cron jobs (none), obvious sync/watch processes. Root cause not found. Per the user's decision, these two configs are reported from their surviving `_report.json` data only -- no `.docx`/`.pdf` for `sonnet5_thinkingdisabled` or `sonnet5_effortlow`. Every file that currently exists on disk from this session has been committed immediately as a precaution. If this recurs, it needs investigating before trusting this environment with more paid-for output.
+
 ## Known Gaps & Scope Decisions
 
 **False claims removed from earlier drafts:**

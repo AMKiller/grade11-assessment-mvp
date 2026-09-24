@@ -324,7 +324,21 @@ if "generation_result" in st.session_state:
     st.subheader("📥 Download Assessment")
     st.caption("One combined document: question paper, marking guideline, and cognitive level analysis grid.")
 
-    if st.button("Generate Full Assessment (.docx)", use_container_width=True):
+    if result.get('generation_errors'):
+        # Don't let a partial generation quietly become a downloadable
+        # document that looks complete -- name exactly which questions
+        # failed and show the real (short) mark total, per the incident in
+        # STATUS.md 2026-09-24 where a partial paper printed a "Total
+        # Marks" figure it didn't actually contain.
+        st.error(
+            f"❌ Cannot generate the document: {len(result['generation_errors'])} question(s) failed "
+            f"after all retries, so this paper only reaches **{result['total_marks']} of the "
+            f"requested {grand_total_marks} marks**. Fix the failing archetype(s) below or "
+            f"regenerate before downloading -- no document will be built from a paper this short "
+            f"of its target.\n\n**Failed questions:**\n"
+            + "\n".join(f"- {e}" for e in result['generation_errors'])
+        )
+    elif st.button("Generate Full Assessment (.docx)", use_container_width=True):
         with st.spinner("Building question paper, marking guide, and cognitive grid..."):
             try:
                 gen = DocumentGenerator(template_path=None)

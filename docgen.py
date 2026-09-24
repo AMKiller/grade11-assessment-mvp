@@ -77,6 +77,23 @@ def _flatten_topic_hierarchy(qnum: int, hierarchical_questions: list) -> list:
     return flat
 
 
+def _compute_actual_marks(question_groups: list) -> int:
+    """
+    Sum of leaf marks actually present in the rendered rows -- the single
+    source of truth for every printed total (cover page, both grand TOTAL
+    paragraphs, cognitive grid). Never trust a caller-supplied total_marks
+    figure for display: if a paper generation run silently drops a failed
+    slot (see generate_paper()'s generation_errors), a caller-supplied total
+    would print a mark value the document doesn't actually contain -- a real
+    bug found in the first live run (2026-09-24, see STATUS.md).
+    """
+    total = 0
+    for qnum, questions in question_groups:
+        flat = _flatten_topic_hierarchy(qnum, questions)
+        total += sum(r['marks'] for r in flat if r['marks'] is not None)
+    return total
+
+
 def parts_to_cell_content(parts: list) -> list:
     """
     Convert generation.py's {"type": "text"|"math", "value": str} parts into
@@ -129,7 +146,18 @@ class DocumentGenerator:
                        internally sub-numbered N.1, N.2... -- matching how a real
                        multi-topic DBE paper structures one Question block per topic.
                        Single-topic papers just pass a one-item list.
-            total_marks: Total marks across all topics combined
+            total_marks: Advisory only -- NOT trusted for anything printed in the
+                       document. Every printed total ("Total Marks" on the cover
+                       page, both grand "TOTAL [N]" paragraphs, and the cognitive
+                       grid's percentage row) is always recomputed from the marks
+                       actually present in topics_data's leaves (see
+                       _compute_actual_marks()). If it disagrees with the caller's
+                       total_marks (e.g. because generate_paper() silently dropped
+                       a failed slot), a warning is printed to stderr/stdout, but
+                       generation still proceeds and prints the real figure -- see
+                       STATUS.md 2026-09-24 for the bug this replaces (the printed
+                       total used to be whatever the caller passed, which could be
+                       wrong for a partial paper).
             task, term, time_minutes, examiner, moderator: Metadata for cover page/header
             grade: Grade (default "11")
             target_distribution: Cognitive % targets for the FET TARGET row (defaults
@@ -143,26 +171,6 @@ class DocumentGenerator:
         target_distribution = target_distribution or DEFAULT_COGNITIVE_TARGETS
         topic_display = " & ".join(name for name, _ in topics_data)
 
-        if self.template_path:
-            doc = self._load_and_replace_template(
-                topic_display, task, term, time_minutes, total_marks, examiner,
-                moderator, grade
-            )
-            # Per format_SKILL.md: a real template supplies its own header/footer/
-            # border via its own section properties -- don't override them.
-        else:
-            doc = Document()
-            set_document_page_setup(doc)
-            set_document_default_font(doc)
-            self._add_generic_cover_page(doc, topic_display, task, term, time_minutes,
-                                         total_marks, examiner, moderator, grade)
-            # Per today's ruling: header text + page-number footer apply even
-            # in the no-template path (task_SKILL.md's frame elements, applied
-            # regardless of PROJECT_BRIEF.md's plain-cover-page simplification).
-            left_header = f"Mathematics {task}".strip() if task else f"Grade {grade} Mathematics"
-            right_header = term or ""
-            self._set_header_footer(doc, left_header, right_header)
-
         # Each selected topic becomes its own QUESTION N group, sub-numbered
         # N.1, N.2, N.3... (see audit note: real DBE papers sometimes group
         # same-flavour "solve for x" items under a shared N.1 stem with
@@ -173,10 +181,39 @@ class DocumentGenerator:
         # blank-spacer-row rules).
         question_groups = [(i + 1, questions) for i, (_, questions) in enumerate(topics_data)]
 
-        self._add_question_paper_body(doc, question_groups, total_marks)
+        actual_total_marks = _compute_actual_marks(question_groups)
+        if total_marks is not None and actual_total_marks != total_marks:
+            print(
+                f"  [docgen] WARNING: requested total_marks={total_marks} but the leaves actually "
+                f"present in topics_data sum to {actual_total_marks} -- printing {actual_total_marks} "
+                f"(the real figure), not the requested one. This usually means one or more question "
+                f"slots failed to generate; check generate_paper()'s generation_errors."
+            )
+
+        if self.template_path:
+            doc = self._load_and_replace_template(
+                topic_display, task, term, time_minutes, actual_total_marks, examiner,
+                moderator, grade
+            )
+            # Per format_SKILL.md: a real template supplies its own header/footer/
+            # border via its own section properties -- don't override them.
+        else:
+            doc = Document()
+            set_document_page_setup(doc)
+            set_document_default_font(doc)
+            self._add_generic_cover_page(doc, topic_display, task, term, time_minutes,
+                                         actual_total_marks, examiner, moderator, grade)
+            # Per today's ruling: header text + page-number footer apply even
+            # in the no-template path (task_SKILL.md's frame elements, applied
+            # regardless of PROJECT_BRIEF.md's plain-cover-page simplification).
+            left_header = f"Mathematics {task}".strip() if task else f"Grade {grade} Mathematics"
+            right_header = term or ""
+            self._set_header_footer(doc, left_header, right_header)
+
+        self._add_question_paper_body(doc, question_groups, actual_total_marks)
         doc.add_page_break()
-        self._add_marking_guide_body(doc, question_groups, total_marks)
-        self._add_cognitive_grid(doc, question_groups, total_marks, target_distribution)
+        self._add_marking_guide_body(doc, question_groups, actual_total_marks)
+        self._add_cognitive_grid(doc, question_groups, actual_total_marks, target_distribution)
 
         if include_information_sheet and grade in ("11", "12"):
             doc.add_page_break()

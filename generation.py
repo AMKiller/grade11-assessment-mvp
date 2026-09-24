@@ -24,6 +24,58 @@ kb = KnowledgeBase()
 # Override via the GENERATION_MODEL env var (e.g. GENERATION_MODEL=claude-opus-5-5).
 GENERATION_MODEL = os.getenv("GENERATION_MODEL", "claude-sonnet-5")
 
+# ============================================================
+# Thinking control (2026-09-24 fix -- see STATUS.md)
+# ============================================================
+# Both claude-sonnet-5 and claude-opus-5-5 run adaptive thinking ON BY
+# DEFAULT, and thinking tokens are billed against and consumed out of the
+# same max_tokens budget as the visible JSON output. Left unconfigured, this
+# caused real failures in the first live run: on Sonnet 5, thinking alone
+# sometimes consumed the entire max_tokens budget before any answer text was
+# emitted ("No text content in Claude response"), or left too little room to
+# finish the JSON ("Response truncated (hit max_tokens limit)"). 4 of 10
+# question slots failed outright this way.
+#
+# claude-sonnet-5 accepts thinking={"type": "disabled"} (confirmed against
+# the installed SDK's ThinkingConfigDisabledParam, anthropic==1.8.0) -- but a
+# same-day comparison run found disabling it makes things WORSE on this
+# model, not better: with thinking off, Sonnet 5 started writing visible
+# planning prose ("Let me design this carefully...") before the JSON instead
+# of going straight to it, breaking json.loads on 8/10 slots. This matches
+# Anthropic's own documented disabled-thinking failure mode (visible-text
+# leakage) -- their guidance is to prefer low/medium effort over disabling
+# thinking. GENERATION_THINKING_MODE therefore defaults to "adaptive", not
+# "disabled"; set it to "disabled" only for deliberate comparison runs.
+#
+# claude-opus-5-5 CANNOT disable thinking at any effort level -- sending
+# thinking={"type": "disabled"} returns a 400 on that model. Its only lever
+# is output_config={"effort": ...} (confirmed against OutputConfigParam in
+# the same SDK), which controls thinking depth rather than turning it off.
+#
+# GENERATION_EFFORT is applied via output_config whenever it's non-empty,
+# independent of GENERATION_THINKING_MODE -- this is what lets a model keep
+# adaptive thinking on (so it doesn't leak prose) while still capping how
+# much of the budget thinking is allowed to spend. Both are overridable via
+# env vars for side-by-side comparison runs.
+GENERATION_THINKING_MODE = os.getenv("GENERATION_THINKING_MODE", "adaptive")  # "adaptive" | "disabled"
+GENERATION_EFFORT = os.getenv("GENERATION_EFFORT", "low")  # "" disables output_config.effort entirely
+
+# Models known (as of 2026-09-24) to reject thinking={"type": "disabled"}
+# with a 400 -- these always use GENERATION_EFFORT (defaulting to "low" if
+# unset) via output_config instead, regardless of GENERATION_THINKING_MODE.
+MODELS_WITHOUT_DISABLED_THINKING = {"claude-opus-5-5"}
+
+# ============================================================
+# max_tokens / truncation handling (2026-09-24 fix -- see STATUS.md)
+# ============================================================
+# Raised from 4096 after the first live run showed several calls hitting the
+# old cap exactly. A truncated response (stop_reason == "max_tokens") is now
+# detected explicitly and retried ONCE at double this cap, inside a single
+# _call_claude() invocation -- this does NOT consume one of
+# generate_question()'s max_retries=3 quality-retry attempts, since a
+# truncation is a budget problem, not a generation-quality problem.
+GENERATION_MAX_TOKENS = int(os.getenv("GENERATION_MAX_TOKENS", "8192"))
+
 
 # ============================================================
 # API call retry policy -- fail-fast on non-retryable errors
@@ -258,28 +310,47 @@ class GeneratedQuestion:
         }
 
 
-def _log_api_call(message, purpose: str, attempt: int = 0) -> dict:
+def _log_api_call(message, purpose: str, attempt: int = 0, truncation_retry: bool = False) -> dict:
     """
     Extract usage stats from an Anthropic API response and print a one-line
     log entry. Returns a plain dict record for later summarization -- no
     new dependencies, just stdlib.
+
+    truncation_retry=True marks a call as the internal max_tokens-doubling
+    retry inside _call_claude() (see GENERATION_MAX_TOKENS) -- it shares its
+    outer `attempt` number with the call it's retrying, so it does NOT get
+    counted as a quality retry by _summarize_usage (which keys off attempt).
     """
     usage = getattr(message, 'usage', None)
+    stop_reason = getattr(message, 'stop_reason', None)
+    thinking_tokens = None
+    details = getattr(usage, 'output_tokens_details', None)
+    if details is not None:
+        thinking_tokens = getattr(details, 'thinking_tokens', None)
+
     record = {
         "purpose": purpose,
         "attempt": attempt + 1,
         "model": getattr(message, 'model', 'unknown'),
+        "stop_reason": stop_reason,
         "input_tokens": getattr(usage, 'input_tokens', 0) or 0,
         "output_tokens": getattr(usage, 'output_tokens', 0) or 0,
+        "thinking_tokens": thinking_tokens,
         "cache_read_input_tokens": getattr(usage, 'cache_read_input_tokens', 0) or 0,
         "cache_creation_input_tokens": getattr(usage, 'cache_creation_input_tokens', 0) or 0,
+        "truncation_retry": truncation_retry,
     }
+    thinking_note = f" thinking={thinking_tokens}" if thinking_tokens is not None else ""
+    trunc_note = " [max_tokens RETRY]" if truncation_retry else ""
     print(
-        f"  [usage] {purpose} (attempt {record['attempt']}): "
-        f"in={record['input_tokens']} out={record['output_tokens']} "
+        f"  [usage] {purpose} (attempt {record['attempt']}){trunc_note}: "
+        f"in={record['input_tokens']} out={record['output_tokens']}{thinking_note} "
+        f"stop_reason={stop_reason} "
         f"cache_read={record['cache_read_input_tokens']} "
         f"cache_write={record['cache_creation_input_tokens']}"
     )
+    if stop_reason == 'max_tokens':
+        print(f"  [truncation] {purpose} (attempt {record['attempt']}) hit max_tokens -- see retry handling in _call_claude")
     return record
 
 
@@ -288,26 +359,36 @@ def _summarize_usage(usage_log: list) -> dict:
     total_calls = len(usage_log)
     total_input = sum(r["input_tokens"] for r in usage_log)
     total_output = sum(r["output_tokens"] for r in usage_log)
+    total_thinking = sum(r.get("thinking_tokens") or 0 for r in usage_log)
     total_cache_read = sum(r["cache_read_input_tokens"] for r in usage_log)
     total_cache_write = sum(r["cache_creation_input_tokens"] for r in usage_log)
-    retries = sum(1 for r in usage_log if r["attempt"] > 1)
+    retries = sum(1 for r in usage_log if r["attempt"] > 1 and not r.get("truncation_retry"))
+    truncation_retries = sum(1 for r in usage_log if r.get("truncation_retry"))
+    stop_reason_counts = {}
+    for r in usage_log:
+        sr = r.get("stop_reason") or "unknown"
+        stop_reason_counts[sr] = stop_reason_counts.get(sr, 0) + 1
 
     return {
         "total_calls": total_calls,
         "retries": retries,
+        "truncation_retries": truncation_retries,
         "total_input_tokens": total_input,
         "total_output_tokens": total_output,
+        "total_thinking_tokens": total_thinking,
         "total_cache_read_tokens": total_cache_read,
         "total_cache_creation_tokens": total_cache_write,
+        "stop_reason_counts": stop_reason_counts,
     }
 
 
 def print_usage_summary(usage_log: list, label: str = "Paper"):
     s = _summarize_usage(usage_log)
     print(f"\n=== API Usage Summary: {label} ===")
-    print(f"  Total calls: {s['total_calls']} ({s['retries']} were retries)")
+    print(f"  Total calls: {s['total_calls']} ({s['retries']} quality retries, {s['truncation_retries']} max_tokens retries)")
+    print(f"  Stop reasons: {s['stop_reason_counts']}")
     print(f"  Total input tokens:  {s['total_input_tokens']}")
-    print(f"  Total output tokens: {s['total_output_tokens']}")
+    print(f"  Total output tokens: {s['total_output_tokens']} (of which thinking: {s['total_thinking_tokens']})")
     print(f"  Cache read tokens:     {s['total_cache_read_tokens']}")
     print(f"  Cache creation tokens: {s['total_cache_creation_tokens']}")
     return s
@@ -655,9 +736,8 @@ a natural way to hit multiple cognitive levels in one slot is a stem with childr
 levels (e.g. a "routine" first part and a "complex" second part), matching the target's split.
 """
 
-        message = _call_claude_with_retry(
+        call_kwargs = dict(
             model=GENERATION_MODEL,
-            max_tokens=4096,
             messages=[
                 {
                     "role": "user",
@@ -666,10 +746,35 @@ levels (e.g. a "routine" first part and a "complex" second part), matching the t
             ],
             system=system_prompt
         )
+        if GENERATION_MODEL in MODELS_WITHOUT_DISABLED_THINKING:
+            # Can't disable thinking on this model at any effort level (400).
+            call_kwargs["output_config"] = {"effort": GENERATION_EFFORT or "low"}
+        elif GENERATION_THINKING_MODE == "disabled":
+            call_kwargs["thinking"] = {"type": "disabled"}
+        elif GENERATION_EFFORT:
+            # Keep adaptive thinking on (avoids the disabled-thinking prose-
+            # leakage failure mode) but cap how much of the budget it spends.
+            call_kwargs["output_config"] = {"effort": GENERATION_EFFORT}
 
-        self.usage_log.append(_log_api_call(
-            message, purpose=f"generate_question:{archetype.archetype_id}", attempt=attempt
-        ))
+        # Truncation handling: try at GENERATION_MAX_TOKENS; if the model hits
+        # that ceiling (stop_reason == "max_tokens"), retry ONCE at double the
+        # cap inside this same call -- logged as a truncation_retry, not a
+        # quality retry, so it doesn't consume generate_question()'s
+        # max_retries budget.
+        current_max_tokens = GENERATION_MAX_TOKENS
+        message = None
+        for internal_try in range(2):
+            message = _call_claude_with_retry(max_tokens=current_max_tokens, **call_kwargs)
+            self.usage_log.append(_log_api_call(
+                message, purpose=f"generate_question:{archetype.archetype_id}",
+                attempt=attempt, truncation_retry=(internal_try > 0)
+            ))
+            if getattr(message, 'stop_reason', None) == 'max_tokens' and internal_try == 0:
+                current_max_tokens *= 2
+                print(f"  [truncation] {archetype.archetype_id}: hit max_tokens, "
+                      f"retrying once at max_tokens={current_max_tokens} (not counted as a quality retry)...")
+                continue
+            break
 
         # Extract text from response, skipping thinking blocks
         response_text = None
@@ -679,7 +784,14 @@ levels (e.g. a "routine" first part and a "complex" second part), matching the t
                 break
 
         if not response_text:
-            raise ValueError("No text content in Claude response")
+            stop_reason = getattr(message, 'stop_reason', None)
+            if stop_reason == 'max_tokens':
+                raise ValueError(
+                    f"No text content in Claude response -- hit max_tokens={current_max_tokens} "
+                    f"(after doubling once) with no visible output emitted, likely because thinking "
+                    f"consumed the entire budget. stop_reason={stop_reason}"
+                )
+            raise ValueError(f"No text content in Claude response (stop_reason={stop_reason})")
 
         # Strip markdown code fences if Claude wraps the JSON in ```json ... ```
         if response_text.startswith("```"):
@@ -693,8 +805,8 @@ levels (e.g. a "routine" first part and a "complex" second part), matching the t
         except json.JSONDecodeError as e:
             if getattr(message, 'stop_reason', None) == 'max_tokens':
                 raise ValueError(
-                    f"Response truncated (hit max_tokens limit) before valid JSON completed -- "
-                    f"increase max_tokens. Truncated text: {response_text[-200:]}"
+                    f"Response truncated (hit max_tokens={current_max_tokens} limit, after doubling "
+                    f"once) before valid JSON completed. Truncated text: {response_text[-200:]}"
                 ) from e
             raise ValueError(f"Claude response was not valid JSON: {response_text}") from e
 
@@ -1112,6 +1224,11 @@ def generate_paper(topic: str, num_questions: int = 5,
                 cognitive_targets=slot["cognitive_targets"]
             )
             if q:
+                # Metadata-only, underscore-prefixed so it's clearly not part
+                # of the Claude-authored schema -- lets callers report planned
+                # vs. actual cognitive level per slot without re-deriving the
+                # leaf plan (see STATUS.md 2026-09-24, item 4).
+                q["_planned_cognitive_targets"] = slot["cognitive_targets"]
                 questions.append(q)
                 total_marks += q.get("total_marks", 0)
                 print(f"  ✓ Question {i} generated")
