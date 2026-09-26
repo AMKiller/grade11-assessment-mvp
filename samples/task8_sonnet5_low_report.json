@@ -1,0 +1,571 @@
+{
+  "model": "claude-sonnet-5",
+  "thinking_mode": "adaptive",
+  "effort_applied": "low",
+  "max_tokens": 8192,
+  "topics_marks": [
+    [
+      "Exponents and Surds",
+      25
+    ],
+    [
+      "Equations and Inequalities",
+      25
+    ]
+  ],
+  "num_questions_per_topic": 5,
+  "actual_total_marks": 45,
+  "requested_total_marks": 50,
+  "usage": {
+    "total_calls": 20,
+    "retries": 10,
+    "truncation_retries": 0,
+    "total_input_tokens": 92448,
+    "total_output_tokens": 37370,
+    "total_thinking_tokens": 20447,
+    "total_cache_read_tokens": 0,
+    "total_cache_creation_tokens": 0,
+    "stop_reason_counts": {
+      "end_turn": 20
+    },
+    "cost_usd": 0.5586,
+    "pricing_used": {
+      "input": 2.0,
+      "output": 10.0
+    },
+    "wall_clock_seconds": 346.6
+  },
+  "cognitive_distribution": {
+    "marks_by_level": {
+      "knowledge": 10,
+      "routine": 18,
+      "complex": 9,
+      "problem_solving": 8
+    },
+    "percentages_by_level": {
+      "knowledge": 22.2,
+      "routine": 40.0,
+      "complex": 20.0,
+      "problem_solving": 17.8
+    },
+    "target_distribution": {
+      "knowledge": 20,
+      "routine": 35,
+      "complex": 30,
+      "problem_solving": 15
+    },
+    "variance": {
+      "knowledge": 2.2,
+      "routine": 5.0,
+      "complex": -10.0,
+      "problem_solving": 2.8
+    }
+  },
+  "verification": {
+    "total_leaves": 13,
+    "sympy_verified": 6,
+    "manual_review_required": 7,
+    "unverifiable_by_design": 7,
+    "real_verification_failures": 0,
+    "unverifiable_detail": [
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_013",
+        "num": "1",
+        "marks": 3
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1",
+        "marks": 7
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_015",
+        "num": "1.1",
+        "marks": 1
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_015",
+        "num": "1.2",
+        "marks": 4
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_014",
+        "num": "1.1",
+        "marks": 1
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_014",
+        "num": "1.2",
+        "marks": 2
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_007",
+        "num": "1",
+        "marks": 5
+      }
+    ],
+    "failed_verification_detail": [],
+    "per_leaf": [
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_013",
+        "num": "1",
+        "marks": 3,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_008",
+        "num": "1",
+        "marks": 7,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 7,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1",
+        "marks": 7,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 7,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_015",
+        "num": "1.1",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 1,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 4
+        },
+        "sympy_verified": false,
+        "manual_review_required": true
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_015",
+        "num": "1.2",
+        "marks": 4,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "problem_solving",
+        "planned_cognitive_targets": {
+          "knowledge": 1,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 4
+        },
+        "sympy_verified": false,
+        "manual_review_required": true
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_014",
+        "num": "1.1",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 1,
+          "routine": 2,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_014",
+        "num": "1.2",
+        "marks": 2,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 1,
+          "routine": 2,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_006",
+        "num": "1",
+        "marks": 5,
+        "problem_type": "equation",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 5,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_007",
+        "num": "1",
+        "marks": 5,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 5,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_002",
+        "num": "1.1",
+        "marks": 1,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 4
+        },
+        "sympy_verified": true,
+        "manual_review_required": false
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_002",
+        "num": "1.2",
+        "marks": 4,
+        "problem_type": "equation",
+        "actual_cognitive_level": "problem_solving",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 4
+        },
+        "sympy_verified": true,
+        "manual_review_required": false
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_004",
+        "num": "1.1",
+        "marks": 3,
+        "problem_type": "inequality",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 3,
+          "complex": 2,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_004",
+        "num": "1.2",
+        "marks": 2,
+        "problem_type": "inequality",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 3,
+          "complex": 2,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false
+      }
+    ]
+  },
+  "generation_errors": [
+    "[Equations and Inequalities] Question 3 (eqineq_008): RuntimeError: All 3 attempts failed. Last error: ValueError: Invalid hierarchical structure: Row 0: tick_count 6 != marks 5"
+  ],
+  "raw_usage_log": [
+    {
+      "purpose": "generate_question:exp_surd_013",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4438,
+      "output_tokens": 570,
+      "thinking_tokens": 167,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_013",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4438,
+      "output_tokens": 965,
+      "thinking_tokens": 409,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_008",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4528,
+      "output_tokens": 1211,
+      "thinking_tokens": 201,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_008",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4528,
+      "output_tokens": 1915,
+      "thinking_tokens": 647,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_008",
+      "attempt": 3,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4528,
+      "output_tokens": 1531,
+      "thinking_tokens": 819,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_005",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4436,
+      "output_tokens": 1316,
+      "thinking_tokens": 470,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_005",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4436,
+      "output_tokens": 1783,
+      "thinking_tokens": 956,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_015",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4738,
+      "output_tokens": 3196,
+      "thinking_tokens": 2175,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_014",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4520,
+      "output_tokens": 1498,
+      "thinking_tokens": 522,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_014",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4520,
+      "output_tokens": 3146,
+      "thinking_tokens": 2259,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_014",
+      "attempt": 3,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4520,
+      "output_tokens": 5938,
+      "thinking_tokens": 4909,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_006",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4859,
+      "output_tokens": 2560,
+      "thinking_tokens": 1508,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_007",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4927,
+      "output_tokens": 1205,
+      "thinking_tokens": 573,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_007",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4927,
+      "output_tokens": 860,
+      "thinking_tokens": 336,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_007",
+      "attempt": 3,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4927,
+      "output_tokens": 1429,
+      "thinking_tokens": 510,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_008",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4665,
+      "output_tokens": 1086,
+      "thinking_tokens": 328,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_008",
+      "attempt": 2,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4665,
+      "output_tokens": 1011,
+      "thinking_tokens": 159,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_008",
+      "attempt": 3,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4665,
+      "output_tokens": 1046,
+      "thinking_tokens": 299,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_002",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4571,
+      "output_tokens": 2122,
+      "thinking_tokens": 1214,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_004",
+      "attempt": 1,
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 4612,
+      "output_tokens": 2982,
+      "thinking_tokens": 1986,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    }
+  ]
+}
