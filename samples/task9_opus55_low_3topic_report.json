@@ -1,0 +1,313 @@
+{
+  "model": "claude-opus-5-5",
+  "topics": [
+    "Equations and Inequalities",
+    "Exponents and Surds",
+    "Trigonometry (reduction formulae, trig equations & general solutions)"
+  ],
+  "marks_per_topic": {
+    "Equations and Inequalities": 20,
+    "Exponents and Surds": 15,
+    "Trigonometry (reduction formulae, trig equations & general solutions)": 15
+  },
+  "actual_total_marks": 50,
+  "requested_total_marks": 50,
+  "usage": {
+    "total_calls": 20,
+    "retries": 5,
+    "truncation_retries": 0,
+    "total_input_tokens": 133784,
+    "total_output_tokens": 24009,
+    "total_thinking_tokens": 6885,
+    "total_cache_read_tokens": 0,
+    "total_cache_creation_tokens": 0,
+    "stop_reason_counts": {
+      "end_turn": 20
+    },
+    "cost_usd": 1.0153,
+    "wall_clock_seconds": 227.1
+  },
+  "cognitive_distribution": {
+    "marks_by_level": {
+      "knowledge": 10,
+      "routine": 17,
+      "complex": 16,
+      "problem_solving": 7
+    },
+    "percentages_by_level": {
+      "knowledge": 20.0,
+      "routine": 34.0,
+      "complex": 32.0,
+      "problem_solving": 14.0
+    },
+    "target_distribution": {
+      "knowledge": 20,
+      "routine": 35,
+      "complex": 30,
+      "problem_solving": 15
+    },
+    "variance": {
+      "knowledge": 0.0,
+      "routine": -1.0,
+      "complex": 2.0,
+      "problem_solving": -1.0
+    }
+  },
+  "diversity_diagnostics": {
+    "Equations and Inequalities": {
+      "forced_reuse_archetype_ids": [],
+      "subtopic_coverage_swaps": []
+    },
+    "Exponents and Surds": {
+      "forced_reuse_archetype_ids": [],
+      "subtopic_coverage_swaps": []
+    },
+    "Trigonometry (reduction formulae, trig equations & general solutions)": {
+      "forced_reuse_archetype_ids": [],
+      "subtopic_coverage_swaps": []
+    }
+  },
+  "generation_errors": [],
+  "raw_usage_log": [
+    {
+      "purpose": "generate_question:eqineq_002",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6609,
+      "output_tokens": 999,
+      "thinking_tokens": 187,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_005",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6779,
+      "output_tokens": 1372,
+      "thinking_tokens": 529,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_007",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6961,
+      "output_tokens": 988,
+      "thinking_tokens": 450,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_006",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6893,
+      "output_tokens": 1913,
+      "thinking_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_006",
+      "attempt": 2,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6893,
+      "output_tokens": 2753,
+      "thinking_tokens": 1341,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_003",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6649,
+      "output_tokens": 816,
+      "thinking_tokens": 410,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_017",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6678,
+      "output_tokens": 416,
+      "thinking_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_006",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6461,
+      "output_tokens": 974,
+      "thinking_tokens": 312,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_016",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6624,
+      "output_tokens": 841,
+      "thinking_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_016",
+      "attempt": 2,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6624,
+      "output_tokens": 721,
+      "thinking_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_016",
+      "attempt": 3,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6624,
+      "output_tokens": 904,
+      "thinking_tokens": 404,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_018",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6403,
+      "output_tokens": 1357,
+      "thinking_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_018",
+      "attempt": 2,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6403,
+      "output_tokens": 1770,
+      "thinking_tokens": 722,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_013",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6374,
+      "output_tokens": 1263,
+      "thinking_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_013",
+      "attempt": 2,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6374,
+      "output_tokens": 1163,
+      "thinking_tokens": 444,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_001",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 7140,
+      "output_tokens": 1235,
+      "thinking_tokens": 405,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_003",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6633,
+      "output_tokens": 581,
+      "thinking_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_005",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 7046,
+      "output_tokens": 949,
+      "thinking_tokens": 471,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_002",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6925,
+      "output_tokens": 1757,
+      "thinking_tokens": 680,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_004",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6691,
+      "output_tokens": 1237,
+      "thinking_tokens": 530,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    }
+  ]
+}
