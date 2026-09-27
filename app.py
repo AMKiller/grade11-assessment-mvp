@@ -362,7 +362,7 @@ if "generation_result" in st.session_state:
 
     # Download section
     st.subheader("📥 Download Assessment")
-    st.caption("One combined document: question paper, marking guideline, and cognitive level analysis grid.")
+    st.caption("Three separate files: question paper (.docx), marking guideline (.docx), and cognitive level analysis grid (.xlsx).")
 
     if result.get('generation_errors'):
         # Don't let a partial generation quietly become a downloadable
@@ -371,19 +371,19 @@ if "generation_result" in st.session_state:
         # STATUS.md 2026-09-24 where a partial paper printed a "Total
         # Marks" figure it didn't actually contain.
         st.error(
-            f"❌ Cannot generate the document: {len(result['generation_errors'])} question(s) failed "
+            f"❌ Cannot generate the documents: {len(result['generation_errors'])} question(s) failed "
             f"after all retries, so this paper only reaches **{result['total_marks']} of the "
             f"requested {grand_total_marks} marks**. Fix the failing archetype(s) below or "
-            f"regenerate before downloading -- no document will be built from a paper this short "
+            f"regenerate before downloading -- no documents will be built from a paper this short "
             f"of its target.\n\n**Failed questions:**\n"
             + "\n".join(f"- {e}" for e in result['generation_errors'])
         )
-    elif st.button("Generate Full Assessment (.docx)", use_container_width=True):
+    elif st.button("Generate Assessment Files", use_container_width=True):
         with st.spinner("Building question paper, marking guide, and cognitive grid..."):
             try:
                 gen = DocumentGenerator(template_path=None)
 
-                doc_bytes = gen.generate_full_assessment(
+                qp_bytes = gen.generate_question_paper(
                     topics_data=result['topics_data'],
                     total_marks=result['total_marks'],
                     task=task or None,
@@ -393,18 +393,49 @@ if "generation_result" in st.session_state:
                     moderator=moderator or None,
                     grade=grade
                 )
-
-                topics_slug = "_".join(t.replace(' ', '_') for t in result['topics'])
-                st.download_button(
-                    label="💾 Download Assessment",
-                    data=doc_bytes,
-                    file_name=f"Grade_{grade}_{topics_slug}_{datetime.now().strftime('%Y%m%d')}.docx",
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    use_container_width=True
+                mg_bytes = gen.generate_marking_guide(
+                    topics_data=result['topics_data'],
+                    total_marks=result['total_marks'],
+                    task=task or None,
+                    term=term if term else None,
+                    grade=grade
+                )
+                grid_bytes = gen.generate_cognitive_grid_xlsx(
+                    topics_data=result['topics_data'],
                 )
 
+                topics_slug = "_".join(t.replace(' ', '_') for t in result['topics'])
+                date_slug = datetime.now().strftime('%Y%m%d')
+                base_name = f"Grade_{grade}_{topics_slug}_{date_slug}"
+
+                dl_col1, dl_col2, dl_col3 = st.columns(3)
+                with dl_col1:
+                    st.download_button(
+                        label="💾 Question Paper (.docx)",
+                        data=qp_bytes,
+                        file_name=f"{base_name}_QP.docx",
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        use_container_width=True
+                    )
+                with dl_col2:
+                    st.download_button(
+                        label="💾 Marking Guide (.docx)",
+                        data=mg_bytes,
+                        file_name=f"{base_name}_MG.docx",
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        use_container_width=True
+                    )
+                with dl_col3:
+                    st.download_button(
+                        label="💾 Cognitive Grid (.xlsx)",
+                        data=grid_bytes,
+                        file_name=f"{base_name}_Grid.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        use_container_width=True
+                    )
+
             except Exception as e:
-                st.error(f"Failed to generate assessment: {e}")
+                st.error(f"Failed to generate assessment files: {e}")
                 st.code(__import__('traceback').format_exc())
 
 # Footer

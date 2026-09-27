@@ -1,28 +1,18 @@
 #!/usr/bin/env python3
 """
-Task 8 model-comparison run: Exponents & Surds (25 marks) + Equations &
-Inequalities (25 marks), 50 marks total, against the live Claude API.
-Model/thinking/effort config controlled by env vars read by generation.py
-at import time (GENERATION_MODEL, GENERATION_THINKING_MODE,
-GENERATION_EFFORT, GENERATION_MAX_TOKENS) -- run once per configuration.
-
-Saves, per run:
-  samples/task8_<basename>.docx        -- combined QP+MG+grid document
-  samples/task8_<basename>.pdf
-  samples/task8_<basename>_report.json      -- usage/cost/cognitive summary
-  samples/task8_<basename>_raw_questions.json -- full generated question
-      structures (parts/answer/marking_steps/sympy fields) for independent
-      correctness verification -- NOT persisted by run_real_generation.py,
-      needed here because this comparison requires re-checking every
-      marking-guide answer by hand/sympy, not just the aggregate stats.
+Task 9's exact 3-topic, 50-mark, uneven-split configuration (Equations and
+Inequalities 20 / Exponents and Surds 15 / Trigonometry 15), re-run through
+the same generate_paper() path the real app.py UI uses, but now producing
+THREE separate deliverable files (question paper .docx, marking guide .docx,
+cognitive grid .xlsx) instead of one combined .docx -- the new baseline for
+the separate-prompt-caching test to come.
 
 Usage:
-    ANTHROPIC_API_KEY=... GENERATION_MODEL=claude-sonnet-5 \
-        [GENERATION_EFFORT=low] python3 scripts/run_task8_comparison.py <basename>
+    ANTHROPIC_API_KEY=... [GENERATION_MODEL=claude-opus-5-5] \
+        python3 scripts/run_task9_3files.py task9_opus55_low_3files
 """
 import json
 import sys
-import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -35,26 +25,26 @@ from generation import (
 from docgen import DocumentGenerator, _compute_actual_marks
 
 TOPICS_MARKS = [
-    ("Exponents and Surds", 25),
-    ("Equations and Inequalities", 25),
+    ("Equations and Inequalities", 20),
+    ("Exponents and Surds", 15),
+    ("Trigonometry (reduction formulae, trig equations & general solutions)", 15),
 ]
 NUM_QUESTIONS_PER_TOPIC = 5
 TARGET_DISTRIBUTION = {"knowledge": 20, "routine": 35, "complex": 30, "problem_solving": 15}
 
+PRICING = {
+    "claude-sonnet-5": {"input": 2.00, "output": 10.00},
+    "claude-opus-5-5": {"input": 4.00, "output": 20.00},
+}
+
 METADATA = dict(
-    task="Task 8",
+    task="Task 9",
     term="Term 3 2026",
-    time_minutes=60,
+    time_minutes=90,
     examiner="AE Killer",
     moderator="D Piters",
     grade="11",
 )
-
-PRICING = {
-    "claude-sonnet-5": {"input": 2.00, "output": 10.00},
-    "claude-opus-5-5": {"input": 4.00, "output": 20.00},
-    "claude-haiku-4-5": {"input": 1.00, "output": 5.00},
-}
 
 
 def collect_leaf_detail(topics_data: list) -> dict:
@@ -66,10 +56,6 @@ def collect_leaf_detail(topics_data: list) -> dict:
     per_leaf = []
     unverifiable_detail = []
     failed_verification_detail = []
-    constructed_count = 0
-    constructed_detail = []
-    cognitive_mismatch_count = 0
-    cognitive_mismatch_detail = []
 
     for topic, questions in topics_data:
         for q in questions:
@@ -81,18 +67,19 @@ def collect_leaf_detail(topics_data: list) -> dict:
                     total_leaves += 1
                     actual_level = leaf.get("cognitive_level")
                     problem_type = leaf.get("problem_type")
-                    archetype_match = leaf.get("archetype_match")
-                    disagreement = leaf.get("cognitive_level_disagreement")
-                    per_leaf.append({
-                        "topic": topic, "archetype_id": archetype_id, "num": leaf.get("num"),
-                        "marks": leaf.get("marks"), "problem_type": problem_type,
+                    entry = {
+                        "topic": topic,
+                        "archetype_id": archetype_id,
+                        "num": leaf.get("num"),
+                        "marks": leaf.get("marks"),
+                        "problem_type": problem_type,
                         "actual_cognitive_level": actual_level,
                         "planned_cognitive_targets": planned,
                         "sympy_verified": leaf.get("sympy_verified"),
                         "manual_review_required": leaf.get("manual_review_required"),
-                        "archetype_match": archetype_match,
-                        "cognitive_level_disagreement": disagreement,
-                    })
+                    }
+                    per_leaf.append(entry)
+
                     if problem_type == "unverifiable":
                         unverifiable += 1
                         unverifiable_detail.append({
@@ -109,57 +96,43 @@ def collect_leaf_detail(topics_data: list) -> dict:
                                 "topic": topic, "archetype_id": archetype_id,
                                 "problem_type": problem_type, "sympy_error": leaf.get("sympy_error"),
                             })
-                    if archetype_match == "constructed":
-                        constructed_count += 1
-                        constructed_detail.append({
-                            "topic": topic, "archetype_id": archetype_id,
-                            "num": leaf.get("num"), "marks": leaf.get("marks"),
-                        })
-                    if disagreement:
-                        cognitive_mismatch_count += 1
-                        cognitive_mismatch_detail.append({
-                            "topic": topic, "archetype_id": archetype_id,
-                            "num": leaf.get("num"), "marks": leaf.get("marks"),
-                            "assigned_level": actual_level, "disagreement": disagreement,
-                        })
 
     return {
-        "total_leaves": total_leaves, "sympy_verified": sympy_verified,
-        "manual_review_required": manual_review, "unverifiable_by_design": unverifiable,
+        "total_leaves": total_leaves,
+        "sympy_verified": sympy_verified,
+        "manual_review_required": manual_review,
+        "unverifiable_by_design": unverifiable,
         "real_verification_failures": real_verification_failures,
         "unverifiable_detail": unverifiable_detail,
         "failed_verification_detail": failed_verification_detail,
-        "constructed_count": constructed_count,
-        "constructed_detail": constructed_detail,
-        "cognitive_mismatch_count": cognitive_mismatch_count,
-        "cognitive_mismatch_detail": cognitive_mismatch_detail,
         "per_leaf": per_leaf,
     }
 
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: run_task8_comparison.py <output_basename>", file=sys.stderr)
+        print("Usage: run_task9_3files.py <output_basename>", file=sys.stderr)
         sys.exit(1)
 
-    out_basename = f"task8_{sys.argv[1]}"
+    out_basename = sys.argv[1]
     thinking_desc = (
-        f"effort={GENERATION_EFFORT or 'low'} (thinking cannot be disabled on this model)"
+        f"effort={GENERATION_EFFORT} (thinking cannot be disabled on this model)"
         if GENERATION_MODEL in MODELS_WITHOUT_DISABLED_THINKING
         else f"thinking_mode={GENERATION_THINKING_MODE}, effort={GENERATION_EFFORT or '(unset)'}"
     )
-    print(f"=== Task 8 comparison run -- model={GENERATION_MODEL}, {thinking_desc}, "
+    print(f"=== Task 9 3-file baseline run -- model={GENERATION_MODEL}, {thinking_desc}, "
           f"max_tokens={GENERATION_MAX_TOKENS} ===\n")
 
     topics_data = []
     combined_usage_log = []
     combined_errors = []
     all_questions = []
-    diversity_diagnostics = {}
 
-    wall_start = time.time()
+    import time as _time
+    wall_start = _time.time()
+
     for topic, marks in TOPICS_MARKS:
-        print(f"--- Generating topic: {topic} ({marks} marks) ---")
+        print(f"--- Generating topic: {topic} (target {marks} marks) ---")
         result = generate_paper(
             topic=topic,
             num_questions=NUM_QUESTIONS_PER_TOPIC,
@@ -170,22 +143,15 @@ def main():
         combined_usage_log.extend(result["usage_log"])
         combined_errors.extend([f"[{topic}] {e}" for e in result.get("generation_errors", [])])
         all_questions.extend(result["questions"])
-        diversity_diagnostics[topic] = result.get("diversity_diagnostics", {})
-        archetype_ids = [q.get("archetype_id") for q in result["questions"]]
-        print(f"  -> {result['num_questions']} questions, {result['total_marks']} marks")
-        print(f"     archetypes used: {archetype_ids}")
-        if diversity_diagnostics[topic].get("forced_reuse_archetype_ids"):
-            print(f"     [diversity] forced reuse (pool exhausted): {diversity_diagnostics[topic]['forced_reuse_archetype_ids']}")
-        if diversity_diagnostics[topic].get("subtopic_coverage_swaps"):
-            for note in diversity_diagnostics[topic]["subtopic_coverage_swaps"]:
-                print(f"     [diversity] {note}")
-        print()
-    wall_seconds = round(time.time() - wall_start, 1)
+        print(f"  -> {result['num_questions']} questions, {result['total_marks']} marks\n")
+
+    wall_clock_seconds = round(_time.time() - wall_start, 1)
 
     question_groups = [(i + 1, qs) for i, (_, qs) in enumerate(topics_data)]
     actual_total_marks = _compute_actual_marks(question_groups)
 
     usage_summary = _summarize_usage(combined_usage_log)
+    usage_summary["wall_clock_seconds"] = wall_clock_seconds
     price = PRICING.get(GENERATION_MODEL)
     if price:
         cost = (usage_summary["total_input_tokens"] / 1_000_000 * price["input"]) + \
@@ -194,10 +160,11 @@ def main():
         cost = None
     usage_summary["cost_usd"] = round(cost, 4) if cost is not None else None
     usage_summary["pricing_used"] = price
-    usage_summary["wall_clock_seconds"] = wall_seconds
 
     cognitive = _analyze_cognitive_distribution(all_questions, TARGET_DISTRIBUTION)
     leaf_detail = collect_leaf_detail(topics_data)
+
+    requested_total = sum(m for _, m in TOPICS_MARKS)
 
     report = {
         "model": GENERATION_MODEL,
@@ -207,14 +174,15 @@ def main():
             else (GENERATION_EFFORT if GENERATION_THINKING_MODE != "disabled" and GENERATION_EFFORT else None)
         ),
         "max_tokens": GENERATION_MAX_TOKENS,
-        "topics_marks": TOPICS_MARKS,
+        "deliverable_structure": "3 separate files (QP .docx, MG .docx, grid .xlsx) -- new baseline, not the old combined-file format",
+        "topics": [t for t, _ in TOPICS_MARKS],
+        "marks_per_topic": {t: m for t, m in TOPICS_MARKS},
         "num_questions_per_topic": NUM_QUESTIONS_PER_TOPIC,
         "actual_total_marks": actual_total_marks,
-        "requested_total_marks": sum(m for _, m in TOPICS_MARKS),
+        "requested_total_marks": requested_total,
         "usage": usage_summary,
         "cognitive_distribution": cognitive,
         "verification": leaf_detail,
-        "diversity_diagnostics": diversity_diagnostics,
         "generation_errors": combined_errors,
         "raw_usage_log": combined_usage_log,
     }
@@ -222,25 +190,16 @@ def main():
     print("\n=== REPORT (summary) ===")
     print(json.dumps({k: v for k, v in report.items() if k not in ("raw_usage_log", "verification")}, indent=2, default=str))
 
-    samples_dir = Path(__file__).parent.parent / "samples"
-    samples_dir.mkdir(exist_ok=True)
-
-    # Full raw question structures -- needed for independent correctness
-    # verification (report.json alone only has summary stats).
-    raw_path = samples_dir / f"{out_basename}_raw_questions.json"
-    raw_path.write_text(json.dumps(topics_data, indent=2, default=str))
-    print(f"Saved: {raw_path}")
-
+    # --- Document generation: 3 separate files ---
     docgen = DocumentGenerator(template_path=None)
-    total_marks = sum(m for _, m in TOPICS_MARKS)
     qp_bytes = docgen.generate_question_paper(
         topics_data=topics_data,
-        total_marks=total_marks,
+        total_marks=requested_total,
         **METADATA,
     )
     mg_bytes = docgen.generate_marking_guide(
         topics_data=topics_data,
-        total_marks=total_marks,
+        total_marks=requested_total,
         task=METADATA["task"],
         term=METADATA["term"],
         grade=METADATA["grade"],
@@ -250,9 +209,12 @@ def main():
         target_distribution=TARGET_DISTRIBUTION,
     )
 
+    samples_dir = Path(__file__).parent.parent / "samples"
+    samples_dir.mkdir(exist_ok=True)
+
     qp_path = samples_dir / f"{out_basename}.qp.docx"
     qp_path.write_bytes(qp_bytes)
-    print(f"Saved: {qp_path}")
+    print(f"\nSaved: {qp_path}")
 
     mg_path = samples_dir / f"{out_basename}.mg.docx"
     mg_path.write_bytes(mg_bytes)
@@ -268,18 +230,12 @@ def main():
 
     if combined_errors:
         print(f"\n⚠ {len(combined_errors)} slot(s) failed -- paper is {actual_total_marks}/"
-              f"{sum(m for _, m in TOPICS_MARKS)} marks:")
+              f"{requested_total} marks:")
         for e in combined_errors:
             print(f"  - {e}")
-
-    print(f"\nConstructed (no archetype precedent) leaves: {leaf_detail['constructed_count']}")
-    for d in leaf_detail["constructed_detail"]:
-        print(f"  - {d}")
-    print(f"Cognitive-level disagreements flagged: {leaf_detail['cognitive_mismatch_count']}")
-    for d in leaf_detail["cognitive_mismatch_detail"]:
-        print(f"  - {d}")
-
-    print(f"\nWall clock: {wall_seconds}s")
+    else:
+        print(f"\n✓ No generation errors. {actual_total_marks}/{requested_total} marks. "
+              f"Cost: ${usage_summary['cost_usd']}, wall clock: {wall_clock_seconds}s")
 
 
 if __name__ == "__main__":

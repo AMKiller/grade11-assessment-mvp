@@ -108,8 +108,10 @@ def test_document_generation():
     # (this exact pattern previously masked a real regression, see STATUS.md).
     gen = DocumentGenerator()
 
-    qp_bytes = gen.generate_full_assessment(
-        topics_data=[("Equations and Inequalities", questions)],
+    topics_data = [("Equations and Inequalities", questions)]
+
+    qp_bytes = gen.generate_question_paper(
+        topics_data=topics_data,
         total_marks=6,
         task="Task 2",
         term="Term 1",
@@ -118,13 +120,31 @@ def test_document_generation():
         moderator="Test Moderator",
         grade="11"
     )
-
     assert len(qp_bytes) > 0
     print(f"  ✓ Question paper generated ({len(qp_bytes)} bytes)")
-
     with open("/tmp/test_qp.docx", "wb") as f:
         f.write(qp_bytes)
     print("  ✓ Saved to /tmp/test_qp.docx")
+
+    mg_bytes = gen.generate_marking_guide(
+        topics_data=topics_data,
+        total_marks=6,
+        task="Task 2",
+        term="Term 1",
+        grade="11"
+    )
+    assert len(mg_bytes) > 0
+    print(f"  ✓ Marking guide generated ({len(mg_bytes)} bytes)")
+    with open("/tmp/test_mg.docx", "wb") as f:
+        f.write(mg_bytes)
+    print("  ✓ Saved to /tmp/test_mg.docx")
+
+    grid_bytes = gen.generate_cognitive_grid_xlsx(topics_data=topics_data)
+    assert len(grid_bytes) > 0
+    print(f"  ✓ Cognitive grid generated ({len(grid_bytes)} bytes)")
+    with open("/tmp/test_grid.xlsx", "wb") as f:
+        f.write(grid_bytes)
+    print("  ✓ Saved to /tmp/test_grid.xlsx")
 
 
 def test_cognitive_analysis():

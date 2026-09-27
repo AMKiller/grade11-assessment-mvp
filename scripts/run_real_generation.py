@@ -196,21 +196,38 @@ def main():
     # regardless (see docgen.py's fix), so a partial paper's document will
     # honestly show its own short total rather than the requested one.
     docgen = DocumentGenerator(template_path=None)
-    docx_bytes = docgen.generate_full_assessment(
+    requested_total = MARKS_PER_TOPIC * len(TOPICS)
+    qp_bytes = docgen.generate_question_paper(
         topics_data=topics_data,
-        total_marks=MARKS_PER_TOPIC * len(TOPICS),
+        total_marks=requested_total,
         task="Task",
         term="Term 2",
         time_minutes=90,
         grade="11",
+    )
+    mg_bytes = docgen.generate_marking_guide(
+        topics_data=topics_data,
+        total_marks=requested_total,
+        task="Task",
+        term="Term 2",
+        grade="11",
+    )
+    grid_bytes = docgen.generate_cognitive_grid_xlsx(
+        topics_data=topics_data,
         target_distribution=TARGET_DISTRIBUTION,
     )
 
     samples_dir = Path(__file__).parent.parent / "samples"
     samples_dir.mkdir(exist_ok=True)
-    docx_path = samples_dir / f"{out_basename}.docx"
-    docx_path.write_bytes(docx_bytes)
-    print(f"\nSaved: {docx_path}")
+    qp_path = samples_dir / f"{out_basename}.qp.docx"
+    qp_path.write_bytes(qp_bytes)
+    print(f"\nSaved: {qp_path}")
+    mg_path = samples_dir / f"{out_basename}.mg.docx"
+    mg_path.write_bytes(mg_bytes)
+    print(f"Saved: {mg_path}")
+    grid_path = samples_dir / f"{out_basename}.grid.xlsx"
+    grid_path.write_bytes(grid_bytes)
+    print(f"Saved: {grid_path}")
 
     report_path = samples_dir / f"{out_basename}_report.json"
     report_path.write_text(json.dumps(report, indent=2, default=str))
