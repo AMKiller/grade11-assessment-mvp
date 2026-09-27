@@ -1,0 +1,954 @@
+{
+  "model": "claude-opus-5-5",
+  "thinking_mode": "adaptive",
+  "effort_applied": "low",
+  "max_tokens": 8192,
+  "output_structure": "3files (qp.docx + mg.docx + grid.xlsx)",
+  "topics_marks": [
+    [
+      "Equations and Inequalities",
+      20
+    ],
+    [
+      "Exponents and Surds",
+      15
+    ],
+    [
+      "Trigonometry (reduction formulae, trig equations & general solutions)",
+      15
+    ]
+  ],
+  "num_questions_per_topic": 5,
+  "actual_total_marks": 50,
+  "requested_total_marks": 50,
+  "usage": {
+    "total_calls": 17,
+    "retries": 2,
+    "truncation_retries": 0,
+    "total_input_tokens": 113895,
+    "total_output_tokens": 24266,
+    "total_thinking_tokens": 9391,
+    "total_cache_read_tokens": 0,
+    "total_cache_creation_tokens": 0,
+    "stop_reason_counts": {
+      "end_turn": 17
+    },
+    "cost_usd": 0.9409,
+    "pricing_used": {
+      "input": 4.0,
+      "output": 20.0
+    },
+    "wall_clock_seconds": 218.1
+  },
+  "cognitive_distribution": {
+    "marks_by_level": {
+      "knowledge": 10,
+      "routine": 17,
+      "complex": 18,
+      "problem_solving": 5
+    },
+    "percentages_by_level": {
+      "knowledge": 20.0,
+      "routine": 34.0,
+      "complex": 36.0,
+      "problem_solving": 10.0
+    },
+    "target_distribution": {
+      "knowledge": 20,
+      "routine": 35,
+      "complex": 30,
+      "problem_solving": 15
+    },
+    "variance": {
+      "knowledge": 0.0,
+      "routine": -1.0,
+      "complex": 6.0,
+      "problem_solving": -5.0
+    }
+  },
+  "verification": {
+    "total_leaves": 27,
+    "sympy_verified": 15,
+    "manual_review_required": 12,
+    "unverifiable_by_design": 12,
+    "real_verification_failures": 0,
+    "unverifiable_detail": [
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_005",
+        "num": "1.1",
+        "marks": 1
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_005",
+        "num": "1.2",
+        "marks": 2
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1.1",
+        "marks": 1
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1.2",
+        "marks": 1
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1.3",
+        "marks": 1
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1.4",
+        "marks": 1
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_007",
+        "num": "1.1",
+        "marks": 2
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.1",
+        "marks": 1
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.2",
+        "marks": 1
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.3",
+        "marks": 1
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.4",
+        "marks": 1
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_005",
+        "num": "1",
+        "marks": 2
+      }
+    ],
+    "failed_verification_detail": [],
+    "constructed_count": 8,
+    "constructed_detail": [
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_005",
+        "num": "1.1",
+        "marks": 1
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_003",
+        "num": "1.3",
+        "marks": 1
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1.1",
+        "marks": 1
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1.2",
+        "marks": 1
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_007",
+        "num": "1.2",
+        "marks": 2
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.1",
+        "marks": 1
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.2",
+        "marks": 1
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.3",
+        "marks": 1
+      }
+    ],
+    "cognitive_mismatch_count": 5,
+    "cognitive_mismatch_detail": [
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_005",
+        "num": "1.2",
+        "marks": 2,
+        "assigned_level": "knowledge",
+        "disagreement": "Substituting and expanding a binomial square to reach standard form is a drilled multi-step procedure, which fits routine rather than single-step knowledge. The slot plan required 4 knowledge marks, and heavy scaffolding lowers the demand only partly."
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_005",
+        "num": "1.3",
+        "marks": 1,
+        "assigned_level": "knowledge",
+        "disagreement": "Factorising a trinomial with a leading coefficient other than 1 is a routine procedure rather than recall. It is labelled knowledge only to satisfy the slot plan."
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_001",
+        "num": "1",
+        "marks": 2,
+        "assigned_level": "complex",
+        "disagreement": "The slot plan required problem_solving. The question does not name the method, so the learner must decide either to expand into standard form or to recognise a difference of two squares of binomials. That decision meets the definition of complex. It is not genuinely unfamiliar in structure, and a 2-mark factorisation item cannot honestly reach problem_solving within this archetype's scope. It is therefore labelled complex rather than falsely labelled problem_solving."
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_003",
+        "num": "1.3",
+        "marks": 1,
+        "assigned_level": "problem_solving",
+        "disagreement": "Recognising that a square cannot be negative is an insight, but for 1 mark following part (b) it may sit closer to complex than genuine problem solving."
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_001",
+        "num": "1",
+        "marks": 2,
+        "assigned_level": "problem_solving",
+        "disagreement": "The restriction is disguised as a product condition. The learner must work out for themselves that sin\u00b2\u03b8/cos\u03b8 < 0 forces cos\u03b8 < 0, which is an uncued insight. This is arguably closer to complex than to fully problem_solving, because the rest of the method (a diagram with Pythagoras) is the standard technique. It is labelled problem_solving because the slot plan requires it."
+      }
+    ],
+    "per_leaf": [
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_005",
+        "num": "1.1",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 4,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "constructed",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_005",
+        "num": "1.2",
+        "marks": 2,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 4,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": "Substituting and expanding a binomial square to reach standard form is a drilled multi-step procedure, which fits routine rather than single-step knowledge. The slot plan required 4 knowledge marks, and heavy scaffolding lowers the demand only partly."
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_005",
+        "num": "1.3",
+        "marks": 1,
+        "problem_type": "equation",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 4,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": "Factorising a trinomial with a leading coefficient other than 1 is a routine procedure rather than recall. It is labelled knowledge only to satisfy the slot plan."
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_005",
+        "num": "1.4",
+        "marks": 1,
+        "problem_type": "system",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 4,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_006",
+        "num": "1",
+        "marks": 5,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 5,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_004",
+        "num": "1",
+        "marks": 4,
+        "problem_type": "inequality",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 4,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_001",
+        "num": "1",
+        "marks": 2,
+        "problem_type": "equation",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 2
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": "The slot plan required problem_solving. The question does not name the method, so the learner must decide either to expand into standard form or to recognise a difference of two squares of binomials. That decision meets the definition of complex. It is not genuinely unfamiliar in structure, and a 2-mark factorisation item cannot honestly reach problem_solving within this archetype's scope. It is therefore labelled complex rather than falsely labelled problem_solving."
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_003",
+        "num": "1.1",
+        "marks": 1,
+        "problem_type": "inequality",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 2,
+          "problem_solving": 1
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_003",
+        "num": "1.2",
+        "marks": 2,
+        "problem_type": "inequality",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 2,
+          "problem_solving": 1
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_003",
+        "num": "1.3",
+        "marks": 1,
+        "problem_type": "inequality",
+        "actual_cognitive_level": "problem_solving",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 2,
+          "problem_solving": 1
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "constructed",
+        "cognitive_level_disagreement": "Recognising that a square cannot be negative is an insight, but for 1 mark following part (b) it may sit closer to complex than genuine problem solving."
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1.1",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "constructed",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1.2",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "constructed",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1.3",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_005",
+        "num": "1.4",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_018",
+        "num": "1",
+        "marks": 2,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 2,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_004",
+        "num": "1",
+        "marks": 2,
+        "problem_type": "equation",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 2,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_007",
+        "num": "1.1",
+        "marks": 2,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 2,
+          "complex": 0,
+          "problem_solving": 2
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_007",
+        "num": "1.2",
+        "marks": 2,
+        "problem_type": "equation",
+        "actual_cognitive_level": "problem_solving",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 2,
+          "complex": 0,
+          "problem_solving": 2
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "constructed",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_016",
+        "num": "1",
+        "marks": 3,
+        "problem_type": "equation",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 3,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.1",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "constructed",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.2",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "constructed",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.3",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "knowledge",
+        "planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "constructed",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_003",
+        "num": "1.4",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_002",
+        "num": "1",
+        "marks": 4,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 4,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_005",
+        "num": "1",
+        "marks": 2,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 2,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_001",
+        "num": "1",
+        "marks": 2,
+        "problem_type": "equation",
+        "actual_cognitive_level": "problem_solving",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 2
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": "The restriction is disguised as a product condition. The learner must work out for themselves that sin\u00b2\u03b8/cos\u03b8 < 0 forces cos\u03b8 < 0, which is an uncued insight. This is arguably closer to complex than to fully problem_solving, because the rest of the method (a diagram with Pythagoras) is the standard technique. It is labelled problem_solving because the slot plan requires it."
+      },
+      {
+        "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+        "archetype_id": "trigreduction_004",
+        "num": "1",
+        "marks": 3,
+        "problem_type": "equation",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 3,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      }
+    ]
+  },
+  "diversity_diagnostics": {
+    "Equations and Inequalities": {
+      "forced_reuse_archetype_ids": [],
+      "subtopic_coverage_swaps": []
+    },
+    "Exponents and Surds": {
+      "forced_reuse_archetype_ids": [],
+      "subtopic_coverage_swaps": []
+    },
+    "Trigonometry (reduction formulae, trig equations & general solutions)": {
+      "forced_reuse_archetype_ids": [],
+      "subtopic_coverage_swaps": []
+    }
+  },
+  "generation_errors": [],
+  "raw_usage_log": [
+    {
+      "purpose": "generate_question:eqineq_005",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6779,
+      "output_tokens": 3000,
+      "thinking_tokens": 930,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_006",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6893,
+      "output_tokens": 1483,
+      "thinking_tokens": 331,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_004",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6647,
+      "output_tokens": 872,
+      "thinking_tokens": 362,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_001",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6620,
+      "output_tokens": 1123,
+      "thinking_tokens": 538,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_003",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6649,
+      "output_tokens": 1652,
+      "thinking_tokens": 561,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_005",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6372,
+      "output_tokens": 1826,
+      "thinking_tokens": 583,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_018",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6403,
+      "output_tokens": 931,
+      "thinking_tokens": 410,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_004",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6368,
+      "output_tokens": 779,
+      "thinking_tokens": 267,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_007",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6368,
+      "output_tokens": 1578,
+      "thinking_tokens": 634,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_016",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6624,
+      "output_tokens": 1047,
+      "thinking_tokens": 485,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_003",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6633,
+      "output_tokens": 2085,
+      "thinking_tokens": 709,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_002",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6925,
+      "output_tokens": 945,
+      "thinking_tokens": 351,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_005",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 7046,
+      "output_tokens": 1186,
+      "thinking_tokens": 481,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_005",
+      "attempt": 2,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 7046,
+      "output_tokens": 1069,
+      "thinking_tokens": 558,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_001",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 7140,
+      "output_tokens": 1493,
+      "thinking_tokens": 592,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_004",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6691,
+      "output_tokens": 1281,
+      "thinking_tokens": 485,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:trigreduction_004",
+      "attempt": 2,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6691,
+      "output_tokens": 1916,
+      "thinking_tokens": 1114,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    }
+  ]
+}

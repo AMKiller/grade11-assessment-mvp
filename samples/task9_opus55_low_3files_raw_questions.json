@@ -1,0 +1,2345 @@
+[
+  [
+    "Equations and Inequalities",
+    [
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Consider the following pair of equations: "
+              },
+              {
+                "type": "math",
+                "value": "2x-y=1"
+              },
+              {
+                "type": "text",
+                "value": " and "
+              },
+              {
+                "type": "math",
+                "value": "x^{2}+y^{2}=13"
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Make "
+                  },
+                  {
+                    "type": "math",
+                    "value": "y"
+                  },
+                  {
+                    "type": "text",
+                    "value": " the subject of "
+                  },
+                  {
+                    "type": "math",
+                    "value": "2x-y=1"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "y=2x-1"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "y=2x-1"
+                      }
+                    ],
+                    "tick_label": "y as subject",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "make variable the subject",
+                "num": "1.1",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, show that substituting into "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x^{2}+y^{2}=13"
+                  },
+                  {
+                    "type": "text",
+                    "value": " gives "
+                  },
+                  {
+                    "type": "math",
+                    "value": "5x^{2}-4x-12=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 2,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "5x^{2}-4x-12=0"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x^{2}+{(2x-1)}^{2}=13"
+                      }
+                    ],
+                    "tick_label": "substitution",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x^{2}+4x^{2}-4x+1=13"
+                      }
+                    ],
+                    "tick_label": "expansion",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "5x^{2}-4x-12=0"
+                      }
+                    ],
+                    "tick_label": null,
+                    "tick_count": 0
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": "Substituting and expanding a binomial square to reach standard form is a drilled multi-step procedure, which fits routine rather than single-step knowledge. The slot plan required 4 knowledge marks, and heavy scaffolding lowers the demand only partly.",
+                "difficulty_tier": "easy",
+                "grid_label": "substitution into quadratic equation",
+                "num": "1.2",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Solve "
+                  },
+                  {
+                    "type": "math",
+                    "value": "5x^{2}-4x-12=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": " for "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x=2"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=-\\frac{6}{5}"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "(5x+6)(x-2)=0"
+                      }
+                    ],
+                    "tick_label": null,
+                    "tick_count": 0
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x=2"
+                      },
+                      {
+                        "type": "text",
+                        "value": " or "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=-\\frac{6}{5}"
+                      }
+                    ],
+                    "tick_label": "both x-values",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "5*x**2 - 4*x - 12",
+                "claimed_solution": "[2, -1.2]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": "Factorising a trinomial with a leading coefficient other than 1 is a routine procedure rather than recall. It is labelled knowledge only to satisfy the slot plan.",
+                "difficulty_tier": "easy",
+                "grid_label": "solve quadratic by factorising",
+                "num": "1.3",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, write down the solutions of the system as "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(x;y)"
+                  },
+                  {
+                    "type": "text",
+                    "value": " pairs."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "(2;3)"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(-\\frac{6}{5};-\\frac{17}{5})"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "(2;3)"
+                      },
+                      {
+                        "type": "text",
+                        "value": " or "
+                      },
+                      {
+                        "type": "math",
+                        "value": "(-\\frac{6}{5};-\\frac{17}{5})"
+                      }
+                    ],
+                    "tick_label": "both y-values",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "system",
+                "sympy_problem": "y - 2*x + 1; x**2 + y**2 - 13",
+                "claimed_solution": "[(2, 3), (-1.2, -3.4)]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "medium",
+                "grid_label": "linear-quadratic simultaneous equations",
+                "num": "1.4",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_005",
+        "_planned_cognitive_targets": {
+          "knowledge": 4,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Solve for x by letting "
+              },
+              {
+                "type": "math",
+                "value": "k=x^{2}-3x"
+              },
+              {
+                "type": "text",
+                "value": ": "
+              },
+              {
+                "type": "math",
+                "value": "(x^{2}-3x)^{2}-14(x^{2}-3x)+40=0"
+              }
+            ],
+            "marks": 5,
+            "cognitive_level": "routine",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x=-2"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "x=-1"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "x=4"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "x=5"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "k^{2}-14k+40=0"
+                  }
+                ],
+                "tick_label": "substitution",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(k-4)(k-10)=0"
+                  }
+                ],
+                "tick_label": "factors",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "k=4"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "k=10"
+                  }
+                ],
+                "tick_label": "values of k",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x^{2}-3x-4=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(x-4)(x+1)=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", giving "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=4"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=-1"
+                  }
+                ],
+                "tick_label": "x-values from k = 4",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x^{2}-3x-10=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(x-5)(x+2)=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", giving "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=5"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=-2"
+                  }
+                ],
+                "tick_label": "x-values from k = 10",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x=-2"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=-1"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=4"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=5"
+                  }
+                ],
+                "tick_label": null,
+                "tick_count": 0
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "(x**2 - 3*x)**2 - 14*(x**2 - 3*x) + 40",
+            "claimed_solution": "[-2, -1, 4, 5]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "medium",
+            "grid_label": "substitution reduces to quadratic",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_006",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 5,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Solve for x: "
+              },
+              {
+                "type": "math",
+                "value": "(2x-1)(x+3)\u22653(x+3)"
+              }
+            ],
+            "marks": 4,
+            "cognitive_level": "complex",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x\u2264-3"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "x\u22652"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "2x^{2}+5x-3\u22653x+9"
+                  },
+                  {
+                    "type": "text",
+                    "value": " so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x^{2}+x-6\u22650"
+                  }
+                ],
+                "tick_label": "standard form",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(x+3)(x-2)\u22650"
+                  }
+                ],
+                "tick_label": "factors",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x\u2264-3"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x\u22652"
+                  }
+                ],
+                "tick_label": "answer, both parts",
+                "tick_count": 2
+              }
+            ],
+            "problem_type": "inequality",
+            "sympy_problem": "2*x**2 + 2*x - 12 >= 0",
+            "claimed_solution": "Union(Interval(-oo, -3), Interval(2, oo))",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "medium",
+            "grid_label": "quadratic inequality after expanding",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 4,
+        "archetype_id": "eqineq_004",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 4,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Solve for x: "
+              },
+              {
+                "type": "math",
+                "value": "(2x-1)^{2}=(x+4)^{2}"
+              }
+            ],
+            "marks": 2,
+            "cognitive_level": "complex",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x=5"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "x=-1"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(2x-1-x-4)(2x-1+x+4)=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": " i.e. "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(x-5)(3x+3)=0"
+                  }
+                ],
+                "tick_label": "factors",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x=5"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=-1"
+                  }
+                ],
+                "tick_label": "both answers",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "(2*x - 1)**2 - (x + 4)**2",
+            "claimed_solution": "[5, -1]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": "The slot plan required problem_solving. The question does not name the method, so the learner must decide either to expand into standard form or to recognise a difference of two squares of binomials. That decision meets the definition of complex. It is not genuinely unfamiliar in structure, and a 2-mark factorisation item cannot honestly reach problem_solving within this archetype's scope. It is therefore labelled complex rather than falsely labelled problem_solving.",
+            "difficulty_tier": "medium",
+            "grid_label": "difference of squares, binomial terms",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 2,
+        "archetype_id": "eqineq_001",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 2
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Answer the following questions on quadratic inequalities."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Solve for "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x"
+                  },
+                  {
+                    "type": "text",
+                    "value": ": "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(x-2)(x+4)<0"
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "-4<x<2"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "-4<x<2"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "inequality",
+                "sympy_problem": "(x-2)*(x+4) < 0",
+                "claimed_solution": "Interval.open(-4, 2)",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "quadratic inequality, factored form",
+                "num": "1.1",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Solve for "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x"
+                  },
+                  {
+                    "type": "text",
+                    "value": ": "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x^{2}-6x+9>0"
+                  }
+                ],
+                "marks": 2,
+                "cognitive_level": "complex",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x\u2208R"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x\u22603"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "(x-3)^{2}>0"
+                      }
+                    ],
+                    "tick_label": "factors",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x\u2208R"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x\u22603"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "inequality",
+                "sympy_problem": "x**2 - 6*x + 9 > 0",
+                "claimed_solution": "Union(Interval.open(-oo, 3), Interval.open(3, oo))",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "medium",
+                "grid_label": "perfect square inequality",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, write down all values of "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x"
+                  },
+                  {
+                    "type": "text",
+                    "value": " for which "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x^{2}-6x+9\u22640"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "problem_solving",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x=3"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x=3"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "inequality",
+                "sympy_problem": "x**2 - 6*x + 9 <= 0",
+                "claimed_solution": "FiniteSet(3)",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": "Recognising that a square cannot be negative is an insight, but for 1 mark following part (b) it may sit closer to complex than genuine problem solving.",
+                "difficulty_tier": "medium",
+                "grid_label": "perfect square, single solution",
+                "num": "1.3",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 4,
+        "archetype_id": "eqineq_003",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 2,
+          "problem_solving": 1
+        }
+      }
+    ]
+  ],
+  [
+    "Exponents and Surds",
+    [
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Given that "
+              },
+              {
+                "type": "math",
+                "value": "x=1+\\sqrt{2}"
+              },
+              {
+                "type": "text",
+                "value": ", answer the following without using a calculator."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Write down the value of "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x-1"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x-1=\\sqrt{2}"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x-1=\\sqrt{2}"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "substitute surd value",
+                "num": "1.1",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Write down the value of "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(x-1)^{2}"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "(x-1)^{2}=2"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "(\\sqrt{2})^{2}=2"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "square of a surd",
+                "num": "1.2",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Write "
+                  },
+                  {
+                    "type": "math",
+                    "value": "\\frac{1}{x-1}"
+                  },
+                  {
+                    "type": "text",
+                    "value": " with a rational denominator."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "\\frac{\\sqrt{2}}{2}"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\\frac{1}{\\sqrt{2}}=\\frac{\\sqrt{2}}{2}"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "rationalise the denominator",
+                "num": "1.3",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, simplify "
+                  },
+                  {
+                    "type": "math",
+                    "value": "\\frac{x+1}{x-1}"
+                  },
+                  {
+                    "type": "text",
+                    "value": " if "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=1+\\sqrt{2}"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "1+\\sqrt{2}"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\\frac{2+\\sqrt{2}}{\\sqrt{2}}=\\frac{2\\sqrt{2}+2}{2}=\\sqrt{2}+1"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "medium",
+                "grid_label": "substitute surd and simplify",
+                "num": "1.4",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 4,
+        "archetype_id": "exp_surd_005",
+        "_planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Solve for x: "
+              },
+              {
+                "type": "math",
+                "value": "\\sqrt[4]{\\frac{1}{x^{3}}}=\\frac{1}{8}"
+              }
+            ],
+            "marks": 2,
+            "cognitive_level": "routine",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x=16"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x^{-\\frac{3}{4}}=8^{-1}"
+                  }
+                ],
+                "tick_label": "single negative fractional exponent",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x=(8^{-1})^{-\\frac{4}{3}}=8^{\\frac{4}{3}}=16"
+                  }
+                ],
+                "tick_label": "raise to reciprocal power and answer",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x=16"
+                  }
+                ],
+                "tick_label": null,
+                "tick_count": 0
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "x**3 - 4096",
+            "claimed_solution": "[16]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "medium",
+            "grid_label": "root equation, reciprocal exponent",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 2,
+        "archetype_id": "exp_surd_018",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 2,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Without using a calculator, determine the value of k if "
+              },
+              {
+                "type": "math",
+                "value": "\\sqrt{k}=3\\sqrt{12}-\\sqrt{27}+2\\sqrt{75}"
+              }
+            ],
+            "marks": 2,
+            "cognitive_level": "complex",
+            "answer": [
+              {
+                "type": "math",
+                "value": "k=507"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "\\sqrt{k}=3\u00b72\\sqrt{3}-3\\sqrt{3}+2\u00b75\\sqrt{3}=6\\sqrt{3}-3\\sqrt{3}+10\\sqrt{3}"
+                  }
+                ],
+                "tick_label": "simplify each surd",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "\\sqrt{k}=13\\sqrt{3}=\\sqrt{169\u00b73}"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "k=507"
+                  }
+                ],
+                "tick_label": "combine and find k",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "sqrt(x) - (3*sqrt(12) - sqrt(27) + 2*sqrt(75))",
+            "claimed_solution": "[507]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "medium",
+            "grid_label": "combine unlike surds, find radicand",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 2,
+        "archetype_id": "exp_surd_004",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 2,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Answer the following without using a calculator."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Simplify: "
+                  },
+                  {
+                    "type": "math",
+                    "value": "\\sqrt{7+\\sqrt{13}}\u00b7\\sqrt{7-\\sqrt{13}}"
+                  }
+                ],
+                "marks": 2,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "6"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\\sqrt{(7+\\sqrt{13})(7-\\sqrt{13})}=\\sqrt{49-13}"
+                      }
+                    ],
+                    "tick_label": "single surd, difference of squares",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "=\\sqrt{36}=6"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "product of conjugate nested surds",
+                "num": "1.1",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Determine the value of "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x"
+                  },
+                  {
+                    "type": "text",
+                    "value": " for which "
+                  },
+                  {
+                    "type": "math",
+                    "value": "\\sqrt{x+\\sqrt{2x-1}}\u00b7\\sqrt{x-\\sqrt{2x-1}}=5"
+                  }
+                ],
+                "marks": 2,
+                "cognitive_level": "problem_solving",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x=6"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\\sqrt{x^{2}-(2x-1)}=\\sqrt{(x-1)^{2}}=5"
+                      }
+                    ],
+                    "tick_label": "simplify to perfect square",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x-1=\u00b15"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", but "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=-4"
+                      },
+                      {
+                        "type": "text",
+                        "value": " makes "
+                      },
+                      {
+                        "type": "math",
+                        "value": "\\sqrt{2x-1}"
+                      },
+                      {
+                        "type": "text",
+                        "value": " undefined, so "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=6"
+                      }
+                    ],
+                    "tick_label": "answer with rejection",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "sqrt(x+sqrt(2*x-1))*sqrt(x-sqrt(2*x-1)) - 5",
+                "claimed_solution": "[6]",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "difficult",
+                "grid_label": "solve equation with nested surds",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 4,
+        "archetype_id": "exp_surd_007",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 2,
+          "complex": 0,
+          "problem_solving": 2
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Solve for x, without using a calculator: "
+              },
+              {
+                "type": "math",
+                "value": "2^{x+2}+2^{x-1}-\\frac{4^{x}}{2^{x}}=112"
+              }
+            ],
+            "marks": 3,
+            "cognitive_level": "complex",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x=5"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "2^{x+2}+2^{x-1}-2^{x}=112"
+                  },
+                  {
+                    "type": "text",
+                    "value": " so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "2^{x-1}(2^{3}+1-2^{1})=112"
+                  }
+                ],
+                "tick_label": "simplify quotient and factorise lowest power",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "7\u00b72^{x-1}=112"
+                  },
+                  {
+                    "type": "text",
+                    "value": " so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "2^{x-1}=16=2^{4}"
+                  }
+                ],
+                "tick_label": "simplify coefficient and same base",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x-1=4"
+                  },
+                  {
+                    "type": "text",
+                    "value": " so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=5"
+                  }
+                ],
+                "tick_label": "equate exponents, answer",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "2**(x+2) + 2**(x-1) - 2**x - 112",
+            "claimed_solution": "[5]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "difficult",
+            "grid_label": "exponential eq, factor common power",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 3,
+        "archetype_id": "exp_surd_016",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 3,
+          "problem_solving": 0
+        }
+      }
+    ]
+  ],
+  [
+    "Trigonometry (reduction formulae, trig equations & general solutions)",
+    [
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Consider the identity: "
+              },
+              {
+                "type": "math",
+                "value": "\\frac{1-cos^{2}x}{cos(90\u00b0-x)\u00b7cos x}=tan x"
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Write down "
+                  },
+                  {
+                    "type": "math",
+                    "value": "tan x"
+                  },
+                  {
+                    "type": "text",
+                    "value": " in terms of "
+                  },
+                  {
+                    "type": "math",
+                    "value": "sin x"
+                  },
+                  {
+                    "type": "text",
+                    "value": " and "
+                  },
+                  {
+                    "type": "math",
+                    "value": "cos x"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "tan x=\\frac{sin x}{cos x}"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "tan x=\\frac{sin x}{cos x}"
+                      }
+                    ],
+                    "tick_label": "quotient identity",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "recall quotient identity",
+                "num": "1.1",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Write down "
+                  },
+                  {
+                    "type": "math",
+                    "value": "1-cos^{2}x"
+                  },
+                  {
+                    "type": "text",
+                    "value": " as a single trigonometric term."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "1-cos^{2}x=sin^{2}x"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "1-cos^{2}x=sin^{2}x"
+                      }
+                    ],
+                    "tick_label": "square identity",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "recall square identity",
+                "num": "1.2",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Simplify "
+                  },
+                  {
+                    "type": "math",
+                    "value": "cos(90\u00b0-x)"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "cos(90\u00b0-x)=sin x"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "cos(90\u00b0-x)=sin x"
+                      }
+                    ],
+                    "tick_label": "co-function reduction",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "co-function reduction",
+                "num": "1.3",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, prove that "
+                  },
+                  {
+                    "type": "math",
+                    "value": "\\frac{1-cos^{2}x}{cos(90\u00b0-x)\u00b7cos x}=tan x"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "text",
+                    "value": "LHS "
+                  },
+                  {
+                    "type": "math",
+                    "value": "=\\frac{sin x}{cos x}=tan x="
+                  },
+                  {
+                    "type": "text",
+                    "value": " RHS"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "text",
+                        "value": "LHS "
+                      },
+                      {
+                        "type": "math",
+                        "value": "=\\frac{sin^{2}x}{sin x\u00b7cos x}"
+                      }
+                    ],
+                    "tick_label": null,
+                    "tick_count": 0
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "text",
+                        "value": "LHS "
+                      },
+                      {
+                        "type": "math",
+                        "value": "=\\frac{sin x}{cos x}=tan x="
+                      },
+                      {
+                        "type": "text",
+                        "value": " RHS"
+                      }
+                    ],
+                    "tick_label": "simplify to RHS",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "medium",
+                "grid_label": "prove trigonometric identity",
+                "num": "1.4",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 4,
+        "archetype_id": "trigreduction_003",
+        "_planned_cognitive_targets": {
+          "knowledge": 3,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Without the use of a calculator, determine the value of: "
+              },
+              {
+                "type": "math",
+                "value": "\\frac{sin210\u00b0\u00b7cos300\u00b0}{tan135\u00b0}"
+              }
+            ],
+            "marks": 4,
+            "cognitive_level": "routine",
+            "answer": [
+              {
+                "type": "math",
+                "value": "\\frac{1}{4}"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "sin210\u00b0 = -sin30\u00b0 = -\\frac{1}{2}"
+                  }
+                ],
+                "tick_label": "reduction of sin210\u00b0",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "cos300\u00b0 = cos60\u00b0 = \\frac{1}{2}"
+                  }
+                ],
+                "tick_label": "reduction of cos300\u00b0",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "tan135\u00b0 = -tan45\u00b0 = -1"
+                  }
+                ],
+                "tick_label": "reduction of tan135\u00b0",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "\\frac{1}{4}"
+                  }
+                ],
+                "tick_label": "answer",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "x - (sin(210*pi/180)*cos(300*pi/180))/tan(135*pi/180)",
+            "claimed_solution": "[0.25]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "medium",
+            "grid_label": "simplify using reduction formulae",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 4,
+        "archetype_id": "trigreduction_002",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 4,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Solve for x if "
+              },
+              {
+                "type": "math",
+                "value": "sin 2x=cos(x+30\u00b0)"
+              },
+              {
+                "type": "text",
+                "value": " and "
+              },
+              {
+                "type": "math",
+                "value": "x\u2208[0\u00b0;90\u00b0]"
+              },
+              {
+                "type": "text",
+                "value": "."
+              }
+            ],
+            "marks": 2,
+            "cognitive_level": "complex",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x=20\u00b0"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "sin 2x=sin(90\u00b0-(x+30\u00b0))=sin(60\u00b0-x)"
+                  }
+                ],
+                "tick_label": "co-function conversion",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "2x=60\u00b0-x"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=20\u00b0+k\u00b7120\u00b0"
+                  },
+                  {
+                    "type": "text",
+                    "value": " (the other family, "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=120\u00b0+k\u00b7360\u00b0"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", gives no solution in the interval)"
+                  }
+                ],
+                "tick_label": null,
+                "tick_count": 0
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x=20\u00b0"
+                  }
+                ],
+                "tick_label": "answer",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "unverifiable",
+            "sympy_problem": "",
+            "claimed_solution": "",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "difficult",
+            "grid_label": "co-function trig equation, interval",
+            "num": "1",
+            "manual_review_required": true,
+            "sympy_verified": false,
+            "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+          }
+        ],
+        "total_marks": 2,
+        "archetype_id": "trigreduction_005",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 2,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Given that "
+              },
+              {
+                "type": "math",
+                "value": "13sin \u03b8+12=0"
+              },
+              {
+                "type": "text",
+                "value": " and "
+              },
+              {
+                "type": "math",
+                "value": "sin \u03b8\u00b7tan \u03b8<0"
+              },
+              {
+                "type": "text",
+                "value": ". Without the use of a calculator, determine the value of "
+              },
+              {
+                "type": "math",
+                "value": "cos \u03b8+tan \u03b8"
+              },
+              {
+                "type": "text",
+                "value": "."
+              }
+            ],
+            "marks": 2,
+            "cognitive_level": "problem_solving",
+            "answer": [
+              {
+                "type": "math",
+                "value": "cos \u03b8+tan \u03b8=\\frac{131}{65}"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "sin \u03b8\u00b7tan \u03b8=\\frac{sin^{2}\u03b8}{cos \u03b8}<0"
+                  },
+                  {
+                    "type": "text",
+                    "value": " so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "cos \u03b8<0"
+                  },
+                  {
+                    "type": "text",
+                    "value": ". Since "
+                  },
+                  {
+                    "type": "math",
+                    "value": "sin \u03b8=-\\frac{12}{13}"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", \u03b8 is in the third quadrant: "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=-5, y=-12, r=13"
+                  }
+                ],
+                "tick_label": "quadrant deduced and x found",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "cos \u03b8+tan \u03b8=-\\frac{5}{13}+\\frac{12}{5}=\\frac{131}{65}"
+                  }
+                ],
+                "tick_label": "answer",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "65*x - 131",
+            "claimed_solution": "[2.0153846]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": "The restriction is disguised as a product condition. The learner must work out for themselves that sin\u00b2\u03b8/cos\u03b8 < 0 forces cos\u03b8 < 0, which is an uncued insight. This is arguably closer to complex than to fully problem_solving, because the rest of the method (a diagram with Pythagoras) is the standard technique. It is labelled problem_solving because the slot plan requires it.",
+            "difficulty_tier": "difficult",
+            "grid_label": "deduce quadrant, find ratios",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 2,
+        "archetype_id": "trigreduction_001",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 2
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Determine the value(s) of "
+              },
+              {
+                "type": "math",
+                "value": "x"
+              },
+              {
+                "type": "text",
+                "value": ", where "
+              },
+              {
+                "type": "math",
+                "value": "x \u2208 (0\u00b0 ; 360\u00b0)"
+              },
+              {
+                "type": "text",
+                "value": ", for which the expression "
+              },
+              {
+                "type": "math",
+                "value": "\\frac{1+cos x}{sin x+2sin x\u00b7cos(180\u00b0+x)}"
+              },
+              {
+                "type": "text",
+                "value": " is undefined."
+              }
+            ],
+            "marks": 3,
+            "cognitive_level": "complex",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x=60\u00b0"
+              },
+              {
+                "type": "text",
+                "value": ", "
+              },
+              {
+                "type": "math",
+                "value": "x=180\u00b0"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "x=300\u00b0"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "sin x-2sin x cos x=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": " so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "sin x(1-2cos x)=0"
+                  }
+                ],
+                "tick_label": null,
+                "tick_count": 0
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "sin x=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": ": "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=180\u00b0"
+                  }
+                ],
+                "tick_label": "value from sin x = 0",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "cos x=\\frac{1}{2}"
+                  },
+                  {
+                    "type": "text",
+                    "value": ": "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=60\u00b0"
+                  }
+                ],
+                "tick_label": "first-quadrant value",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x=300\u00b0"
+                  }
+                ],
+                "tick_label": "fourth-quadrant value",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x=60\u00b0"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=180\u00b0"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=300\u00b0"
+                  }
+                ],
+                "tick_label": null,
+                "tick_count": 0
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "sin(x*pi/180)*(1 - 2*cos(x*pi/180))",
+            "claimed_solution": "[60, 180, 300]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "difficult",
+            "grid_label": "values where trig expression undefined",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 3,
+        "archetype_id": "trigreduction_004",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 3,
+          "problem_solving": 0
+        }
+      }
+    ]
+  ]
+]
