@@ -1,0 +1,585 @@
+{
+  "model": "claude-opus-5-5",
+  "thinking_mode": "adaptive",
+  "effort_applied": "low",
+  "max_tokens": 8192,
+  "topics_marks": [
+    [
+      "Exponents and Surds",
+      25
+    ],
+    [
+      "Equations and Inequalities",
+      25
+    ]
+  ],
+  "num_questions_per_topic": 5,
+  "actual_total_marks": 50,
+  "requested_total_marks": 50,
+  "usage": {
+    "total_calls": 11,
+    "retries": 1,
+    "truncation_retries": 0,
+    "total_input_tokens": 72741,
+    "total_output_tokens": 16502,
+    "total_thinking_tokens": 5487,
+    "total_cache_read_tokens": 0,
+    "total_cache_creation_tokens": 0,
+    "stop_reason_counts": {
+      "end_turn": 11
+    },
+    "cost_usd": 0.621,
+    "pricing_used": {
+      "input": 4.0,
+      "output": 20.0
+    },
+    "wall_clock_seconds": 149.8
+  },
+  "cognitive_distribution": {
+    "marks_by_level": {
+      "knowledge": 0,
+      "routine": 28,
+      "complex": 14,
+      "problem_solving": 8
+    },
+    "percentages_by_level": {
+      "knowledge": 0.0,
+      "routine": 56.0,
+      "complex": 28.0,
+      "problem_solving": 16.0
+    },
+    "target_distribution": {
+      "knowledge": 20,
+      "routine": 35,
+      "complex": 30,
+      "problem_solving": 15
+    },
+    "variance": {
+      "knowledge": -20.0,
+      "routine": 21.0,
+      "complex": -2.0,
+      "problem_solving": 1.0
+    }
+  },
+  "verification": {
+    "total_leaves": 16,
+    "sympy_verified": 13,
+    "manual_review_required": 3,
+    "unverifiable_by_design": 3,
+    "real_verification_failures": 0,
+    "unverifiable_detail": [
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_011",
+        "num": "1.1",
+        "marks": 2
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_011",
+        "num": "1.2",
+        "marks": 3
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_003",
+        "num": "1.1",
+        "marks": 1
+      }
+    ],
+    "failed_verification_detail": [],
+    "constructed_count": 2,
+    "constructed_detail": [
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_012",
+        "num": "1.1",
+        "marks": 2
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_003",
+        "num": "1.2",
+        "marks": 4
+      }
+    ],
+    "cognitive_mismatch_count": 5,
+    "cognitive_mismatch_detail": [
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_011",
+        "num": "1.1",
+        "marks": 2,
+        "assigned_level": "routine",
+        "disagreement": "The slot plan required knowledge, but verifying a surd equality needs a short drilled multi-step procedure (simplify surds, collect like terms, match target), which is routine rather than single-step recall. The question was simplified as far as the archetype allows and is labelled routine honestly."
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_011",
+        "num": "1.2",
+        "marks": 3,
+        "assigned_level": "routine",
+        "disagreement": "The slot plan required knowledge, but expanding a product of surd binomials and simplifying to a given value is a drilled multi-step procedure, which meets the definition of routine rather than knowledge. No further redesign could honestly reduce it to a single recall step within this archetype."
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_012",
+        "num": "1.2",
+        "marks": 4,
+        "assigned_level": "problem_solving",
+        "disagreement": "The learner must decide unaided to isolate the bracket, rationalise and equate rational/irrational parts, which meets the definition of complex. However, this is still a recognisable archetype structure rather than a genuinely unfamiliar one, so it falls short of true problem solving. The slot plan required problem_solving."
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_008",
+        "num": "1",
+        "marks": 5,
+        "assigned_level": "routine",
+        "disagreement": "The slot plan required 5 knowledge marks, but by definition knowledge is a single recall step or direct formula substitution. Translating a word problem into equations and solving the resulting quadratic is inherently multi-step. Even with the variables named and the sum/product structure made explicit to remove the decision-making, the task is a drilled multi-step procedure. That makes it routine at the lowest honest level, not knowledge."
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_003",
+        "num": "1.2",
+        "marks": 4,
+        "assigned_level": "problem_solving",
+        "disagreement": "The learner must translate 'real and defined' into two uncued conditions (a non-negative radicand and a non-zero denominator) and must handle the sign reversal. This goes beyond the drilled archetype, but it could reasonably be classed as complex, because it combines known skills rather than requiring a truly novel insight. The slot plan required problem_solving."
+      }
+    ],
+    "per_leaf": [
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_011",
+        "num": "1.1",
+        "marks": 2,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 5,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": "The slot plan required knowledge, but verifying a surd equality needs a short drilled multi-step procedure (simplify surds, collect like terms, match target), which is routine rather than single-step recall. The question was simplified as far as the archetype allows and is labelled routine honestly."
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_011",
+        "num": "1.2",
+        "marks": 3,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 5,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": "The slot plan required knowledge, but expanding a product of surd binomials and simplifying to a given value is a drilled multi-step procedure, which meets the definition of routine rather than knowledge. No further redesign could honestly reduce it to a single recall step within this archetype."
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_002",
+        "num": "1.1",
+        "marks": 4,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 6,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_002",
+        "num": "1.2",
+        "marks": 2,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 6,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_018",
+        "num": "1",
+        "marks": 4,
+        "problem_type": "equation",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 4,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_012",
+        "num": "1.1",
+        "marks": 2,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 2,
+          "complex": 0,
+          "problem_solving": 4
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "constructed",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_012",
+        "num": "1.2",
+        "marks": 4,
+        "problem_type": "system",
+        "actual_cognitive_level": "problem_solving",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 2,
+          "complex": 0,
+          "problem_solving": 4
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": "The learner must decide unaided to isolate the bracket, rationalise and equate rational/irrational parts, which meets the definition of complex. However, this is still a recognisable archetype structure rather than a genuinely unfamiliar one, so it falls short of true problem solving. The slot plan required problem_solving."
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_015",
+        "num": "1.1",
+        "marks": 1,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 3,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Exponents and Surds",
+        "archetype_id": "exp_surd_015",
+        "num": "1.2",
+        "marks": 3,
+        "problem_type": "equation",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 3,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_008",
+        "num": "1",
+        "marks": 5,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 5,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": "The slot plan required 5 knowledge marks, but by definition knowledge is a single recall step or direct formula substitution. Translating a word problem into equations and solving the resulting quadratic is inherently multi-step. Even with the variables named and the sum/product structure made explicit to remove the decision-making, the task is a drilled multi-step procedure. That makes it routine at the lowest honest level, not knowledge."
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_006",
+        "num": "1",
+        "marks": 5,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 5,
+          "complex": 0,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_004",
+        "num": "1",
+        "marks": 5,
+        "problem_type": "inequality",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 5,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_003",
+        "num": "1.1",
+        "marks": 1,
+        "problem_type": "unverifiable",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 4
+        },
+        "sympy_verified": false,
+        "manual_review_required": true,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_003",
+        "num": "1.2",
+        "marks": 4,
+        "problem_type": "inequality",
+        "actual_cognitive_level": "problem_solving",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 4
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "constructed",
+        "cognitive_level_disagreement": "The learner must translate 'real and defined' into two uncued conditions (a non-negative radicand and a non-zero denominator) and must handle the sign reversal. This goes beyond the drilled archetype, but it could reasonably be classed as complex, because it combines known skills rather than requiring a truly novel insight. The slot plan required problem_solving."
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_007",
+        "num": "1.1",
+        "marks": 3,
+        "problem_type": "equation",
+        "actual_cognitive_level": "routine",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 3,
+          "complex": 2,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      },
+      {
+        "topic": "Equations and Inequalities",
+        "archetype_id": "eqineq_007",
+        "num": "1.2",
+        "marks": 2,
+        "problem_type": "inequality",
+        "actual_cognitive_level": "complex",
+        "planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 3,
+          "complex": 2,
+          "problem_solving": 0
+        },
+        "sympy_verified": true,
+        "manual_review_required": false,
+        "archetype_match": "direct",
+        "cognitive_level_disagreement": null
+      }
+    ]
+  },
+  "diversity_diagnostics": {
+    "Exponents and Surds": {
+      "forced_reuse_archetype_ids": [],
+      "subtopic_coverage_swaps": []
+    },
+    "Equations and Inequalities": {
+      "forced_reuse_archetype_ids": [],
+      "subtopic_coverage_swaps": []
+    }
+  },
+  "generation_errors": [],
+  "raw_usage_log": [
+    {
+      "purpose": "generate_question:exp_surd_011",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6420,
+      "output_tokens": 1676,
+      "thinking_tokens": 568,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_002",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6497,
+      "output_tokens": 1260,
+      "thinking_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_002",
+      "attempt": 2,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6497,
+      "output_tokens": 1769,
+      "thinking_tokens": 615,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_018",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6403,
+      "output_tokens": 931,
+      "thinking_tokens": 423,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_012",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6402,
+      "output_tokens": 2075,
+      "thinking_tokens": 818,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:exp_surd_015",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6674,
+      "output_tokens": 1561,
+      "thinking_tokens": 456,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_008",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6698,
+      "output_tokens": 1517,
+      "thinking_tokens": 528,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_006",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6893,
+      "output_tokens": 1233,
+      "thinking_tokens": 301,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_004",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6647,
+      "output_tokens": 918,
+      "thinking_tokens": 453,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_003",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6649,
+      "output_tokens": 2224,
+      "thinking_tokens": 901,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    },
+    {
+      "purpose": "generate_question:eqineq_007",
+      "attempt": 1,
+      "model": "claude-opus-5-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 6961,
+      "output_tokens": 1338,
+      "thinking_tokens": 424,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "truncation_retry": false
+    }
+  ]
+}

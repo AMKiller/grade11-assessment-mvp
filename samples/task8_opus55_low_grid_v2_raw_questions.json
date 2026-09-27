@@ -1,0 +1,1612 @@
+[
+  [
+    "Exponents and Surds",
+    [
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Without using a calculator, verify each of the following. Show all your working."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Verify that "
+                  },
+                  {
+                    "type": "math",
+                    "value": "\\sqrt{50}-\\sqrt{18}=2\\sqrt{2}"
+                  }
+                ],
+                "marks": 2,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "text",
+                    "value": "LHS "
+                  },
+                  {
+                    "type": "math",
+                    "value": "=2\\sqrt{2}="
+                  },
+                  {
+                    "type": "text",
+                    "value": " RHS"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "text",
+                        "value": "LHS "
+                      },
+                      {
+                        "type": "math",
+                        "value": "=\\sqrt{25\u00b72}-\\sqrt{9\u00b72}=5\\sqrt{2}-3\\sqrt{2}"
+                      }
+                    ],
+                    "tick_label": "simplify both surds",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "text",
+                        "value": "LHS "
+                      },
+                      {
+                        "type": "math",
+                        "value": "=2\\sqrt{2}="
+                      },
+                      {
+                        "type": "text",
+                        "value": " RHS"
+                      }
+                    ],
+                    "tick_label": "match target",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": "The slot plan required knowledge, but verifying a surd equality needs a short drilled multi-step procedure (simplify surds, collect like terms, match target), which is routine rather than single-step recall. The question was simplified as far as the archetype allows and is labelled routine honestly.",
+                "difficulty_tier": "easy",
+                "grid_label": "verify surd sum by simplifying",
+                "num": "1.1",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Verify that "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(\\sqrt{5}+\\sqrt{3})(\\sqrt{5}-\\sqrt{3})=2"
+                  }
+                ],
+                "marks": 3,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "text",
+                    "value": "LHS "
+                  },
+                  {
+                    "type": "math",
+                    "value": "=2="
+                  },
+                  {
+                    "type": "text",
+                    "value": " RHS"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "text",
+                        "value": "LHS "
+                      },
+                      {
+                        "type": "math",
+                        "value": "=5-\\sqrt{15}+\\sqrt{15}-3"
+                      }
+                    ],
+                    "tick_label": "expand",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "=5-3"
+                      }
+                    ],
+                    "tick_label": "simplify",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "text",
+                        "value": "LHS "
+                      },
+                      {
+                        "type": "math",
+                        "value": "=2="
+                      },
+                      {
+                        "type": "text",
+                        "value": " RHS"
+                      }
+                    ],
+                    "tick_label": "match target",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": "The slot plan required knowledge, but expanding a product of surd binomials and simplifying to a given value is a drilled multi-step procedure, which meets the definition of routine rather than knowledge. No further redesign could honestly reduce it to a single recall step within this archetype.",
+                "difficulty_tier": "easy",
+                "grid_label": "verify product of conjugate surds",
+                "num": "1.2",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "exp_surd_011",
+        "_planned_cognitive_targets": {
+          "knowledge": 5,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Simplify each of the following without using a calculator. Show ALL working."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "\\frac{\\sqrt[3]{8^{2}}\u00b781^{\\frac{3}{4}}}{\\sqrt{144}\u00b79^{-\\frac{1}{2}}}"
+                  }
+                ],
+                "marks": 4,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "27"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\\frac{(2^{3})^{\\frac{2}{3}}\u00b7(3^{4})^{\\frac{3}{4}}}{12\u00b7(3^{2})^{-\\frac{1}{2}}}"
+                      }
+                    ],
+                    "tick_label": "convert to prime bases",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\\frac{2^{2}\u00b73^{3}}{12\u00b73^{-1}}"
+                      }
+                    ],
+                    "tick_label": "simplify each term",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\\frac{4\u00b727}{12\u00b7\\frac{1}{3}}=\\frac{108}{4}"
+                      }
+                    ],
+                    "tick_label": "simplify further",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "27"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "x - 64**Rational(1,3)*81**Rational(3,4)/(sqrt(144)*9**Rational(-1,2))",
+                "claimed_solution": "[27]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "medium",
+                "grid_label": "surds with fractional exponents",
+                "num": "1.1",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "\\sqrt[5]{32^{3}}\u00b732^{-\\frac{4}{5}}"
+                  }
+                ],
+                "marks": 2,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "\\frac{1}{2}"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "(2^{5})^{\\frac{3}{5}}\u00b7(2^{5})^{-\\frac{4}{5}}=2^{3}\u00b72^{-4}"
+                      }
+                    ],
+                    "tick_label": "convert and simplify terms",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\\frac{1}{2}"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "x - 32**Rational(3,5)*32**Rational(-4,5)",
+                "claimed_solution": "[0.5]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "fifth root, negative exponent",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 6,
+        "archetype_id": "exp_surd_002",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 6,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Solve for x, giving all real solutions: "
+              },
+              {
+                "type": "math",
+                "value": "5\\sqrt[3]{\\frac{1}{x^{2}}}-3=17"
+              }
+            ],
+            "marks": 4,
+            "cognitive_level": "complex",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x=\u00b1\\frac{1}{8}"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "\\sqrt[3]{\\frac{1}{x^{2}}}=4"
+                  }
+                ],
+                "tick_label": "isolate the root",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x^{-\\frac{2}{3}}=4"
+                  }
+                ],
+                "tick_label": "single negative fractional exponent",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x=\u00b14^{-\\frac{3}{2}}"
+                  }
+                ],
+                "tick_label": "raise to reciprocal power",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x=\u00b1\\frac{1}{8}"
+                  }
+                ],
+                "tick_label": "both answers",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "64*x**2 - 1",
+            "claimed_solution": "[0.125, -0.125]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "difficult",
+            "grid_label": "solve rational-exponent root equation",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 4,
+        "archetype_id": "exp_surd_018",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 4,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Consider the surd expressions below."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Write "
+                  },
+                  {
+                    "type": "math",
+                    "value": "\\frac{14}{3-\\sqrt{2}}"
+                  },
+                  {
+                    "type": "text",
+                    "value": " with a rational denominator, in simplest form."
+                  }
+                ],
+                "marks": 2,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "6+2\\sqrt{2}"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\\frac{14}{3-\\sqrt{2}}\u00b7\\frac{3+\\sqrt{2}}{3+\\sqrt{2}}=\\frac{14(3+\\sqrt{2})}{9-2}"
+                      }
+                    ],
+                    "tick_label": "multiply by conjugate",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "6+2\\sqrt{2}"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "x - 14/(3 - sqrt(2))",
+                "claimed_solution": "[8.828427]",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "rationalise the denominator",
+                "num": "1.1",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Determine the rational numbers "
+                  },
+                  {
+                    "type": "math",
+                    "value": "a"
+                  },
+                  {
+                    "type": "text",
+                    "value": " and "
+                  },
+                  {
+                    "type": "math",
+                    "value": "b"
+                  },
+                  {
+                    "type": "text",
+                    "value": " if "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(3-\\sqrt{2})(a+b\\sqrt{2})=2+11\\sqrt{2}"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 4,
+                "cognitive_level": "problem_solving",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "a=4"
+                  },
+                  {
+                    "type": "text",
+                    "value": " and "
+                  },
+                  {
+                    "type": "math",
+                    "value": "b=5"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "a+b\\sqrt{2}=\\frac{2+11\\sqrt{2}}{3-\\sqrt{2}}\u00b7\\frac{3+\\sqrt{2}}{3+\\sqrt{2}}"
+                      }
+                    ],
+                    "tick_label": "isolate bracket and rationalise",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "=\\frac{6+2\\sqrt{2}+33\\sqrt{2}+22}{7}"
+                      }
+                    ],
+                    "tick_label": "expand",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "=\\frac{28+35\\sqrt{2}}{7}=4+5\\sqrt{2}"
+                      }
+                    ],
+                    "tick_label": "simplify",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "a=4"
+                      },
+                      {
+                        "type": "text",
+                        "value": " and "
+                      },
+                      {
+                        "type": "math",
+                        "value": "b=5"
+                      }
+                    ],
+                    "tick_label": "equate rational and irrational parts",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "system",
+                "sympy_problem": "3*x - 2*y - 2; 3*y - x - 11",
+                "claimed_solution": "[(4, 5)]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": "The learner must decide unaided to isolate the bracket, rationalise and equate rational/irrational parts, which meets the definition of complex. However, this is still a recognisable archetype structure rather than a genuinely unfamiliar one, so it falls short of true problem solving. The slot plan required problem_solving.",
+                "difficulty_tier": "medium",
+                "grid_label": "equate rational, irrational parts",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 6,
+        "archetype_id": "exp_surd_012",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 2,
+          "complex": 0,
+          "problem_solving": 4
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "In triangle ABC, the angle at B is 90\u00b0. The two shorter sides are "
+              },
+              {
+                "type": "math",
+                "value": "AB=\\sqrt{3}+1"
+              },
+              {
+                "type": "text",
+                "value": " units and "
+              },
+              {
+                "type": "math",
+                "value": "BC=\\sqrt{3}-1"
+              },
+              {
+                "type": "text",
+                "value": " units. D is the point on AC such that BD \u22a5 AC."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Calculate the area of triangle ABC."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "text",
+                    "value": "Area "
+                  },
+                  {
+                    "type": "math",
+                    "value": "=1"
+                  },
+                  {
+                    "type": "text",
+                    "value": " square unit"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "text",
+                        "value": "Area "
+                      },
+                      {
+                        "type": "math",
+                        "value": "=\\frac{1}{2}(\\sqrt{3}+1)(\\sqrt{3}-1)=\\frac{1}{2}(3-1)"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", so Area "
+                      },
+                      {
+                        "type": "math",
+                        "value": "=1"
+                      },
+                      {
+                        "type": "text",
+                        "value": " square unit"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "2*x - (sqrt(3)+1)*(sqrt(3)-1)",
+                "claimed_solution": "[1]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "area of triangle, surd sides",
+                "num": "1.1",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, determine the length of BD in simplest surd form."
+                  }
+                ],
+                "marks": 3,
+                "cognitive_level": "complex",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "BD=\\frac{\\sqrt{2}}{2}"
+                  },
+                  {
+                    "type": "text",
+                    "value": " units"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "AC^{2}=(\\sqrt{3}+1)^{2}+(\\sqrt{3}-1)^{2}"
+                      }
+                    ],
+                    "tick_label": "substitution into Pythagoras",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "AC^{2}=4+2\\sqrt{3}+4-2\\sqrt{3}=8"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", so "
+                      },
+                      {
+                        "type": "math",
+                        "value": "AC=2\\sqrt{2}"
+                      }
+                    ],
+                    "tick_label": "expand and simplify",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\\frac{1}{2}\u00b72\\sqrt{2}\u00b7BD=1"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", so "
+                      },
+                      {
+                        "type": "math",
+                        "value": "BD=\\frac{\\sqrt{2}}{2}"
+                      },
+                      {
+                        "type": "text",
+                        "value": " units"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "2*sqrt(2)*x - 2",
+                "claimed_solution": "[0.70710678]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "difficult",
+                "grid_label": "pythagoras and area combined",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 4,
+        "archetype_id": "exp_surd_015",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 3,
+          "problem_solving": 0
+        }
+      }
+    ]
+  ],
+  [
+    "Equations and Inequalities",
+    [
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "The sum of two numbers is 17 and their product is 66. Let the numbers be "
+              },
+              {
+                "type": "math",
+                "value": "x"
+              },
+              {
+                "type": "text",
+                "value": " and "
+              },
+              {
+                "type": "math",
+                "value": "y"
+              },
+              {
+                "type": "text",
+                "value": ". Write down two equations in "
+              },
+              {
+                "type": "math",
+                "value": "x"
+              },
+              {
+                "type": "text",
+                "value": " and "
+              },
+              {
+                "type": "math",
+                "value": "y"
+              },
+              {
+                "type": "text",
+                "value": ", and solve them to find the two numbers."
+              }
+            ],
+            "marks": 5,
+            "cognitive_level": "routine",
+            "answer": [
+              {
+                "type": "text",
+                "value": "The numbers are "
+              },
+              {
+                "type": "math",
+                "value": "6"
+              },
+              {
+                "type": "text",
+                "value": " and "
+              },
+              {
+                "type": "math",
+                "value": "11"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x+y=17"
+                  },
+                  {
+                    "type": "text",
+                    "value": " and "
+                  },
+                  {
+                    "type": "math",
+                    "value": "xy=66"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "y=17-x"
+                  }
+                ],
+                "tick_label": "setup",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x(17-x)=66"
+                  }
+                ],
+                "tick_label": "substitution",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x^{2}-17x+66=0"
+                  }
+                ],
+                "tick_label": "standard form",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(x-6)(x-11)=0"
+                  }
+                ],
+                "tick_label": null,
+                "tick_count": 0
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "The numbers are "
+                  },
+                  {
+                    "type": "math",
+                    "value": "6"
+                  },
+                  {
+                    "type": "text",
+                    "value": " and "
+                  },
+                  {
+                    "type": "math",
+                    "value": "11"
+                  }
+                ],
+                "tick_label": "both answers",
+                "tick_count": 2
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "x**2 - 17*x + 66",
+            "claimed_solution": "[6, 11]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": "The slot plan required 5 knowledge marks, but by definition knowledge is a single recall step or direct formula substitution. Translating a word problem into equations and solving the resulting quadratic is inherently multi-step. Even with the variables named and the sum/product structure made explicit to remove the decision-making, the task is a drilled multi-step procedure. That makes it routine at the lowest honest level, not knowledge.",
+            "difficulty_tier": "easy",
+            "grid_label": "sum-product word problem, quadratic",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_008",
+        "_planned_cognitive_targets": {
+          "knowledge": 5,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "By letting "
+              },
+              {
+                "type": "math",
+                "value": "k=x^{2}-3x"
+              },
+              {
+                "type": "text",
+                "value": ", solve for x: "
+              },
+              {
+                "type": "math",
+                "value": "(x^{2}-3x)^{2}-2(x^{2}-3x)-8=0"
+              }
+            ],
+            "marks": 5,
+            "cognitive_level": "routine",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x=-1"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "x=1"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "x=2"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "x=4"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "k^{2}-2k-8=0"
+                  }
+                ],
+                "tick_label": "substitution, standard form",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(k-4)(k+2)=0"
+                  }
+                ],
+                "tick_label": "factors",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x^{2}-3x=4"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x^{2}-3x=-2"
+                  }
+                ],
+                "tick_label": "back-substitution",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(x-4)(x+1)=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(x-1)(x-2)=0"
+                  }
+                ],
+                "tick_label": "factors",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x=-1"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=1"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=2"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=4"
+                  }
+                ],
+                "tick_label": "answers",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "(x**2 - 3*x)**2 - 2*(x**2 - 3*x) - 8",
+            "claimed_solution": "[-1, 1, 2, 4]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "medium",
+            "grid_label": "substitution to reduce to quadratic",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_006",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 5,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Solve for x: "
+              },
+              {
+                "type": "math",
+                "value": "2x(x-4)\u2264(x-4)(x+3)"
+              }
+            ],
+            "marks": 5,
+            "cognitive_level": "complex",
+            "answer": [
+              {
+                "type": "math",
+                "value": "3\u2264x\u22644"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "2x(x-4)-(x-4)(x+3)\u22640"
+                  }
+                ],
+                "tick_label": "all terms on one side",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(x-4)[2x-(x+3)]\u22640"
+                  }
+                ],
+                "tick_label": "common factor",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(x-4)(x-3)\u22640"
+                  }
+                ],
+                "tick_label": "factors",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "3\u2264x\u22644"
+                  }
+                ],
+                "tick_label": "answer, both parts",
+                "tick_count": 2
+              }
+            ],
+            "problem_type": "inequality",
+            "sympy_problem": "x**2 - 7*x + 12 <= 0",
+            "claimed_solution": "Interval(3, 4)",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "medium",
+            "grid_label": "quadratic inequality, common factor",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_004",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 5,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Given: "
+              },
+              {
+                "type": "math",
+                "value": "f(x)=x^{2}-2x-15"
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Factorise "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x^{2}-2x-15"
+                  },
+                  {
+                    "type": "text",
+                    "value": " fully."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "(x-5)(x+3)"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "(x-5)(x+3)"
+                      }
+                    ],
+                    "tick_label": "factors",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "factorise quadratic trinomial",
+                "num": "1.1",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, determine the values of "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x"
+                  },
+                  {
+                    "type": "text",
+                    "value": " for which "
+                  },
+                  {
+                    "type": "math",
+                    "value": "\\frac{\\sqrt{15+2x-x^{2}}}{x-1}"
+                  },
+                  {
+                    "type": "text",
+                    "value": " is real and defined."
+                  }
+                ],
+                "marks": 4,
+                "cognitive_level": "problem_solving",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "-3\u2264x\u22645"
+                  },
+                  {
+                    "type": "text",
+                    "value": " and "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x\u22601"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "15+2x-x^{2}\u22650"
+                      }
+                    ],
+                    "tick_label": "setup inequality",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x^{2}-2x-15\u22640"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", so "
+                      },
+                      {
+                        "type": "math",
+                        "value": "(x-5)(x+3)\u22640"
+                      }
+                    ],
+                    "tick_label": "factors",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "text",
+                        "value": "Critical values "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=-3"
+                      },
+                      {
+                        "type": "text",
+                        "value": " and "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=5"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", giving "
+                      },
+                      {
+                        "type": "math",
+                        "value": "-3\u2264x\u22645"
+                      }
+                    ],
+                    "tick_label": "interval",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "-3\u2264x\u22645"
+                      },
+                      {
+                        "type": "text",
+                        "value": " and "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x\u22601"
+                      }
+                    ],
+                    "tick_label": "exclude x = 1",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "inequality",
+                "sympy_problem": "(-x**2 + 2*x + 15)/(x - 1)**2 >= 0",
+                "claimed_solution": "Union(Interval.Ropen(-3, 1), Interval.Lopen(1, 5))",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": "The learner must translate 'real and defined' into two uncued conditions (a non-negative radicand and a non-zero denominator) and must handle the sign reversal. This goes beyond the drilled archetype, but it could reasonably be classed as complex, because it combines known skills rather than requiring a truly novel insight. The slot plan required problem_solving.",
+                "difficulty_tier": "difficult",
+                "grid_label": "surd domain, quadratic inequality",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_003",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 4
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Given the quadratic equation "
+              },
+              {
+                "type": "math",
+                "value": "x^{2}+(k-3)x+4=0"
+              },
+              {
+                "type": "text",
+                "value": ", where k is a real constant."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Determine the value(s) of k for which the equation has equal roots."
+                  }
+                ],
+                "marks": 3,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "k=7"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "k=-1"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "\u0394=(k-3)^{2}-4(1)(4)"
+                      }
+                    ],
+                    "tick_label": "substitution into discriminant",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "k^{2}-6k-7=0"
+                      }
+                    ],
+                    "tick_label": "\u0394 = 0 simplified",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "(k-7)(k+1)=0"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", so "
+                      },
+                      {
+                        "type": "math",
+                        "value": "k=7"
+                      },
+                      {
+                        "type": "text",
+                        "value": " or "
+                      },
+                      {
+                        "type": "math",
+                        "value": "k=-1"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "x**2 - 6*x - 7",
+                "claimed_solution": "[7, -1]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "equal roots, find parameter",
+                "num": "1.1",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, determine the values of k for which the roots of the equation are non-real."
+                  }
+                ],
+                "marks": 2,
+                "cognitive_level": "complex",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "-1<k<7"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "k^{2}-6k-7<0"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", i.e. "
+                      },
+                      {
+                        "type": "math",
+                        "value": "(k-7)(k+1)<0"
+                      }
+                    ],
+                    "tick_label": "condition \u0394 < 0",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "-1<k<7"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "inequality",
+                "sympy_problem": "x**2 - 6*x - 7 < 0",
+                "claimed_solution": "Interval.open(-1, 7)",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "medium",
+                "grid_label": "non-real roots, quadratic inequality",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_007",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 3,
+          "complex": 2,
+          "problem_solving": 0
+        }
+      }
+    ]
+  ]
+]
