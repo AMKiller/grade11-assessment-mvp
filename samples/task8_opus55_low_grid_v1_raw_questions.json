@@ -1,0 +1,1563 @@
+[
+  [
+    "Exponents and Surds",
+    [
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Answer the following questions without using a calculator."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Write "
+                  },
+                  {
+                    "type": "math",
+                    "value": "32"
+                  },
+                  {
+                    "type": "text",
+                    "value": " as a power of 2, and hence write down the value of x if "
+                  },
+                  {
+                    "type": "math",
+                    "value": "2^{x}=32"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "32=2^{5}"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=5"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "32=2^{5}"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", so "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=5"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "2**x - 32",
+                "claimed_solution": "[5]",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "write number as prime power",
+                "num": "1.1",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Solve for x: "
+                  },
+                  {
+                    "type": "math",
+                    "value": "2^{x+3}+2^{x+1}=320"
+                  }
+                ],
+                "marks": 4,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x=5"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "2^{x}(2^{3}+2)=320"
+                      }
+                    ],
+                    "tick_label": "factorise common power",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "10\u00b72^{x}=320"
+                      },
+                      {
+                        "type": "text",
+                        "value": " so "
+                      },
+                      {
+                        "type": "math",
+                        "value": "2^{x}=32"
+                      }
+                    ],
+                    "tick_label": "simplify coefficient",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "2^{x}=2^{5}"
+                      }
+                    ],
+                    "tick_label": "same base",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x=5"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "2**(x+3) + 2**(x+1) - 320",
+                "claimed_solution": "[5]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": "The slot plan required all 5 marks at knowledge level, but solving an exponential equation by factoring out a common power is a multi-step drilled procedure (factorise, simplify, rewrite as the same base, equate exponents). That meets the definition of routine, not single-step recall, so it is honestly labelled routine. Only part (a), worth 1 mark, could legitimately be made knowledge level.",
+                "difficulty_tier": "medium",
+                "grid_label": "exponential eq, factor common power",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "exp_surd_016",
+        "_planned_cognitive_targets": {
+          "knowledge": 5,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Given: "
+              },
+              {
+                "type": "math",
+                "value": "x=\\sqrt{12+\\sqrt{12+\\sqrt{12+\u2026}}}"
+              },
+              {
+                "type": "text",
+                "value": ", where the pattern of nested square roots continues indefinitely."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "By noting that the expression under the outermost square root, "
+                  },
+                  {
+                    "type": "math",
+                    "value": "12+\\sqrt{12+\\sqrt{12+\u2026}}"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", contains the same infinite expression as x, write "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x^{2}"
+                  },
+                  {
+                    "type": "text",
+                    "value": " in terms of x."
+                  }
+                ],
+                "marks": 2,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x^{2}=12+x"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x^{2}=12+\\sqrt{12+\\sqrt{12+\u2026}}"
+                      }
+                    ],
+                    "tick_label": "square both sides",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x^{2}=12+x"
+                      }
+                    ],
+                    "tick_label": "answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "medium",
+                "grid_label": "express infinite surd recursively",
+                "num": "1.1",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, determine the value of x."
+                  }
+                ],
+                "marks": 4,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x=4"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x^{2}-x-12=0"
+                      }
+                    ],
+                    "tick_label": "standard form",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "(x-4)(x+3)=0"
+                      }
+                    ],
+                    "tick_label": "factors",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x=4"
+                      },
+                      {
+                        "type": "text",
+                        "value": " or "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=-3"
+                      }
+                    ],
+                    "tick_label": "roots",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x=4"
+                      },
+                      {
+                        "type": "text",
+                        "value": " (reject "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=-3"
+                      },
+                      {
+                        "type": "text",
+                        "value": " since a square root cannot be negative)"
+                      }
+                    ],
+                    "tick_label": "rejection of negative root",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x=4"
+                      }
+                    ],
+                    "tick_label": null,
+                    "tick_count": 0
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "x**2 - x - 12",
+                "claimed_solution": "[4]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "solve quadratic, reject negative root",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 6,
+        "archetype_id": "exp_surd_010",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 6,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Solve for x, without using a calculator: "
+              },
+              {
+                "type": "math",
+                "value": "\\sqrt{2^{x}+5}+1=2^{x}"
+              }
+            ],
+            "marks": 6,
+            "cognitive_level": "complex",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x=2"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "\\sqrt{2^{x}+5}=2^{x}-1"
+                  }
+                ],
+                "tick_label": "isolate the surd",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "2^{x}+5=2^{2x}-2\u00b72^{x}+1"
+                  }
+                ],
+                "tick_label": "square both sides",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Let "
+                  },
+                  {
+                    "type": "math",
+                    "value": "k=2^{x}"
+                  },
+                  {
+                    "type": "text",
+                    "value": ": "
+                  },
+                  {
+                    "type": "math",
+                    "value": "k^{2}-3k-4=0"
+                  }
+                ],
+                "tick_label": "standard form",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(k-4)(k+1)=0"
+                  }
+                ],
+                "tick_label": "factors",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "2^{x}=-1"
+                  },
+                  {
+                    "type": "text",
+                    "value": " (NA, since "
+                  },
+                  {
+                    "type": "math",
+                    "value": "2^{x}>0"
+                  },
+                  {
+                    "type": "text",
+                    "value": ")"
+                  }
+                ],
+                "tick_label": "rejection of extraneous root",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "2^{x}=4=2^{2}"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=2"
+                  }
+                ],
+                "tick_label": "answer",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "2**x - 1 - sqrt(2**x + 5)",
+            "claimed_solution": "[2]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "difficult",
+            "grid_label": "surd with exponential, reject root",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 6,
+        "archetype_id": "exp_surd_009",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 6,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Rectangle ABCD has side "
+              },
+              {
+                "type": "math",
+                "value": "AB=\u221a3+1"
+              },
+              {
+                "type": "text",
+                "value": " units and diagonal "
+              },
+              {
+                "type": "math",
+                "value": "AC=2\u221a2"
+              },
+              {
+                "type": "text",
+                "value": " units. Without using a calculator, determine the area of rectangle ABCD. Show all your working."
+              }
+            ],
+            "marks": 4,
+            "cognitive_level": "problem_solving",
+            "answer": [
+              {
+                "type": "text",
+                "value": "Area "
+              },
+              {
+                "type": "math",
+                "value": "=2"
+              },
+              {
+                "type": "text",
+                "value": " square units"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "BC^{2}=AC^{2}-AB^{2}=(2\u221a2)^{2}-(\u221a3+1)^{2}"
+                  }
+                ],
+                "tick_label": "Pythagoras substitution",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "BC^{2}=8-(4+2\u221a3)=4-2\u221a3"
+                  }
+                ],
+                "tick_label": "expand and simplify",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "4-2\u221a3=(\u221a3-1)^{2}"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", so "
+                  },
+                  {
+                    "type": "math",
+                    "value": "BC=\u221a3-1"
+                  }
+                ],
+                "tick_label": "length of BC",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Area "
+                  },
+                  {
+                    "type": "math",
+                    "value": "=(\u221a3+1)(\u221a3-1)=3-1=2"
+                  },
+                  {
+                    "type": "text",
+                    "value": " square units"
+                  }
+                ],
+                "tick_label": "area",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "x - (sqrt(3)+1)*sqrt(8-(sqrt(3)+1)**2)",
+            "claimed_solution": "[2]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "difficult",
+            "grid_label": "surd rectangle area via pythagoras",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 4,
+        "archetype_id": "exp_surd_015",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 4
+        }
+      }
+    ]
+  ],
+  [
+    "Equations and Inequalities",
+    [
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Given the inequality "
+              },
+              {
+                "type": "math",
+                "value": "(x+1)(x-4)\u22656"
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Show that the inequality can be written as "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x^{2}-3x-10\u22650"
+                  },
+                  {
+                    "type": "text",
+                    "value": "."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "knowledge",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x^{2}-3x-10\u22650"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x^{2}-4x+x-4-6\u22650"
+                      }
+                    ],
+                    "tick_label": null,
+                    "tick_count": 0
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x^{2}-3x-10\u22650"
+                      }
+                    ],
+                    "tick_label": "expansion to standard form",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "expand to standard form",
+                "num": "1.1",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, solve for "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x"
+                  },
+                  {
+                    "type": "text",
+                    "value": ": "
+                  },
+                  {
+                    "type": "math",
+                    "value": "(x+1)(x-4)\u22656"
+                  }
+                ],
+                "marks": 4,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x\u2264-2"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x\u22655"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "(x-5)(x+2)\u22650"
+                      }
+                    ],
+                    "tick_label": "factors",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "text",
+                        "value": "Critical values: "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=-2"
+                      },
+                      {
+                        "type": "text",
+                        "value": " and "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=5"
+                      }
+                    ],
+                    "tick_label": "critical values",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x\u2264-2"
+                      },
+                      {
+                        "type": "text",
+                        "value": " or "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x\u22655"
+                      }
+                    ],
+                    "tick_label": "both parts of answer",
+                    "tick_count": 2
+                  }
+                ],
+                "problem_type": "inequality",
+                "sympy_problem": "(x+1)*(x-4) - 6 >= 0",
+                "claimed_solution": "Union(Interval(-oo, -2), Interval(5, oo))",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": "The slot plan required all 5 marks at knowledge level, but solving a quadratic inequality (factorising, finding critical values, selecting the correct regions and writing them with 'or') is a drilled multi-step procedure, which is routine by definition. No honest redesign within this archetype reduces it to single-step recall, so it is labelled routine.",
+                "difficulty_tier": "medium",
+                "grid_label": "quadratic inequality after expanding",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_004",
+        "_planned_cognitive_targets": {
+          "knowledge": 5,
+          "routine": 0,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Determine the value(s) of "
+              },
+              {
+                "type": "math",
+                "value": "k"
+              },
+              {
+                "type": "text",
+                "value": " for which the equation "
+              },
+              {
+                "type": "math",
+                "value": "x^{2}+(k-1)x+k+2=0"
+              },
+              {
+                "type": "text",
+                "value": " has equal roots."
+              }
+            ],
+            "marks": 5,
+            "cognitive_level": "routine",
+            "answer": [
+              {
+                "type": "math",
+                "value": "k=7"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "k=-1"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "\u0394=(k-1)^{2}-4(1)(k+2)"
+                  }
+                ],
+                "tick_label": "substitution into discriminant",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "\u0394=k^{2}-6k-7"
+                  }
+                ],
+                "tick_label": "simplified discriminant",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "k^{2}-6k-7=0"
+                  }
+                ],
+                "tick_label": "condition \u0394 = 0",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(k-7)(k+1)=0"
+                  }
+                ],
+                "tick_label": "factors",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "k=7"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "k=-1"
+                  }
+                ],
+                "tick_label": "answer",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "equation",
+            "sympy_problem": "x**2 - 6*x - 7",
+            "claimed_solution": "[7, -1]",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "medium",
+            "grid_label": "equal roots, find parameter",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_007",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 5,
+          "complex": 0,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "flat_row",
+            "is_stem": false,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Solve for x: "
+              },
+              {
+                "type": "math",
+                "value": "x(3-2x)\u2264-9"
+              }
+            ],
+            "marks": 5,
+            "cognitive_level": "complex",
+            "answer": [
+              {
+                "type": "math",
+                "value": "x\u2264-\\frac{3}{2}"
+              },
+              {
+                "type": "text",
+                "value": " or "
+              },
+              {
+                "type": "math",
+                "value": "x\u22653"
+              }
+            ],
+            "marking_steps": [
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "-2x^{2}+3x+9\u22640"
+                  }
+                ],
+                "tick_label": "expand and standard form",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "2x^{2}-3x-9\u22650"
+                  }
+                ],
+                "tick_label": "divide by -1, reverse sign",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "(2x+3)(x-3)\u22650"
+                  }
+                ],
+                "tick_label": "factors",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Critical values: "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=-\\frac{3}{2}"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=3"
+                  }
+                ],
+                "tick_label": "critical values",
+                "tick_count": 1
+              },
+              {
+                "parts": [
+                  {
+                    "type": "math",
+                    "value": "x\u2264-\\frac{3}{2}"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x\u22653"
+                  }
+                ],
+                "tick_label": "answer, both intervals",
+                "tick_count": 1
+              }
+            ],
+            "problem_type": "inequality",
+            "sympy_problem": "2*x**2 - 3*x - 9 >= 0",
+            "claimed_solution": "Union(Interval(-oo, -1.5), Interval(3, oo))",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "medium",
+            "grid_label": "quadratic inequality, rearrange first",
+            "num": "1",
+            "sympy_verified": true,
+            "manual_review_required": false,
+            "sympy_error": null
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_003",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 0,
+          "complex": 5,
+          "problem_solving": 0
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "A farmer builds a rectangular chicken run against the straight wall of a barn. The wall forms one side of the run, so fencing is only needed for the other three sides. The farmer has exactly "
+              },
+              {
+                "type": "math",
+                "value": "50"
+              },
+              {
+                "type": "text",
+                "value": " m of fencing and uses all of it. The barn wall is "
+              },
+              {
+                "type": "math",
+                "value": "25"
+              },
+              {
+                "type": "text",
+                "value": " m long. Let "
+              },
+              {
+                "type": "math",
+                "value": "x"
+              },
+              {
+                "type": "text",
+                "value": " be the length, in metres, of each of the two sides of the run that are perpendicular to the wall."
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Write down an expression, in terms of "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x"
+                  },
+                  {
+                    "type": "text",
+                    "value": ", for the length of the side of the run that is parallel to the wall."
+                  }
+                ],
+                "marks": 1,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "50-2x"
+                  },
+                  {
+                    "type": "text",
+                    "value": " m"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "50-2x"
+                      },
+                      {
+                        "type": "text",
+                        "value": " m"
+                      }
+                    ],
+                    "tick_label": "expression",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "easy",
+                "grid_label": "express side in terms of x",
+                "num": "1.1",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "The area enclosed by the run must be exactly "
+                  },
+                  {
+                    "type": "math",
+                    "value": "300"
+                  },
+                  {
+                    "type": "text",
+                    "value": " m\u00b2. Determine the dimensions of the run. Take into account all the information given, and justify any value you reject."
+                  }
+                ],
+                "marks": 4,
+                "cognitive_level": "problem_solving",
+                "answer": [
+                  {
+                    "type": "text",
+                    "value": "The run is "
+                  },
+                  {
+                    "type": "math",
+                    "value": "15"
+                  },
+                  {
+                    "type": "text",
+                    "value": " m by "
+                  },
+                  {
+                    "type": "math",
+                    "value": "20"
+                  },
+                  {
+                    "type": "text",
+                    "value": " m, with the "
+                  },
+                  {
+                    "type": "math",
+                    "value": "20"
+                  },
+                  {
+                    "type": "text",
+                    "value": " m side along the wall."
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x(50-2x)=300"
+                      }
+                    ],
+                    "tick_label": "setup",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "2x^{2}-50x+300=0"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", so "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x^{2}-25x+150=0"
+                      }
+                    ],
+                    "tick_label": "standard form",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "(x-10)(x-15)=0"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", so "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=10"
+                      },
+                      {
+                        "type": "text",
+                        "value": " or "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=15"
+                      }
+                    ],
+                    "tick_label": "both values",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "text",
+                        "value": "If "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=10"
+                      },
+                      {
+                        "type": "text",
+                        "value": ", the parallel side is "
+                      },
+                      {
+                        "type": "math",
+                        "value": "30"
+                      },
+                      {
+                        "type": "text",
+                        "value": " m, which is longer than the "
+                      },
+                      {
+                        "type": "math",
+                        "value": "25"
+                      },
+                      {
+                        "type": "text",
+                        "value": " m wall, so reject it. The run is "
+                      },
+                      {
+                        "type": "math",
+                        "value": "15"
+                      },
+                      {
+                        "type": "text",
+                        "value": " m by "
+                      },
+                      {
+                        "type": "math",
+                        "value": "20"
+                      },
+                      {
+                        "type": "text",
+                        "value": " m, with the "
+                      },
+                      {
+                        "type": "math",
+                        "value": "20"
+                      },
+                      {
+                        "type": "text",
+                        "value": " m side along the wall."
+                      }
+                    ],
+                    "tick_label": "rejection and answer",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "unverifiable",
+                "sympy_problem": "",
+                "claimed_solution": "",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": "The learner must build the area equation without a cue and then notice, unprompted, that the wall length rules out one root. This is at least complex and arguably problem-solving, but it still follows the archetype's familiar translate-then-solve structure, so problem_solving is a generous label.",
+                "difficulty_tier": "difficult",
+                "grid_label": "area word problem, reject root",
+                "num": "1.2",
+                "manual_review_required": true,
+                "sympy_verified": false,
+                "sympy_error": "Not mechanically verifiable by SymPy (proof/identity/word problem archetype) -- flagged for manual review, not independently confirmed."
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_008",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 1,
+          "complex": 0,
+          "problem_solving": 4
+        }
+      },
+      {
+        "question_structure": [
+          {
+            "type": "stem_row",
+            "is_stem": true,
+            "parts": [
+              {
+                "type": "text",
+                "value": "Given the equation "
+              },
+              {
+                "type": "math",
+                "value": "2x^{2}-5x-1=0"
+              }
+            ],
+            "marks": null,
+            "cognitive_level": null,
+            "children": [
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Solve for x: "
+                  },
+                  {
+                    "type": "math",
+                    "value": "2x^{2}-5x-1=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": " (correct to TWO decimal places)"
+                  }
+                ],
+                "marks": 3,
+                "cognitive_level": "routine",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x=2,69"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=-0,19"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x=\\frac{-(-5)\u00b1\\sqrt{(-5)^{2}-4(2)(-1)}}{2(2)}"
+                      }
+                    ],
+                    "tick_label": "substitution",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x=\\frac{5\u00b1\\sqrt{33}}{4}"
+                      }
+                    ],
+                    "tick_label": null,
+                    "tick_count": 0
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x=2,69"
+                      },
+                      {
+                        "type": "text",
+                        "value": " or "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=-0,19"
+                      }
+                    ],
+                    "tick_label": "both answers",
+                    "tick_count": 2
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "2*x**2 - 5*x - 1",
+                "claimed_solution": "[2.69, -0.19]",
+                "archetype_match": "direct",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "medium",
+                "grid_label": "quadratic formula to 2 d.p.",
+                "num": "1.1",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              },
+              {
+                "parts": [
+                  {
+                    "type": "text",
+                    "value": "Hence, solve for x: "
+                  },
+                  {
+                    "type": "math",
+                    "value": "2(x-3)^{2}-5(x-3)-1=0"
+                  },
+                  {
+                    "type": "text",
+                    "value": " (correct to TWO decimal places)"
+                  }
+                ],
+                "marks": 2,
+                "cognitive_level": "complex",
+                "answer": [
+                  {
+                    "type": "math",
+                    "value": "x=5,69"
+                  },
+                  {
+                    "type": "text",
+                    "value": " or "
+                  },
+                  {
+                    "type": "math",
+                    "value": "x=2,81"
+                  }
+                ],
+                "marking_steps": [
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x-3=2,69"
+                      },
+                      {
+                        "type": "text",
+                        "value": " or "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x-3=-0,19"
+                      }
+                    ],
+                    "tick_label": "link to previous answers",
+                    "tick_count": 1
+                  },
+                  {
+                    "parts": [
+                      {
+                        "type": "math",
+                        "value": "x=5,69"
+                      },
+                      {
+                        "type": "text",
+                        "value": " or "
+                      },
+                      {
+                        "type": "math",
+                        "value": "x=2,81"
+                      }
+                    ],
+                    "tick_label": "both answers",
+                    "tick_count": 1
+                  }
+                ],
+                "problem_type": "equation",
+                "sympy_problem": "2*(x-3)**2 - 5*(x-3) - 1",
+                "claimed_solution": "[5.69, 2.81]",
+                "archetype_match": "constructed",
+                "cognitive_level_disagreement": null,
+                "difficulty_tier": "medium",
+                "grid_label": "hence, substitution into roots",
+                "num": "1.2",
+                "sympy_verified": true,
+                "manual_review_required": false,
+                "sympy_error": null
+              }
+            ],
+            "num": "1"
+          }
+        ],
+        "total_marks": 5,
+        "archetype_id": "eqineq_002",
+        "_planned_cognitive_targets": {
+          "knowledge": 0,
+          "routine": 3,
+          "complex": 2,
+          "problem_solving": 0
+        }
+      }
+    ]
+  ]
+]

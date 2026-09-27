@@ -12,8 +12,6 @@ from table_helpers import (
     add_information_sheet_image, set_table_fixed_layout_and_grid,
     show_table_borders
 )
-from generation import _analyze_cognitive_distribution
-
 DEFAULT_COGNITIVE_TARGETS = {
     'knowledge': 20,
     'routine': 35,
@@ -22,12 +20,51 @@ DEFAULT_COGNITIVE_TARGETS = {
 }
 
 COGNITIVE_LEVELS = ['knowledge', 'routine', 'complex', 'problem_solving']
-# "Knowledge" widened from 0.85" -- at that width it wrapped mid-word
-# ("Knowledg" / "e") in real rendering, confirmed by viewing a rendered
-# page image (format_SKILL.md's own verification standard). 1.05" fits it
-# on one line; total width (5.9") stays under the ~6.69" usable A4 width
-# (21cm page - 2x2cm margins) alongside the other five columns.
-COGNITIVE_GRID_COL_WIDTHS_IN = [1.3, 1.05, 0.85, 0.85, 1.15, 0.7]
+COGNITIVE_LEVEL_NAMES = {
+    'knowledge': 'Knowledge', 'routine': 'Routine',
+    'complex': 'Complex', 'problem_solving': 'Problem Solving'
+}
+DIFFICULTY_TIERS = ['easy', 'medium', 'difficult']
+DIFFICULTY_TIER_LABELS = {'easy': 'E', 'medium': 'M', 'difficult': 'D'}
+
+# 2026-09-27: rebuilt to match the approved Task 8 reference format
+# (reference/task8_baseline/build.py) -- one row per sub-question (never
+# aggregated per top-level QUESTION), 4 cognitive levels x 3 difficulty
+# tiers (E/M/D) = 12 mark-columns, each leaf's mark value in exactly one
+# cell. Topic(0.75) + Q(0.45) + Sub-topic(1.35) + 12x0.28 tier cells(3.36)
+# + Total(0.45) = 6.36in, comfortably under the ~6.69in usable A4 width
+# (21cm page - 2x2cm margins) -- the reference's own 6.76in (build.py's
+# W=[0.8,0.42,1.6]+[0.29]*12+[0.46]) came from a different template/page
+# geometry than this app's no-template generic path.
+COGNITIVE_GRID_COL_WIDTHS_IN = [0.75, 0.45, 1.35] + [0.28] * 12 + [0.45]
+
+
+def _collect_grid_leaves(topics_data: list) -> list:
+    """
+    Flatten topics_data into one row per LEAF (never per top-level question
+    or per stem) -- topic name, sub-question number, grid_label, marks,
+    cognitive_level, difficulty_tier. This is the single source of truth
+    the grid renderer, and its own column/row-total reconciliation, are
+    both built from -- reuses _flatten_topic_hierarchy() so the grid can
+    never disagree with the question paper/marking guide about what a
+    sub-question's number or marks actually are.
+    """
+    rows = []
+    for qnum, (topic, questions) in enumerate(topics_data, 1):
+        flat = _flatten_topic_hierarchy(qnum, questions)
+        for r in flat:
+            if r.get("is_stem"):
+                continue
+            leaf = r["leaf"]
+            rows.append({
+                "topic": topic,
+                "num": r["num"],
+                "label": leaf.get("grid_label") or "",
+                "marks": leaf.get("marks"),
+                "level": leaf.get("cognitive_level"),
+                "tier": leaf.get("difficulty_tier"),
+            })
+    return rows
 
 
 def _flatten_topic_hierarchy(qnum: int, hierarchical_questions: list) -> list:
@@ -213,7 +250,7 @@ class DocumentGenerator:
         self._add_question_paper_body(doc, question_groups, actual_total_marks)
         doc.add_page_break()
         self._add_marking_guide_body(doc, question_groups, actual_total_marks)
-        self._add_cognitive_grid(doc, question_groups, actual_total_marks, target_distribution)
+        self._add_cognitive_grid(doc, topics_data, target_distribution)
 
         if include_information_sheet and grade in ("11", "12"):
             doc.add_page_break()
@@ -385,73 +422,130 @@ class DocumentGenerator:
 
         add_grand_total_paragraph(doc, grand_total)
 
-    def _add_cognitive_grid(self, doc, question_groups: list, total_marks: int, targets: dict):
-        """Bordered COGNITIVE LEVEL ANALYSIS GRID -- long format by question,
-        with FET TARGET % and THIS TASK % rows, per task_SKILL.md."""
+    def _add_cognitive_grid(self, doc, topics_data: list, targets: dict):
+        """
+        Bordered COGNITIVE LEVEL ANALYSIS GRID matching the approved Task 8
+        reference format (reference/task8_baseline/build.py / _CognitiveGrid.
+        docx): one row per sub-question -- never aggregated per top-level
+        QUESTION -- with 4 cognitive levels x 3 difficulty tiers (E/M/D) =
+        12 mark-columns, a leaf's full mark value in exactly one of them,
+        plus top Weighting/Actual% and bottom TOTAL/% summary rows.
+        """
         doc.add_paragraph()
         heading = doc.add_paragraph()
         r = heading.add_run("COGNITIVE LEVEL ANALYSIS GRID")
         set_font(r, size=14, bold=True)
 
-        table = doc.add_table(rows=0, cols=6)
+        leaves = _collect_grid_leaves(topics_data)
+        total_marks = sum(leaf["marks"] for leaf in leaves if leaf["marks"])
+
+        # 12 mark-column totals, keyed (level, tier). A leaf with a missing/
+        # invalid level or tier can't happen in practice -- both are
+        # required by generation.py's validator (check_leaf_flags) before a
+        # leaf is ever accepted -- but if one ever slipped through, it
+        # contributes to neither the column totals nor a data-row cell
+        # below, so a pipeline regression shows up as a totals mismatch the
+        # caller can see, not a silent miscount or a crash.
+        col_totals = {(lvl, tier): 0 for lvl in COGNITIVE_LEVELS for tier in DIFFICULTY_TIERS}
+        for leaf in leaves:
+            key = (leaf["level"], leaf["tier"])
+            if key in col_totals and leaf["marks"]:
+                col_totals[key] += leaf["marks"]
+        level_totals = {lvl: sum(col_totals[(lvl, t)] for t in DIFFICULTY_TIERS) for lvl in COGNITIVE_LEVELS}
+
+        def pct(x):
+            return round(100 * x / total_marks) if total_marks else 0
+
+        table = doc.add_table(rows=0, cols=16)
         show_table_borders(table)
 
-        headers = ["QUESTION", "Knowledge", "Routine", "Complex", "Problem-Solving", "Total"]
-        header_row = table.add_row()
-        for i, h in enumerate(headers):
-            r = header_row.cells[i].paragraphs[0].add_run(h)
-            set_font(r, size=11, bold=True)
+        def cell_text(c, text, bold=False, center=True, shade=None):
+            p = c.paragraphs[0]
+            run = p.add_run(str(text))
+            set_font(run, size=8, bold=bold)
+            if center:
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            if shade:
+                tcPr = c._tc.get_or_add_tcPr()
+                sh = OxmlElement('w:shd')
+                sh.set(qn('w:val'), 'clear')
+                sh.set(qn('w:fill'), shade)
+                tcPr.append(sh)
 
-        level_totals = {level: 0 for level in COGNITIVE_LEVELS}
-
-        for qnum, questions in question_groups:
-            # Reuses generation.py's leaf-walk (flat rows + stem children) so
-            # the grid is built from the same actually-generated leaves as
-            # the rest of the document, not from the pre-generation plan.
-            row_totals = _analyze_cognitive_distribution(questions, targets)["marks_by_level"]
-            row_total_marks = sum(row_totals.values())
-
-            row = table.add_row()
-            r = row.cells[0].paragraphs[0].add_run(f"QUESTION {qnum}")
-            set_font(r, size=11)
+        def summary_row(label, values, shade=None):
+            row = table.add_row().cells
+            merged_label = row[0].merge(row[1]).merge(row[2])
+            cell_text(merged_label, label, bold=True, center=False, shade=shade)
             for i, level in enumerate(COGNITIVE_LEVELS):
-                r = row.cells[i + 1].paragraphs[0].add_run(str(row_totals[level]))
-                set_font(r, size=11)
-                level_totals[level] += row_totals[level]
-            # Total column is bold on every row, not just the TOTAL row --
-            # task_SKILL.md: "Bold the total row and total column".
-            r = row.cells[5].paragraphs[0].add_run(str(row_total_marks))
-            set_font(r, size=11, bold=True)
+                merged = row[3 + 3 * i].merge(row[4 + 3 * i]).merge(row[5 + 3 * i])
+                cell_text(merged, values[level], bold=True, shade=shade)
+            cell_text(row[15], values["total"], bold=True, shade=shade)
 
-        total_row = table.add_row()
-        r = total_row.cells[0].paragraphs[0].add_run("TOTAL")
-        set_font(r, size=11, bold=True)
-        for i, level in enumerate(COGNITIVE_LEVELS):
-            r = total_row.cells[i + 1].paragraphs[0].add_run(str(level_totals[level]))
-            set_font(r, size=11, bold=True)
-        r = total_row.cells[5].paragraphs[0].add_run(str(sum(level_totals.values())))
-        set_font(r, size=11, bold=True)
+        # --- Top summary rows ---
+        summary_row(
+            "Weighting (Prescribed)",
+            {**{lvl: f"{targets.get(lvl, 0)}%" for lvl in COGNITIVE_LEVELS}, "total": "100%"},
+            shade="D9D9D9"
+        )
+        summary_row(
+            "Actual %",
+            {**{lvl: f"{pct(level_totals[lvl])}%" for lvl in COGNITIVE_LEVELS}, "total": f"{pct(total_marks)}%"},
+            shade="D9D9D9"
+        )
 
-        fet_row = table.add_row()
-        r = fet_row.cells[0].paragraphs[0].add_run("FET TARGET %")
-        set_font(r, size=11, bold=True)
+        # --- Column headers (2 rows: level names, then E/M/D per level) ---
+        header_row = table.add_row().cells
+        for i, h in enumerate(["Topic", "Q", "Sub-topic"]):
+            cell_text(header_row[i], h, bold=True)
         for i, level in enumerate(COGNITIVE_LEVELS):
-            r = fet_row.cells[i + 1].paragraphs[0].add_run(f"{targets.get(level, 0)}%")
-            set_font(r, size=11, bold=True)
-        r = fet_row.cells[5].paragraphs[0].add_run("—")
-        set_font(r, size=11, bold=True)
+            merged = header_row[3 + 3 * i].merge(header_row[4 + 3 * i]).merge(header_row[5 + 3 * i])
+            cell_text(merged, COGNITIVE_LEVEL_NAMES[level], bold=True)
+        cell_text(header_row[15], "Total", bold=True)
 
-        task_row = table.add_row()
-        r = task_row.cells[0].paragraphs[0].add_run("THIS TASK %")
-        set_font(r, size=11, bold=True)
-        for i, level in enumerate(COGNITIVE_LEVELS):
-            pct = round(level_totals[level] / total_marks * 100) if total_marks else 0
-            r = task_row.cells[i + 1].paragraphs[0].add_run(f"{pct}%")
-            set_font(r, size=11, bold=True)
-        r = task_row.cells[5].paragraphs[0].add_run("100%")
-        set_font(r, size=11, bold=True)
+        tier_row = table.add_row().cells
+        for i in range(12):
+            cell_text(tier_row[3 + i], DIFFICULTY_TIER_LABELS[DIFFICULTY_TIERS[i % 3]], bold=True)
+        # Topic/Q/Sub-topic/Total only need to appear once -- vertically
+        # merge them across both header rows (mirrors the reference's own
+        # two-row header).
+        prev_row = table.rows[-2].cells
+        for i in (0, 1, 2, 15):
+            tier_row[i].merge(prev_row[i])
+
+        # --- Data rows: one per sub-question, never aggregated ---
+        last_topic = None
+        for leaf in leaves:
+            row = table.add_row().cells
+            cell_text(row[0], leaf["topic"] if leaf["topic"] != last_topic else "", bold=True, center=False)
+            last_topic = leaf["topic"]
+            cell_text(row[1], leaf["num"])
+            cell_text(row[2], leaf["label"], center=False)
+            if leaf["level"] in COGNITIVE_LEVELS and leaf["tier"] in DIFFICULTY_TIERS:
+                col_index = 3 + COGNITIVE_LEVELS.index(leaf["level"]) * 3 + DIFFICULTY_TIERS.index(leaf["tier"])
+                cell_text(row[col_index], leaf["marks"])
+            cell_text(row[15], leaf["marks"], bold=True)
+
+        # --- Bottom summary rows ---
+        total_row = table.add_row().cells
+        merged_label = total_row[0].merge(total_row[1]).merge(total_row[2])
+        cell_text(merged_label, "TOTAL", bold=True, center=False, shade="D9D9D9")
+        for i in range(12):
+            lvl = COGNITIVE_LEVELS[i // 3]
+            tier = DIFFICULTY_TIERS[i % 3]
+            cell_text(total_row[3 + i], col_totals[(lvl, tier)], bold=True, shade="D9D9D9")
+        cell_text(total_row[15], total_marks, bold=True, shade="D9D9D9")
+
+        summary_row(
+            "%",
+            {**{lvl: f"{pct(level_totals[lvl])}%" for lvl in COGNITIVE_LEVELS}, "total": "100%"},
+            shade="D9D9D9"
+        )
 
         set_table_fixed_layout_and_grid(table, COGNITIVE_GRID_COL_WIDTHS_IN)
+
+        note = doc.add_paragraph()
+        r = note.add_run("E = Easy, M = Medium, D = Difficult.")
+        set_font(r, size=9)
 
     def _save_to_bytes(self, doc) -> bytes:
         """Save document to bytes buffer."""

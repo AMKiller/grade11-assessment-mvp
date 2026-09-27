@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Unit tests for the real SymPy verification logic, no API calls."""
 
-from generation import QuestionGenerator, GeneratedQuestion
+import json
+from generation import QuestionGenerator, GeneratedQuestion, _repair_json_escape_collisions
 
 
 def make_gen():
@@ -124,6 +125,50 @@ def test_unverifiable_handled_upstream():
     print("Unverifiable type: handled by generate_question() before calling _verify_answer() -- OK by design")
 
 
+def test_frac_json_escape_repair():
+    """
+    Regression test for the 2026-09-27 bug: a math part containing "\frac"
+    with a single backslash is ambiguous JSON (\f is also the form-feed
+    escape) -- json.loads() silently corrupts it instead of raising. Confirm
+    _repair_json_escape_collisions() fixes this on the exact wire-text shape
+    Claude produces, is idempotent on already-correct output, and leaves
+    \sqrt/\cdot (which don't collide) alone.
+    """
+    # Single-escaped \frac (the bug) -- must round-trip to a literal \frac,
+    # not a form-feed character. Built directly rather than via json.dumps
+    # (which would correctly double-escape it for us) -- this is what a
+    # single mis-escaped backslash from Claude actually looks like on the
+    # wire: literally the two characters backslash, f.
+    raw_bad = '{"value": "\\frac{a}{b}"}'
+    parsed_before = json.loads(raw_bad)
+    assert parsed_before["value"] == "\x0crac{a}{b}", (
+        "test setup check failed -- expected the unrepaired parse to demonstrate "
+        f"the corruption, got {parsed_before['value']!r}"
+    )
+
+    repaired = _repair_json_escape_collisions(raw_bad)
+    parsed_after = json.loads(repaired)
+    assert parsed_after["value"] == "\\frac{a}{b}", (
+        f"repair failed to recover a literal \\frac, got {parsed_after['value']!r}"
+    )
+    print("  ✓ single-escaped \\frac repaired to a literal \\frac (not form-feed)")
+
+    # Already-correctly-escaped output must be left untouched (idempotent).
+    raw_good = '{"value": "\\\\frac{a}{b}"}'
+    parsed_good_before = json.loads(raw_good)
+    parsed_good_after = json.loads(_repair_json_escape_collisions(raw_good))
+    assert parsed_good_after["value"] == parsed_good_before["value"] == "\\frac{a}{b}"
+    print("  ✓ already-correct \\\\frac left untouched (repair is idempotent)")
+
+    # \sqrt and \cdot don't collide with any JSON escape letter -- a single
+    # backslash before them is simply invalid JSON (caught immediately by
+    # the existing "not valid JSON" retry path), and the repair must not
+    # touch them either way.
+    raw_sqrt = '{"value": "\\\\sqrt{x}"}'
+    assert json.loads(_repair_json_escape_collisions(raw_sqrt))["value"] == "\\sqrt{x}"
+    print("  ✓ \\sqrt (no collision) unaffected by the repair")
+
+
 if __name__ == "__main__":
     print("=" * 60)
     print("VERIFICATION LOGIC UNIT TESTS")
@@ -137,4 +182,5 @@ if __name__ == "__main__":
     test_inequality_wrong()
     test_system_correct()
     test_unverifiable_handled_upstream()
+    test_frac_json_escape_repair()
     print("\n✓ ALL VERIFICATION TESTS PASSED")

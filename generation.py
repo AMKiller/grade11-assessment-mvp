@@ -2,6 +2,7 @@ import ast
 import json
 import os
 import random
+import re
 import time
 from types import SimpleNamespace
 from typing import Optional
@@ -144,6 +145,42 @@ def _call_claude_with_retry(**kwargs):
     raise NonRetryableAPIError(last_exception) from last_exception
 
 # ============================================================
+# JSON escape-collision repair (2026-09-27 fix -- see STATUS.md)
+# ============================================================
+# Claude's response text IS this pipeline's JSON payload -- when it writes
+# a math value containing a DSL backslash-command like "\frac{...}" with a
+# single backslash (the literal 2-char sequence backslash+f), that's
+# ambiguous JSON: \f is ALSO a valid JSON string escape for the form-feed
+# control character (U+000C). json.loads() correctly (per the JSON spec)
+# decodes it as form-feed, silently corrupting "\frac{...}" into a form-feed
+# byte followed by literal "rac{...}" -- which then fails math-part
+# validation with a confusing "unknown command" error, burns all 3 quality
+# retries, and fails the whole slot outright (see exp_surd_003's failure in
+# the 2026-09-27 Task 8 run).
+#
+# Of this DSL's three backslash-commands, only \frac collides this way --
+# \sqrt and \cdot start with 's'/'c', neither a JSON escape letter, so a
+# stray single backslash before them raises json.JSONDecodeError
+# immediately instead of silently corrupting (already caught by the
+# existing "Claude response was not valid JSON" retry path below).
+#
+# This pipeline's JSON payload has no legitimate use for a literal
+# form-feed character anywhere (every field is prose or the math DSL, both
+# printable text) -- so any un-doubled \f in the raw response text is
+# unambiguously a mis-escaped \frac, never an intended form-feed. Safe to
+# repair pre-parse: double the backslash so json.loads() decodes it back to
+# a literal "\f" (the start of "\frac"), not the control character. The
+# negative lookbehind skips a backslash that's already doubled (an already-
+# correctly-escaped "\\frac"), so this is idempotent -- it never touches
+# text Claude already escaped correctly.
+_FRAC_ESCAPE_COLLISION_RE = re.compile(r'(?<!\\)\\f')
+
+
+def _repair_json_escape_collisions(text: str) -> str:
+    return _FRAC_ESCAPE_COLLISION_RE.sub(lambda m: '\\\\f', text)
+
+
+# ============================================================
 # Hierarchical Structure Support
 # ============================================================
 
@@ -167,6 +204,12 @@ def validate_hierarchical_structure(data: dict, target_marks: int) -> tuple[bool
         disagreement = leaf.get("cognitive_level_disagreement")
         if disagreement is not None and not isinstance(disagreement, str):
             errors.append(f"{label}: cognitive_level_disagreement must be null or a string, got {disagreement!r}")
+        tier = leaf.get("difficulty_tier")
+        if tier not in ("easy", "medium", "difficult"):
+            errors.append(f"{label}: difficulty_tier must be 'easy'/'medium'/'difficult', got {tier!r}")
+        grid_label = leaf.get("grid_label")
+        if not isinstance(grid_label, str) or not grid_label.strip():
+            errors.append(f"{label}: grid_label must be a non-empty string, got {grid_label!r}")
 
     for i, row in enumerate(structure):
         if not isinstance(row, dict):
@@ -585,8 +628,8 @@ JSON STRUCTURE:
             "marks": null,
             "cognitive_level": null,
             "children": [
-                {{"parts": [...], "marks": 2, "cognitive_level": "routine", "answer": [...], "marking_steps": [...], "problem_type": "...", "sympy_problem": "...", "claimed_solution": "...", "archetype_match": "direct", "cognitive_level_disagreement": null}},
-                {{"parts": [...], "marks": 3, "cognitive_level": "complex", ..., "archetype_match": "constructed", "cognitive_level_disagreement": null}}
+                {{"parts": [...], "marks": 2, "cognitive_level": "routine", "answer": [...], "marking_steps": [...], "problem_type": "...", "sympy_problem": "...", "claimed_solution": "...", "archetype_match": "direct", "cognitive_level_disagreement": null, "difficulty_tier": "medium", "grid_label": "solve quadratic by factorising"}},
+                {{"parts": [...], "marks": 3, "cognitive_level": "complex", ..., "archetype_match": "constructed", "cognitive_level_disagreement": null, "difficulty_tier": "difficult", "grid_label": "combine two conditions"}}
             ]
         }},
         {{
@@ -601,7 +644,9 @@ JSON STRUCTURE:
             "sympy_problem": "...",
             "claimed_solution": "...",
             "archetype_match": "direct",
-            "cognitive_level_disagreement": null
+            "cognitive_level_disagreement": null,
+            "difficulty_tier": "easy",
+            "grid_label": "exponential eq, common base"
         }}
     ],
     "total_marks": 6
@@ -633,6 +678,16 @@ LaTeX -- anything outside this list will fail to render and the whole question w
   - plain digits/letters/operators as needed
 Decimals use South African comma notation even inside math parts, e.g. {{"type": "math", "value":
 "1,35"}} -- this parses correctly as a single number, same as "1.35" would.
+
+CRITICAL JSON ESCAPING: your entire response IS the JSON this gets parsed from, so every literal
+backslash inside a string value (i.e. every use of "\\frac", "\\sqrt", "\\cdot" above) MUST be
+written as TWO backslashes in your actual output -- "\\\\frac{{a}}{{b}}", not "\\frac{{a}}{{b}}" --
+exactly like any other JSON string containing a literal backslash. Getting this wrong for "\\frac"
+specifically is silently corrupting: "\\f" is also a valid JSON escape for the form-feed control
+character, so a single backslash there parses "successfully" into the wrong character and the
+question fails validation with a confusing error instead of a clear JSON error. "\\sqrt" and
+"\\cdot" don't have this silent-corruption risk (a single backslash before them is simply invalid
+JSON and gets caught immediately) -- but double-escape all three consistently regardless.
 
 This restriction does NOT apply to "sympy_problem" or "claimed_solution" -- those two fields stay
 in standard Python/JSON numeric syntax with periods, are NOT split into parts, and are never
@@ -713,6 +768,29 @@ it." Leave null whenever you agree with your own "cognitive_level" label. Do NOT
 with a mismatched target and leave this null -- that hides a real validity problem from the
 paper's cognitive grid.
 
+"difficulty_tier" -- every leaf also needs an item-difficulty tier, independent of its cognitive
+level: "easy" | "medium" | "difficult". This is NOT the same axis as "cognitive_level" -- cognitive
+level is about which KIND of thinking the leaf demands (recall vs. decision vs. novel insight);
+difficulty_tier is about how hard THIS PARTICULAR INSTANCE is within that kind, e.g. two "routine"
+leaves that both apply the same drilled procedure can differ in tier because one uses small clean
+integers (easy) and the other uses larger or messier numbers, an extra step, or a less common
+special case of the same technique (difficult), with a typical/average instance in between
+(medium). Base your choice on the "Difficulty distribution" given below under this archetype (real
+historical evidence of how instances of this exact archetype have been tiered) when it's provided;
+when it isn't (no historical evidence available for this archetype), use your own honest judgement
+against the same easy/medium/difficult definition -- don't default to "medium" reflexively.
+
+"grid_label" -- a short (3-6 word) lowercase phrase naming what THIS SPECIFIC leaf tests, in the
+same terse style as real DBE cognitive-grid sub-topic labels, e.g. "solve quadratic by
+factorising", "rationalise the denominator", "nature of roots, discriminant". This is
+leaf-specific, not archetype-generic -- if a stem's several children test different things (e.g.
+one child sets up a value, the next child uses it), give each its own accurate label rather than
+reusing one label for all of them. The archetype's own "Grid label" (given below, when the
+archetype's KB entry has one) is a strong starting point for a leaf that directly matches it, but
+adapt it if this specific leaf tests something narrower or different (especially for a
+"constructed" leaf per "archetype_match" above, which by definition isn't what the archetype's own
+label describes).
+
 Rules for "problem_type" and the two machine-readable fields:
 
 1. problem_type = "equation" (single-variable equation solved for x):
@@ -752,6 +830,8 @@ Description: {archetype.description}
 
 Marking pattern: {json.dumps(archetype.marking_pattern, indent=2)}
 Language notes: {archetype.language_notes}
+Grid label: {archetype.grid_label or "(none catalogued for this archetype -- author your own per-leaf grid_label from scratch)"}
+Difficulty distribution: {json.dumps(archetype.difficulty_distribution, indent=2) if archetype.difficulty_distribution else "(no historical E/M/D evidence for this archetype -- use your own judgement per the difficulty_tier definition above)"}
 
 Marks for this question: {marks}
 
@@ -840,6 +920,8 @@ levels (e.g. a "routine" first part and a "complex" second part), matching the t
             if response_text.startswith("json"):
                 response_text = response_text[4:]
             response_text = response_text.strip()
+
+        response_text = _repair_json_escape_collisions(response_text)
 
         try:
             data = json.loads(response_text)
