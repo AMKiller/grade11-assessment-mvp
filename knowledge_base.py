@@ -17,6 +17,15 @@ class Archetype:
     usage_tier: str
     frequency_cap: int | None = None
     low_evidence: bool = False
+    # Both v2-schema only (Equations and Inequalities as of 2026-09) -- v1
+    # archetypes (Exponents and Surds) have neither, and callers must
+    # tolerate that: grid_label falls back to "" (generation.py then asks
+    # Claude to author a per-leaf label with no historical anchor) and
+    # difficulty_distribution falls back to None (no historical E/M/D
+    # evidence to guide the tier choice, again handled in generation.py's
+    # prompt-building, not silently defaulted to a specific tier here).
+    grid_label: str = ""
+    difficulty_distribution: dict | None = None
 
 
 class KnowledgeBase:
@@ -66,7 +75,9 @@ class KnowledgeBase:
                 source_examples=arch.get("source_examples", []),
                 usage_tier=tier,
                 frequency_cap=frequency_cap,
-                low_evidence=arch.get("low_evidence", False)
+                low_evidence=arch.get("low_evidence", False),
+                grid_label=arch.get("grid_label", ""),
+                difficulty_distribution=arch.get("difficulty_distribution")
             ))
         return parsed
 
