@@ -511,9 +511,7 @@ class QuestionGenerator:
         archetype = self.kb.get_archetype(self.topic, archetype_id)
 
         if marks is None:
-            marks = archetype.marking_pattern.get("typical_total_marks", 3)
-            if marks is None:
-                marks = 3
+            marks = round(_typical_marks_weight(archetype))
 
         if cognitive_targets is None:
             cognitive_targets = {'knowledge': 0, 'routine': marks, 'complex': 0, 'problem_solving': 0}
@@ -1227,6 +1225,31 @@ def _build_leaf_plan(archetypes: list, marks_plan: list, level_totals: dict) -> 
     return plan
 
 
+def _typical_marks_weight(archetype) -> float:
+    """
+    A numeric weight for proportional mark distribution, derived from an
+    archetype's "typical_total_marks". Most KB entries store this as a
+    plain int, but some (e.g. the Trigonometry KB, added 2026-09-27) store
+    a free-text descriptive range instead -- e.g. "1-5, most commonly
+    2-3..." -- which crashed sum(weights) with "unsupported operand
+    type(s) for +: 'int' and 'str'" the moment a topic with this KB shape
+    was actually used (Task 9, the first run to add a third topic). Falls
+    back to extracting the first integer mentioned in the string (a
+    reasonable low-end proxy for a proportionality weight, not a claim
+    about the true typical value), or a flat 3 if none is found -- this is
+    only ever a WEIGHT for proportional scaling, never the final printed
+    marks, so an approximate fallback here doesn't affect correctness.
+    """
+    w = archetype.marking_pattern.get("typical_total_marks")
+    if isinstance(w, (int, float)) and w:
+        return w
+    if isinstance(w, str):
+        m = re.search(r'\d+', w)
+        if m:
+            return int(m.group())
+    return 3
+
+
 def _distribute_marks(archetypes: list, target_marks: int) -> list:
     """
     Compute an integer mark value per archetype that sums EXACTLY to
@@ -1237,10 +1260,7 @@ def _distribute_marks(archetypes: list, target_marks: int) -> list:
 
     Returns a list of ints, same length and order as `archetypes`.
     """
-    weights = []
-    for a in archetypes:
-        w = a.marking_pattern.get("typical_total_marks")
-        weights.append(w if w else 3)
+    weights = [_typical_marks_weight(a) for a in archetypes]
 
     total_weight = sum(weights)
     raw = [target_marks * w / total_weight for w in weights]
@@ -1323,10 +1343,7 @@ def generate_paper(topic: str, num_questions: int = 5,
         # No explicit total requested -- fall back to each archetype's own
         # historical typical mark value, and let the paper total be
         # whatever that happens to sum to.
-        marks_plan = []
-        for a in gen.selected_archetypes:
-            w = a.marking_pattern.get("typical_total_marks")
-            marks_plan.append(w if w else 3)
+        marks_plan = [round(_typical_marks_weight(a)) for a in gen.selected_archetypes]
         target_marks = sum(marks_plan)
 
     # (a) Whole-paper mark allocation by cognitive level -- fixed before any
