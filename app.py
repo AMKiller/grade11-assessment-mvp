@@ -318,6 +318,11 @@ if "generation_result" in st.session_state:
                             st.error(f"⚠️ SymPy's independent solve DISAGREED with Claude's claimed answer — requires manual review: {leaf.get('sympy_error', '')}")
                     else:
                         st.warning(f"⚠ Verification incomplete: {leaf.get('sympy_error', 'Unknown error')}")
+
+                    if leaf.get('archetype_match') == 'constructed':
+                        st.info("🛠 Constructed — no direct precedent in this archetype's catalog (e.g. an invented scaffold step); spot-check separately from grounded content")
+                    if leaf.get('cognitive_level_disagreement'):
+                        st.warning(f"⚖️ Cognitive-level disagreement flagged by the model: {leaf.get('cognitive_level_disagreement')}")
                     st.divider()
 
     # Download section

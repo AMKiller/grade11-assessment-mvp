@@ -66,6 +66,10 @@ def collect_leaf_detail(topics_data: list) -> dict:
     per_leaf = []
     unverifiable_detail = []
     failed_verification_detail = []
+    constructed_count = 0
+    constructed_detail = []
+    cognitive_mismatch_count = 0
+    cognitive_mismatch_detail = []
 
     for topic, questions in topics_data:
         for q in questions:
@@ -77,6 +81,8 @@ def collect_leaf_detail(topics_data: list) -> dict:
                     total_leaves += 1
                     actual_level = leaf.get("cognitive_level")
                     problem_type = leaf.get("problem_type")
+                    archetype_match = leaf.get("archetype_match")
+                    disagreement = leaf.get("cognitive_level_disagreement")
                     per_leaf.append({
                         "topic": topic, "archetype_id": archetype_id, "num": leaf.get("num"),
                         "marks": leaf.get("marks"), "problem_type": problem_type,
@@ -84,6 +90,8 @@ def collect_leaf_detail(topics_data: list) -> dict:
                         "planned_cognitive_targets": planned,
                         "sympy_verified": leaf.get("sympy_verified"),
                         "manual_review_required": leaf.get("manual_review_required"),
+                        "archetype_match": archetype_match,
+                        "cognitive_level_disagreement": disagreement,
                     })
                     if problem_type == "unverifiable":
                         unverifiable += 1
@@ -101,6 +109,19 @@ def collect_leaf_detail(topics_data: list) -> dict:
                                 "topic": topic, "archetype_id": archetype_id,
                                 "problem_type": problem_type, "sympy_error": leaf.get("sympy_error"),
                             })
+                    if archetype_match == "constructed":
+                        constructed_count += 1
+                        constructed_detail.append({
+                            "topic": topic, "archetype_id": archetype_id,
+                            "num": leaf.get("num"), "marks": leaf.get("marks"),
+                        })
+                    if disagreement:
+                        cognitive_mismatch_count += 1
+                        cognitive_mismatch_detail.append({
+                            "topic": topic, "archetype_id": archetype_id,
+                            "num": leaf.get("num"), "marks": leaf.get("marks"),
+                            "assigned_level": actual_level, "disagreement": disagreement,
+                        })
 
     return {
         "total_leaves": total_leaves, "sympy_verified": sympy_verified,
@@ -108,6 +129,10 @@ def collect_leaf_detail(topics_data: list) -> dict:
         "real_verification_failures": real_verification_failures,
         "unverifiable_detail": unverifiable_detail,
         "failed_verification_detail": failed_verification_detail,
+        "constructed_count": constructed_count,
+        "constructed_detail": constructed_detail,
+        "cognitive_mismatch_count": cognitive_mismatch_count,
+        "cognitive_mismatch_detail": cognitive_mismatch_detail,
         "per_leaf": per_leaf,
     }
 
@@ -130,6 +155,7 @@ def main():
     combined_usage_log = []
     combined_errors = []
     all_questions = []
+    diversity_diagnostics = {}
 
     wall_start = time.time()
     for topic, marks in TOPICS_MARKS:
@@ -144,7 +170,16 @@ def main():
         combined_usage_log.extend(result["usage_log"])
         combined_errors.extend([f"[{topic}] {e}" for e in result.get("generation_errors", [])])
         all_questions.extend(result["questions"])
-        print(f"  -> {result['num_questions']} questions, {result['total_marks']} marks\n")
+        diversity_diagnostics[topic] = result.get("diversity_diagnostics", {})
+        archetype_ids = [q.get("archetype_id") for q in result["questions"]]
+        print(f"  -> {result['num_questions']} questions, {result['total_marks']} marks")
+        print(f"     archetypes used: {archetype_ids}")
+        if diversity_diagnostics[topic].get("forced_reuse_archetype_ids"):
+            print(f"     [diversity] forced reuse (pool exhausted): {diversity_diagnostics[topic]['forced_reuse_archetype_ids']}")
+        if diversity_diagnostics[topic].get("subtopic_coverage_swaps"):
+            for note in diversity_diagnostics[topic]["subtopic_coverage_swaps"]:
+                print(f"     [diversity] {note}")
+        print()
     wall_seconds = round(time.time() - wall_start, 1)
 
     question_groups = [(i + 1, qs) for i, (_, qs) in enumerate(topics_data)]
@@ -179,6 +214,7 @@ def main():
         "usage": usage_summary,
         "cognitive_distribution": cognitive,
         "verification": leaf_detail,
+        "diversity_diagnostics": diversity_diagnostics,
         "generation_errors": combined_errors,
         "raw_usage_log": combined_usage_log,
     }
@@ -216,6 +252,13 @@ def main():
               f"{sum(m for _, m in TOPICS_MARKS)} marks:")
         for e in combined_errors:
             print(f"  - {e}")
+
+    print(f"\nConstructed (no archetype precedent) leaves: {leaf_detail['constructed_count']}")
+    for d in leaf_detail["constructed_detail"]:
+        print(f"  - {d}")
+    print(f"Cognitive-level disagreements flagged: {leaf_detail['cognitive_mismatch_count']}")
+    for d in leaf_detail["cognitive_mismatch_detail"]:
+        print(f"  - {d}")
 
     print(f"\nWall clock: {wall_seconds}s")
 

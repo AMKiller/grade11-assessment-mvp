@@ -160,6 +160,14 @@ def validate_hierarchical_structure(data: dict, target_marks: int) -> tuple[bool
 
     total_leaf_marks = 0
 
+    def check_leaf_flags(leaf: dict, label: str):
+        match = leaf.get("archetype_match")
+        if match not in ("direct", "constructed"):
+            errors.append(f"{label}: archetype_match must be 'direct' or 'constructed', got {match!r}")
+        disagreement = leaf.get("cognitive_level_disagreement")
+        if disagreement is not None and not isinstance(disagreement, str):
+            errors.append(f"{label}: cognitive_level_disagreement must be null or a string, got {disagreement!r}")
+
     for i, row in enumerate(structure):
         if not isinstance(row, dict):
             errors.append(f"Row {i}: must be a dict")
@@ -191,6 +199,8 @@ def validate_hierarchical_structure(data: dict, target_marks: int) -> tuple[bool
                 tick_sum = sum(s.get("tick_count", 0) for s in child.get("marking_steps", []))
                 if tick_sum != child.get("marks"):
                     errors.append(f"Row {i}, child {j}: tick_count {tick_sum} != marks {child.get('marks')}")
+
+                check_leaf_flags(child, f"Row {i}, child {j}")
         else:
             if not isinstance(marks, int) or marks <= 0:
                 errors.append(f"Row {i}: flat row marks must be >0")
@@ -203,6 +213,8 @@ def validate_hierarchical_structure(data: dict, target_marks: int) -> tuple[bool
             tick_sum = sum(s.get("tick_count", 0) for s in row.get("marking_steps", []))
             if tick_sum != marks:
                 errors.append(f"Row {i}: tick_count {tick_sum} != marks {marks}")
+
+            check_leaf_flags(row, f"Row {i}")
 
     if total_leaf_marks != target_marks:
         errors.append(f"Total leaf marks {total_leaf_marks} != target {target_marks}")
@@ -573,8 +585,8 @@ JSON STRUCTURE:
             "marks": null,
             "cognitive_level": null,
             "children": [
-                {{"parts": [...], "marks": 2, "cognitive_level": "routine", "answer": [...], "marking_steps": [...], "problem_type": "...", "sympy_problem": "...", "claimed_solution": "..."}},
-                {{"parts": [...], "marks": 3, "cognitive_level": "complex", ...}}
+                {{"parts": [...], "marks": 2, "cognitive_level": "routine", "answer": [...], "marking_steps": [...], "problem_type": "...", "sympy_problem": "...", "claimed_solution": "...", "archetype_match": "direct", "cognitive_level_disagreement": null}},
+                {{"parts": [...], "marks": 3, "cognitive_level": "complex", ..., "archetype_match": "constructed", "cognitive_level_disagreement": null}}
             ]
         }},
         {{
@@ -587,7 +599,9 @@ JSON STRUCTURE:
             "marking_steps": [...],
             "problem_type": "equation",
             "sympy_problem": "...",
-            "claimed_solution": "..."
+            "claimed_solution": "...",
+            "archetype_match": "direct",
+            "cognitive_level_disagreement": null
         }}
     ],
     "total_marks": 6
@@ -673,6 +687,32 @@ Red flag that a question is mislabelled: if you named the method in the question
 ("using the quadratic formula, solve..."), that removes the decision-making that would justify
 "complex" or higher -- it's "routine" regardless of mark value.
 
+"archetype_match" -- every leaf (flat row or stem child) must say whether it's a direct instance
+of the given archetype or something you built yourself to make the question work:
+  - "direct": this leaf's technique is a real instance of the archetype's own cataloged pattern
+    (varying only the numbers/context, per your instructions above).
+  - "constructed": this leaf has NO precedent in the archetype description or marking pattern you
+    were given -- e.g. a scaffolding sub-part you invented to set up a "hence" for a later child
+    (a "make y the subject" algebra step, a "write down the formula for..." lead-in, a bridging
+    fact), or any leaf whose technique doesn't match what the archetype actually documents. Mark
+    these honestly as "constructed" -- do NOT mark a leaf "direct" just because it sits inside a
+    stem built from a real archetype; the archetype backs the STEM's overall scenario, not
+    necessarily every child inside it. Never invent a leaf with no archetype backing at all
+    without marking it "constructed" -- this flag is what lets a human reviewer find and check
+    every non-grounded question before it ships to real students.
+
+"cognitive_level_disagreement" -- null by default. If, after your own genuine judgement using the
+COGNITIVE LEVEL definitions above, you believe this leaf's true difficulty does NOT match the
+"cognitive_level" you ended up assigning it (most often because the paper's mark-allocation plan
+required a specific level for this slot -- see "Cognitive level targets" below -- and this
+archetype's natural technique sits at a different level even after a genuine redesign attempt),
+set this to a short string explaining the disagreement, e.g. "this substitution technique requires
+the learner to decide the substitution themselves with no cue, which meets the definition of
+complex above -- but the slot plan required routine, and no further redesign could honestly lower
+it." Leave null whenever you agree with your own "cognitive_level" label. Do NOT silently comply
+with a mismatched target and leave this null -- that hides a real validity problem from the
+paper's cognitive grid.
+
 Rules for "problem_type" and the two machine-readable fields:
 
 1. problem_type = "equation" (single-variable equation solved for x):
@@ -726,8 +766,9 @@ remove a cue that tells the learner which method to use, etc. Do NOT simply keep
 usual routine question and relabel cognitive_level to something higher; that mislabels the paper's
 actual difficulty and defeats the point of this target. If a target level genuinely cannot be
 reached within this archetype's scope even after a real redesign attempt, generate the closest
-legitimate level instead of a false label -- an honest mismatch is preferred over a fake one, and
-will be visible in the paper's printed grid rather than silently hidden.
+legitimate level instead of a false label, AND set that leaf's "cognitive_level_disagreement" field
+(defined above) to explain the mismatch -- an honest, flagged mismatch is preferred over a fake or
+silent one.
 
 Generate ONE new question in this archetype's style.
 Vary the numbers and specific context - do NOT use the exact past-paper examples.
@@ -1180,6 +1221,12 @@ def generate_paper(topic: str, num_questions: int = 5,
 
     gen = QuestionGenerator(topic)
     gen.select_archetypes(num_questions, target_distribution, prefer_core)
+    # Captured immediately after selection -- see KnowledgeBase.
+    # last_sampling_diagnostics / _ensure_subtopic_coverage for what these
+    # mean (forced archetype reuse because the pool was exhausted, and any
+    # swap made to guarantee a named sub-topic, e.g. "Inequalities" within
+    # "Equations and Inequalities", isn't left unrepresented by chance).
+    diversity_diagnostics = dict(gen.kb.last_sampling_diagnostics)
 
     if target_marks is not None:
         min_possible = len(gen.selected_archetypes) * MIN_MARKS_PER_QUESTION
@@ -1263,7 +1310,8 @@ def generate_paper(topic: str, num_questions: int = 5,
         "planned_level_totals": level_totals,
         "generation_errors": generation_errors,
         "usage_summary": usage_summary,
-        "usage_log": gen.usage_log
+        "usage_log": gen.usage_log,
+        "diversity_diagnostics": diversity_diagnostics,
     }
 
 

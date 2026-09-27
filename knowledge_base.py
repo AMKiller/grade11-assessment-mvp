@@ -22,6 +22,13 @@ class Archetype:
 class KnowledgeBase:
     def __init__(self):
         self.topics = {}
+        # Set by sample_by_cognitive_distribution() on every call -- read it
+        # right after calling to see whether archetype reuse was forced (pool
+        # exhausted) or a named sub-topic had to be swapped in for coverage.
+        # A plain instance attribute, not a return value, so the sampling
+        # method's return type (list[Archetype]) stays unchanged for existing
+        # callers/tests. See generate_paper()'s "diversity_diagnostics".
+        self.last_sampling_diagnostics = {}
         self._load_kbs()
 
     def _load_kbs(self):
@@ -128,6 +135,7 @@ class KnowledgeBase:
             raise ValueError(f"No archetypes found for topic '{topic}' with tier filter {tier_filter}")
 
         selected = []
+        forced_reuse_ids = []
         for _ in range(num_archetypes):
             target_level = self._pick_level_by_distribution(target_distribution)
             candidates = [a for a in archetypes
@@ -137,10 +145,106 @@ class KnowledgeBase:
             if not candidates:
                 candidates = [a for a in archetypes if a not in selected]
 
-            if candidates:
-                selected.append(random.choice(candidates))
+            if not candidates:
+                # Pool genuinely exhausted (num_archetypes > available
+                # archetypes for this tier_filter) -- reuse is now
+                # unavoidable. Allow it, but record exactly which archetype
+                # had to repeat rather than silently under-supplying (the
+                # old behaviour: this iteration would just contribute
+                # nothing, quietly returning fewer archetypes than asked
+                # for). See last_sampling_diagnostics.
+                candidates = archetypes
 
+            if candidates:
+                choice = random.choice(candidates)
+                if choice in selected:
+                    forced_reuse_ids.append(choice.archetype_id)
+                selected.append(choice)
+
+        selected, subtopic_notes = self._ensure_subtopic_coverage(
+            topic, selected, archetypes, target_distribution
+        )
+
+        self.last_sampling_diagnostics = {
+            "forced_reuse_archetype_ids": forced_reuse_ids,
+            "subtopic_coverage_swaps": subtopic_notes,
+        }
         return selected
+
+    def _ensure_subtopic_coverage(self, topic: str, selected: list,
+                                 pool: list, target_distribution: dict) -> tuple:
+        """
+        Guard against a named sub-topic (e.g. "Inequalities" within
+        "Equations and Inequalities") going entirely unrepresented by chance,
+        even though the pool has dedicated archetypes for it. Sub-topics are
+        derived generically from the topic name itself (split on " and "/
+        "&"), not hardcoded to one topic -- so this applies the same way to
+        "Exponents and Surds" -> ["Exponents", "Surds"].
+
+        For each sub-topic keyword with no selected archetype whose name/
+        description mentions it, and at least one unselected archetype in
+        the pool that does, swaps one in for the selected archetype with the
+        least cognitive-level overlap with the replacement (so the paper's
+        planned K/R/C/PS balance is disturbed as little as possible).
+
+        Returns (possibly-modified selected list, list of human-readable
+        swap notes for reporting -- e.g. "swapped X for Y to cover
+        'Inequalities'").
+        """
+        import re
+        parts = [p.strip() for p in re.split(r"\s+and\s+|&", topic, flags=re.IGNORECASE) if p.strip()]
+        if len(parts) < 2:
+            return selected, []
+
+        def singular_candidates(word: str) -> set:
+            """Naive plural->singular variants, e.g. 'Inequalities' -> also
+            tries 'inequality' (handles the -ies->-y irregular case that a
+            plain rstrip('s') gets wrong: 'inequalities'.rstrip('s') would
+            give 'inequalitie', not 'inequality')."""
+            wl = word.lower()
+            cands = {wl}
+            if wl.endswith("ies"):
+                cands.add(wl[:-3] + "y")
+            if wl.endswith("s"):
+                cands.add(wl[:-1])
+            return cands
+
+        notes = []
+        for keyword in parts:
+            kw_variants = singular_candidates(keyword)
+
+            def mentions(a, variants=kw_variants):
+                text = (a.name + " " + a.description).lower()
+                return any(v in text for v in variants)
+
+            if any(mentions(a) for a in selected):
+                continue  # already covered
+
+            replacement_candidates = [a for a in pool if mentions(a) and a not in selected]
+            if not replacement_candidates:
+                continue  # no dedicated archetype exists for this sub-topic at all
+
+            replacement = random.choice(replacement_candidates)
+
+            # Replace whichever selected archetype shares the LEAST cognitive
+            # -level overlap with the replacement, to minimize disruption to
+            # the already-chosen K/R/C/PS mix.
+            def overlap(a):
+                return sum(1 for lvl, v in a.cognitive_level_distribution.items()
+                          if v > 0 and replacement.cognitive_level_distribution.get(lvl, 0) > 0)
+
+            victim = min(selected, key=overlap) if selected else None
+            if victim is None:
+                continue
+
+            idx = selected.index(victim)
+            selected[idx] = replacement
+            notes.append(
+                f"swapped {victim.archetype_id} for {replacement.archetype_id} "
+                f"to cover named sub-topic '{keyword}' (had no representation)"
+            )
+
+        return selected, notes
 
     def _pick_level_by_distribution(self, distribution: dict) -> str:
         """Pick a cognitive level based on target percentages."""
