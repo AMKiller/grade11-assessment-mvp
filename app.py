@@ -8,7 +8,11 @@ from knowledge_base import KnowledgeBase
 from generation import generate_paper, _analyze_cognitive_distribution, parts_to_plain_text, NonRetryableAPIError
 from docgen import DocumentGenerator
 
-AVAILABLE_TOPICS = ["Equations and Inequalities", "Exponents and Surds"]
+AVAILABLE_TOPICS = [
+    "Equations and Inequalities",
+    "Exponents and Surds",
+    "Trigonometry (reduction formulae, trig equations & general solutions)",
+]
 
 
 st.set_page_config(
@@ -55,12 +59,20 @@ with st.sidebar:
         step=5
     )
 
-    # Per-topic mark allocation: with 1 topic it's trivially 100%; with 2+,
-    # let the user set the split (e.g. 50:50, 25:75) for every topic except
-    # the last, whose share is computed as the remainder -- guarantees the
-    # allocation always sums exactly to grand_total_marks by construction,
-    # no separate validation step needed.
+    # Per-topic mark allocation, generalized for N topics (not just 2): with
+    # 1 topic it's trivially 100%; with 2+, the user sets the split for every
+    # topic except the last, whose share is computed as the remainder --
+    # guarantees the allocation always SUMS to grand_total_marks by
+    # construction. Marks need not be equal across topics.
+    #
+    # This does NOT by itself guarantee every topic ends up with a positive
+    # share, though: Streamlit's max_value=remaining only stops any single
+    # input from exceeding what's left at that point, so an early topic
+    # taking the full budget can still squeeze a LATER topic (not just the
+    # final one) down to a forced 0 via the shrinking max_value -- so the
+    # explicit all-positive check below is required, not optional.
     marks_per_topic = {}
+    marks_allocation_error = None
     if len(selected_topics) == 1:
         marks_per_topic[selected_topics[0]] = grand_total_marks
     elif len(selected_topics) > 1:
@@ -81,6 +93,15 @@ with st.sidebar:
         last_topic = selected_topics[-1]
         marks_per_topic[last_topic] = remaining
         st.caption(f"{last_topic}: **{remaining} marks** (remainder, auto-computed)")
+
+        zero_or_negative = [t for t, m in marks_per_topic.items() if m <= 0]
+        if zero_or_negative:
+            marks_allocation_error = (
+                f"❌ Invalid mark allocation: {', '.join(zero_or_negative)} would get 0 marks "
+                f"(or fewer) once every other topic's share is subtracted from the total. "
+                f"Reduce one or more of the other topics' marks so every topic gets a positive share."
+            )
+            st.error(marks_allocation_error)
 
     time_minutes = st.number_input(
         "Duration (minutes)",
@@ -163,7 +184,8 @@ The generator aims to hit these percentages across the selected questions.
 """)
 
 # Generate button
-if st.button("🚀 Generate Assessment", use_container_width=True, type="primary", disabled=not selected_topics):
+if st.button("🚀 Generate Assessment", use_container_width=True, type="primary",
+              disabled=not selected_topics or marks_allocation_error is not None):
 
     with st.spinner(f"🧠 Sampling archetypes across {len(selected_topics)} topic(s)..."):
         try:
@@ -174,11 +196,16 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
                 'problem_solving': 15
             }
 
+            import time as _time
+            wall_start = _time.time()
+
             topics_data = []
             combined_question_dicts = []
             combined_errors = []
             combined_total_marks = 0
             combined_planned_level_totals = {level: 0 for level in target_distribution}
+            combined_usage_log = []
+            combined_diversity_diagnostics = {}
 
             for t in selected_topics:
                 st.write(f"Generating **{t}** (target: {marks_per_topic[t]} marks)...")
@@ -200,6 +227,10 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
                 )
                 for level, marks in topic_result.get('planned_level_totals', {}).items():
                     combined_planned_level_totals[level] = combined_planned_level_totals.get(level, 0) + marks
+                combined_usage_log.extend(topic_result.get('usage_log', []))
+                combined_diversity_diagnostics[t] = topic_result.get('diversity_diagnostics', {})
+
+            wall_clock_seconds = round(_time.time() - wall_start, 1)
 
             # Built from the ACTUAL leaves Claude generated (flat rows + stem
             # children), not the plan -- see generation.py's grid-first design.
@@ -207,12 +238,16 @@ if st.button("🚀 Generate Assessment", use_container_width=True, type="primary
 
             result = {
                 "topics": selected_topics,
+                "marks_per_topic": marks_per_topic,
                 "topics_data": topics_data,
                 "questions": combined_question_dicts,
                 "total_marks": combined_total_marks,
                 "cognitive_analysis": cognitive_analysis,
                 "planned_level_totals": combined_planned_level_totals,
-                "generation_errors": combined_errors
+                "generation_errors": combined_errors,
+                "usage_log": combined_usage_log,
+                "diversity_diagnostics": combined_diversity_diagnostics,
+                "wall_clock_seconds": wall_clock_seconds,
             }
 
             st.session_state.generation_result = result

@@ -46,6 +46,8 @@ class KnowledgeBase:
         kbs = [
             ("Equations and Inequalities", "grade11_equations_and_inequalities_knowledge_base.json"),
             ("Exponents and Surds", "grade11_exponents_and_surds_knowledge_base.json"),
+            ("Trigonometry (reduction formulae, trig equations & general solutions)",
+             "grade11_trigonometry_reduction_equations_knowledge_base.json"),
         ]
 
         for topic_name, filename in kbs:

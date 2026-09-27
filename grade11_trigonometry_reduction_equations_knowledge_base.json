@@ -1,0 +1,1162 @@
+{
+ "grade": "11",
+ "topic": "Trigonometry (reduction formulae, trig equations & general solutions)",
+ "scope_note": "This is the Term 1 ATP topic, distinct from 'Trigonometric Functions' (Term 3, graphs \u2014 already built as a separate knowledge base) and from 'Trigonometry (sine, cosine and area rules)' (Term 3, application problems \u2014 also excluded). Per the 2026 Grade 11 ATP, this topic covers exactly: (1) deriving/using tan\u03b8=sin\u03b8/cos\u03b8 and sin\u00b2\u03b8+cos\u00b2\u03b8=1; (2) deriving/using reduction formulae for sin/cos(90\u00b0\u00b1\u03b8), sin/cos/tan(180\u00b0\u00b1\u03b8), sin/cos/tan(360\u00b0\u00b1\u03b8), sin/cos/tan(\u2212\u03b8); (3) determining values of a variable for which an identity holds (undefined-value questions); (4) determining general solutions of trig equations, including solutions restricted to a specific interval. Taught in Term 1 (completed by end of March), so \u2014 unlike the graphs topic \u2014 May/June mid-year papers legitimately examine this content, and are included as full evidence here.",
+ "source_papers_analyzed": [
+  {
+   "year": 2021,
+   "paper": "Paper 2, Nov",
+   "questions_extracted": 7,
+   "notes": "Q5 in full. Q6 (graphs) and Q7 (sine/cosine rule) out of scope for this topic."
+  },
+  {
+   "year": 2022,
+   "paper": "Paper 2, Nov",
+   "questions_extracted": 7,
+   "notes": "Q5 in full. Q6 and Q7 out of scope."
+  },
+  {
+   "year": 2023,
+   "paper": "Paper 2, Nov",
+   "questions_extracted": 8,
+   "notes": "Q5 in full. Q6 and Q7 out of scope."
+  },
+  {
+   "year": 2025,
+   "paper": "Paper 2, Nov",
+   "questions_extracted": 9,
+   "notes": "Q4 in full except Q4.3.2 (see excluded_sub_questions \u2014 didn't fit cleanly into any archetype). Q5 (graphs) and Q6 (sine-rule/elevation) out of scope. Off-series source (ecexams.co.za, Eastern Cape); content/structure matched cleanly."
+  },
+  {
+   "year": 2019,
+   "paper": "Paper 2, May/June",
+   "questions_extracted": 5,
+   "notes": "Q2 in full. Legitimately in scope \u2014 this topic is Term 1 content, so mid-year exams should and do test it."
+  },
+  {
+   "year": 2022,
+   "paper": "Paper 2, May/June",
+   "questions_extracted": 5,
+   "notes": "Q2.1-2.3 retained; Q2.4 (sine/cosine/area-rule 2D problem, embedded in the same question) excluded as a different topic."
+  },
+  {
+   "year": 2023,
+   "paper": "Paper 2, May/June",
+   "questions_extracted": 6,
+   "notes": "Q4.1-4.2 retained; Q4.1.3(b) (an area-rule calculation embedded in an otherwise-relevant sub-question) excluded. Note: this same paper's Q5 (graphs) was excluded entirely from the Trigonometric Functions knowledge base as anomalous \u2014 its identities/equations content here is unaffected by that and is legitimately in scope."
+  },
+  {
+   "year": 2024,
+   "paper": "Paper 2, June Common Test (KZN provincial)",
+   "questions_extracted": 7,
+   "notes": "Q3, Q4 retained except Q4.4 (see excluded_archetypes \u2014 simultaneous-equation item, only 1 example, dropped). 100-mark/2-hour provincial common test rather than the standard 150-mark/3-hour NSC format \u2014 kept as supplementary evidence, flagged as a different paper format from the main Nov/May-June set."
+  },
+  {
+   "year": 2023,
+   "paper": "Paper 2, Nov (Grade 12 -- cross-grade top-up)",
+   "questions_extracted": 4,
+   "notes": "Cross-grade top-up (Grade 12 Nov, scope-filtered to Grade-11 reduction/identity/equation content only). Q5.1.1, Q5.1.3 -> trigreduction_001; Q5.2.1 -> trigreduction_003; Q5.2.2 -> trigreduction_004. Excluded: Q5.1.2 (double angle), Q5.2.3 (function min-value, doesn't fit any archetype -- flagged), Q5.3.1/5.3.2 (compound angle), Q5.4 (triple/double angle). Q6 (graphs) out of scope entirely."
+  },
+  {
+   "year": 2022,
+   "paper": "Paper 2, Nov (Grade 12 -- cross-grade top-up)",
+   "questions_extracted": 4,
+   "notes": "Cross-grade top-up. Q5.1.1-5.1.3 -> trigreduction_001; Q5.2 -> trigreduction_002. Excluded: Q5.3 (factor requires solving 3sin2x-1=0, double angle), Q5.4.1/5.4.2 (compound angle identity), Q5.5.1/5.5.2 (double-angle restructuring, 2sinxcosx). Q6 (graphs) out of scope entirely."
+  },
+  {
+   "year": 2021,
+   "paper": "Paper 2, Nov (Grade 12 -- cross-grade top-up)",
+   "questions_extracted": 3,
+   "notes": "Cross-grade top-up. Q5.1 -> trigreduction_002; Q5.2 -> trigreduction_003; Q5.3.1 -> trigreduction_001. Excluded: Q5.3.2 (cos108 from sin36 needs double-angle link, 108=180-2x36), Q6.1.1/6.1.2 (compound angle), Q6.2 (tanx=2sin2x, double angle)."
+  },
+  {
+   "year": 2020,
+   "paper": "Paper 2, Nov (Grade 12 -- cross-grade top-up)",
+   "questions_extracted": 4,
+   "notes": "Cross-grade top-up. Q6.1.1-6.1.3 -> trigreduction_001; Q6.3 -> trigreduction_005. Excluded: Q5 (whole question, graphs -- different ATP topic), Q6.2 (contains sin2x/cos2x, double angle), Q6.4 (explicitly asks for cos2A)."
+  },
+  {
+   "year": 2024,
+   "paper": "Paper 2, Nov (Grade 12 -- cross-grade top-up)",
+   "questions_extracted": 2,
+   "notes": "Cross-grade top-up. Q5.1.1 -> trigreduction_001; Q6.2 -> trigreduction_005. Excluded: Q5.1.2 (cos2A explicit), Q5.1.3 (compound angle sin(A-B)), Q5.2 (half-angle, beyond G11 scope), Q6.1.1/6.1.2 (compound angle identity), Q6.3.1/6.3.2 (function max-value, doesn't fit any archetype -- flagged)."
+  },
+  {
+   "year": 2025,
+   "paper": "Paper 2, Nov (Grade 12 -- cross-grade top-up)",
+   "questions_extracted": 3,
+   "notes": "Cross-grade top-up. Q5.1.1 -> trigreduction_001; Q5.2.1 -> trigreduction_002; Q6.1 -> trigreduction_003. Excluded: Q5.1.2 (disguised double angle: 2sin25cos25 and 1-2sin^2(25)), Q5.1.3 (sin10 from tan50=k -- borderline, likely needs compound angle to bridge 10 deg and 50 deg, flagged rather than force-fit), Q5.2.2 ('will be real' domain question -- different question type from 'undefined', doesn't fit any archetype -- flagged), Q6.2 (contains sin2x explicitly)."
+  },
+  {
+   "year": 2018,
+   "paper": "Paper 2, Nov (Grade 12 -- cross-grade top-up)",
+   "questions_extracted": 4,
+   "notes": "Cross-grade top-up. Q5.1.1, Q5.1.2(a), Q5.1.2(b) -> trigreduction_001; Q5.3 -> trigreduction_002. Excluded: Q5.1.2(c) (compound angle sin(\u03b8+60\u00b0)), Q5.1.3 (tan(2\u03b8-40\u00b0), double angle + calculator-based, out of scope), Q5.2 (identity's RHS is 2tan2x, double angle explicit)."
+  }
+ ],
+ "excluded_papers": [
+  {
+   "file": "MathsGrade11June2021QPandMemo.pdf",
+   "reason": "Zip-packaged scan with no extractable text layer (source: testpapers.co.za); paper number (P1 vs P2) could not be confirmed without OCR."
+  },
+  {
+   "file": "MathsGr11June2022QP1andMemo.pdf",
+   "reason": "Confirmed Paper 1 \u2014 does not cover this topic (also no extractable text layer)."
+  }
+ ],
+ "archetypes": [
+  {
+   "archetype_id": "trigreduction_001",
+   "name": "Given a trig ratio (numeric or in terms of a variable) plus a quadrant/domain restriction, determine other ratio(s) without a calculator",
+   "description": "A value or equation fixing one trig ratio is given (e.g. cos62\u00b0=k, 3sin\u03b8=2 with cos\u03b8<0, tcos15\u00b0=4, a point on the Cartesian plane), along with a sign/quadrant/interval restriction. Learners use a diagram (Cartesian-plane construction with Pythagoras) or the Pythagorean identity to find other ratios, sometimes leaving the answer in terms of the given variable.",
+   "evidence_count": 40,
+   "low_evidence": false,
+   "cognitive_level_distribution": {
+    "knowledge": 0,
+    "routine": 37,
+    "complex": 3,
+    "problem_solving": 0
+   },
+   "command_verbs_used": [
+    "determine",
+    "calculate",
+    "with the aid of a diagram",
+    "without the use of a calculator",
+    "in terms of"
+   ],
+   "marking_pattern": {
+    "typical_total_marks": "1-5, most commonly 2-3; rises to 4-5 when the answer must be expressed in terms of a variable (t, g) rather than a numeric value, or when a diagram must be constructed from scratch (point-on-Cartesian-plane setups)",
+    "typical_breakdown": [
+     "M1: correct Pythagoras/identity substitution (or set up diagram: x, y, r)",
+     "A1: correct sign choice from quadrant",
+     "A1: final ratio value/expression"
+    ],
+    "consensus": "Consistent method (diagram + Pythagoras, or square-and-substitute the Pythagorean identity) across all 26 examples. Mark totals vary by sub-part length (1-5 marks) and complexity of the given setup rather than by a genuine disagreement in method.",
+    "notes": "Consistent Accuracy (CA) applies heavily within this archetype: an incorrect value found in one sub-part carries forward for full marks in the next as long as method is correct (e.g. Nov 2023 P2 Q5.2.1->5.2.2->5.2.3; Jun 2023 P2 Q4.1.1->4.1.2->4.1.3a; Nov 2022 P2 Q5.3.1->5.3.2->5.3.3). Cognitive level note: 24 of 26 examples are Routine -- working with a variable (t, g) instead of a numeric ratio value does not raise the level, since the underlying technique (diagram + Pythagoras, or the Pythagorean identity) is unchanged and the booklet explicitly allows 'derivation from given information' at Routine. The two Complex exceptions (Nov 2022 Q5.3.3, Jun 2023 Q4.1.3a) genuinely require connecting two different geometric representations (a rotation between two points; a similar-triangle scaling) rather than a single direct read."
+   },
+   "language_notes": "Restriction usually stated as '... and cos \u03b8 < 0' or 'for 0\u00b0 \u2264 \u03b8 \u2264 180\u00b0'. 'Without the use of a calculator' appears in almost every instance \u2014 a required instruction, not optional phrasing.",
+   "source_examples": [
+    "Nov 2021 P2 Q5.1.1",
+    "Nov 2021 P2 Q5.1.2",
+    "Nov 2022 P2 Q5.3.1",
+    "Nov 2022 P2 Q5.3.2(a)",
+    "Nov 2022 P2 Q5.3.2(b)",
+    "Nov 2022 P2 Q5.3.3",
+    "Nov 2023 P2 Q5.1.1",
+    "Nov 2023 P2 Q5.1.2",
+    "Nov 2023 P2 Q5.2.1",
+    "Nov 2023 P2 Q5.2.2",
+    "Nov 2023 P2 Q5.2.3",
+    "Nov 2025 P2 Q4.1.1",
+    "Nov 2025 P2 Q4.1.2",
+    "Nov 2025 P2 Q4.2.1",
+    "Nov 2025 P2 Q4.2.2",
+    "Jun 2019 P2 Q2.1.1",
+    "Jun 2022 P2 Q2.1.1",
+    "Jun 2022 P2 Q2.1.2",
+    "Jun 2023 P2 Q4.1.1",
+    "Jun 2023 P2 Q4.1.2(a)",
+    "Jun 2023 P2 Q4.1.2(b)",
+    "Jun 2023 P2 Q4.1.2(c)",
+    "Jun 2023 P2 Q4.1.3(a)",
+    "KZN Jun 2024 CT P2 Q3.1",
+    "KZN Jun 2024 CT P2 Q3.2",
+    "KZN Jun 2024 CT P2 Q3.3",
+    "G12 Nov 2023 P2 Q5.1.1",
+    "G12 Nov 2023 P2 Q5.1.3",
+    "G12 Nov 2022 P2 Q5.1.1",
+    "G12 Nov 2022 P2 Q5.1.2",
+    "G12 Nov 2022 P2 Q5.1.3",
+    "G12 Nov 2021 P2 Q5.3.1",
+    "G12 Nov 2020 P2 Q6.1.1",
+    "G12 Nov 2020 P2 Q6.1.2",
+    "G12 Nov 2020 P2 Q6.1.3",
+    "G12 Nov 2024 P2 Q5.1.1",
+    "G12 Nov 2025 P2 Q5.1.1",
+    "G12 Nov 2018 P2 Q5.1.1",
+    "G12 Nov 2018 P2 Q5.1.2(a)",
+    "G12 Nov 2018 P2 Q5.1.2(b)"
+   ],
+   "examples_detail": [
+    {
+     "ref": "Nov 2021 P2 Q5.1.1",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "direct co-function substitution",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2021 P2 Q5.1.2",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "direct 180-shift substitution",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2022 P2 Q5.3.1",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "Pythagoras for b, irrational result",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2022 P2 Q5.3.2(a)",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "ratio read-off using found b (CA)",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2022 P2 Q5.3.2(b)",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "two reduction formulae combined then added",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2022 P2 Q5.3.3",
+     "marks": 5,
+     "cognitive_level": "complex",
+     "difficulty_tier": "medium",
+     "tier_note": "similar-triangle scaling to find k, m",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2023 P2 Q5.1.1",
+     "marks": 4,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "derive sin\u03b8 then apply identity, clean result",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2023 P2 Q5.1.2",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "irrational tan value + compound reduction",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2023 P2 Q5.2.1",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "in terms of t, Pythagorean identity",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2023 P2 Q5.2.2",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "co-function of prior part (CA)",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2023 P2 Q5.2.3",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "combine into single fraction, extra step",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2025 P2 Q4.1.1",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "45-45-90 special triangle, clean integer",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2025 P2 Q4.1.2",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "Pythagoras, irrational result",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2025 P2 Q4.2.1",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "direct equation solve, clean value",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2025 P2 Q4.2.2",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "compute tan\u00b2 via diagram then evaluate",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2019 P2 Q2.1.1",
+     "marks": 4,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "Pythagoras, irrational result",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2022 P2 Q2.1.1",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "co-function then Pythagoras, clean 3-4-5",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2022 P2 Q2.1.2",
+     "marks": 3,
+     "cognitive_level": "complex",
+     "difficulty_tier": "difficult",
+     "tier_note": "connects P's ratio to R's coordinates via shared angle [reviewed: level/tier confirmed by Anne-Marie]",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2023 P2 Q4.1.1",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "Pythagoras, clean integer with sign from quadrant",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2023 P2 Q4.1.2(a)",
+     "marks": 1,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "direct ratio read from diagram",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2023 P2 Q4.1.2(b)",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "single reduction + substitute found ratio",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2023 P2 Q4.1.2(c)",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "odd-function squared + substitute found ratio",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2023 P2 Q4.1.3(a)",
+     "marks": 4,
+     "cognitive_level": "complex",
+     "difficulty_tier": "medium",
+     "tier_note": "similar-triangle scaling along OP",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "KZN Jun 2024 CT P2 Q3.1",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "algebraic match to Pythagorean identity form",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "KZN Jun 2024 CT P2 Q3.2",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "co-function reduction + substitute g expression",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "KZN Jun 2024 CT P2 Q3.3",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "large coterminal-angle reduction + co-function",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2023 P2 Q5.1.1",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "Pythagoras for cos\u03b2, sign fixed by quadrant range",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2023 P2 Q5.1.3",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "co-function + periodicity of already-known ratio",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2022 P2 Q5.1.1",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "direct periodicity substitution of given ratio",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2022 P2 Q5.1.2",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "Pythagoras for cosx, then form tanx",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2022 P2 Q5.1.3",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "single reduction, substitute found ratio (CA)",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2021 P2 Q5.3.1",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "match given form to Pythagorean identity",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2020 P2 Q6.1.1",
+     "marks": 1,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "direct ratio read from diagram",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2020 P2 Q6.1.2",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "Pythagoras for radius, then ratio",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2020 P2 Q6.1.3",
+     "marks": 4,
+     "cognitive_level": "complex",
+     "difficulty_tier": "medium",
+     "tier_note": "rotate to a second point via shared angle +90\u00b0",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2024 P2 Q5.1.1",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "Pythagoras for radius from given point",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2025 P2 Q5.1.1",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "construct diagram from given tan ratio, co-function",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2018 P2 Q5.1.1",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "Pythagoras, clean integer with sign from quadrant",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2018 P2 Q5.1.2(a)",
+     "marks": 1,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "direct ratio read from diagram",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2018 P2 Q5.1.2(b)",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "single reduction, substitute found ratio (CA)",
+     "tier_confidence": "high"
+    }
+   ],
+   "difficulty_distribution": {
+    "knowledge": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    },
+    "routine": {
+     "easy": 12,
+     "medium": 20,
+     "difficult": 4
+    },
+    "complex": {
+     "easy": 0,
+     "medium": 3,
+     "difficult": 1
+    },
+    "problem_solving": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    }
+   },
+   "level_assignment_note": "Per-example levels reconstructed during v1->v2 enrichment; matches v1's recorded level counts exactly.",
+   "grid_label": "find other trig ratio"
+  },
+  {
+   "archetype_id": "trigreduction_002",
+   "name": "Simplify a multi-term trigonometric expression to a single ratio/value using reduction formulae, without a calculator",
+   "description": "A compound expression combining several reduction-formula terms (e.g. sin(180\u00b0\u2212\u03b8), cos(360\u00b0+x), tan(\u2212x)) is given, either with numeric special angles or a general variable, and must be simplified to a single trig ratio, a single fraction, or a numeric value.",
+   "evidence_count": 19,
+   "low_evidence": false,
+   "cognitive_level_distribution": {
+    "knowledge": 0,
+    "routine": 13,
+    "complex": 6,
+    "problem_solving": 0
+   },
+   "command_verbs_used": [
+    "simplify",
+    "simplify to a single trigonometric ratio/function",
+    "evaluate",
+    "determine the value of"
+   ],
+   "marking_pattern": {
+    "typical_total_marks": "3-8 (numeric/special-angle versions tend to sit at 3-6 marks; general-variable versions with more reduction steps run 5-8 marks)",
+    "typical_breakdown": [
+     "1 mark per correctly-applied reduction identity (each quadrant/co-function reduction is its own accuracy mark)",
+     "1 mark for correct simplification/cancellation step",
+     "1 mark for final answer"
+    ],
+    "consensus": "Consistent across all 15 examples: marks are awarded per individual reduction step applied, not just for the final answer \u2014 'answer only' does not get full marks.",
+    "notes": "Consistent across all 15 examples: marks are awarded per individual reduction step applied, not just for the final answer -- 'answer only' does not get full marks. Cognitive level note: chaining 2-4 standard reduction substitutions is Routine ('well-known procedures', 'few steps') even when six or more marks are on offer -- mark total reflects length, not cognitive demand. The 4 Complex examples (Nov 2021 Q5.3, Nov 2025 Q4.3.1, Jun 2019 Q2.3, KZN Q4.1.1) each require a non-obvious restructuring step: a negative-common-factor trick, spotting sin^2(theta)+cos^2(theta)=1 mid-expression, a square-root restructuring, or (KZN) simply the longest chain of distinct identities seen in the dataset."
+   },
+   "language_notes": "Numeric versions always specify 'without the use of a calculator'. General-variable versions typically end '...to a single trigonometric ratio of x' or similar, specifying the required final form.",
+   "source_examples": [
+    "Nov 2021 P2 Q5.2",
+    "Nov 2021 P2 Q5.3",
+    "Nov 2021 P2 Q5.4",
+    "Nov 2022 P2 Q5.1",
+    "Nov 2023 P2 Q5.3",
+    "Nov 2025 P2 Q4.3.1",
+    "Nov 2025 P2 Q4.4",
+    "Jun 2019 P2 Q2.2.1",
+    "Jun 2019 P2 Q2.2.2",
+    "Jun 2019 P2 Q2.3",
+    "Jun 2022 P2 Q2.2.1",
+    "Jun 2022 P2 Q2.2.2",
+    "Jun 2023 P2 Q4.2",
+    "KZN Jun 2024 CT P2 Q4.1.1",
+    "KZN Jun 2024 CT P2 Q4.1.2",
+    "G12 Nov 2022 P2 Q5.2",
+    "G12 Nov 2021 P2 Q5.1",
+    "G12 Nov 2025 P2 Q5.2.1",
+    "G12 Nov 2018 P2 Q5.3"
+   ],
+   "examples_detail": [
+    {
+     "ref": "Nov 2021 P2 Q5.2",
+     "marks": 4,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "three reduction identities, resolves cleanly",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2021 P2 Q5.3",
+     "marks": 5,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "negative-common-factor trick [reviewed: level/tier confirmed by Anne-Marie]",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2021 P2 Q5.4",
+     "marks": 3,
+     "cognitive_level": "complex",
+     "difficulty_tier": "difficult",
+     "tier_note": "trig values as exponents, negative/fractional exponent [reviewed: level/tier confirmed by Anne-Marie]",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2022 P2 Q5.1",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "three reduction identities, resolves cleanly",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2023 P2 Q5.3",
+     "marks": 5,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "standard multi-term reduction simplify",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2025 P2 Q4.3.1",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "spotting sin\u00b2+cos\u00b2=1 mid-expression [reviewed: level/tier confirmed by Anne-Marie]",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2025 P2 Q4.4",
+     "marks": 5,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "multiple special-angle substitutions",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2019 P2 Q2.2.1",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "multiple special-angle substitutions",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2019 P2 Q2.2.2",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "coterminal multiple (1080\u00b0) reduction step",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2019 P2 Q2.3",
+     "marks": 5,
+     "cognitive_level": "complex",
+     "difficulty_tier": "difficult",
+     "tier_note": "square-root restructuring [reviewed: level/tier confirmed by Anne-Marie]",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2022 P2 Q2.2.1",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "four special-angle evaluations",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2022 P2 Q2.2.2",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "long identity chain, mixed numeric+variable terms",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2023 P2 Q4.2",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "standard multi-term reduction simplify",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "KZN Jun 2024 CT P2 Q4.1.1",
+     "marks": 8,
+     "cognitive_level": "complex",
+     "difficulty_tier": "difficult",
+     "tier_note": "longest identity chain in dataset",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "KZN Jun 2024 CT P2 Q4.1.2",
+     "marks": 4,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "clean special-angle substitution",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2022 P2 Q5.2",
+     "marks": 5,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "three reduction substitutions, resolves to constant",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2021 P2 Q5.1",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "spotting co-function cancellation (sin40=cos50) mid-expression [reviewed: level/tier confirmed by Anne-Marie]",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2025 P2 Q5.2.1",
+     "marks": 4,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "three-term reduction chain, straightforward",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2018 P2 Q5.3",
+     "marks": 5,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "co-function pairing insight across a 15-term sum; trivial once spotted [reviewed: level/tier confirmed by Anne-Marie]",
+     "tier_confidence": "high"
+    }
+   ],
+   "difficulty_distribution": {
+    "knowledge": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    },
+    "routine": {
+     "easy": 2,
+     "medium": 12,
+     "difficult": 2
+    },
+    "complex": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 3
+    },
+    "problem_solving": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    }
+   },
+   "level_assignment_note": "Per-example levels reconstructed during v1->v2 enrichment; matches v1's recorded level counts exactly.",
+   "grid_label": "simplify using reduction formulae"
+  },
+  {
+   "archetype_id": "trigreduction_003",
+   "name": "Prove a trigonometric identity",
+   "description": "A statement of equality between two trig expressions is given; learners must show LHS = RHS through algebraic manipulation, typically converting to sine/cosine, finding a common denominator, and/or factorising.",
+   "evidence_count": 6,
+   "low_evidence": false,
+   "cognitive_level_distribution": {
+    "knowledge": 0,
+    "routine": 6,
+    "complex": 0,
+    "problem_solving": 0
+   },
+   "command_verbs_used": [
+    "prove that",
+    "prove the above identity"
+   ],
+   "marking_pattern": {
+    "typical_total_marks": "3-5",
+    "typical_breakdown": [
+     "1 mark for a correctly identified quotient/reciprocal identity substitution",
+     "1 mark for correct factorisation or common-denominator step",
+     "1 mark for correctly reaching the RHS/simplified form"
+    ],
+    "consensus": "Consistent across all 3 examples (start from LHS, work step-by-step to RHS; marks awarded per correct manipulation step).",
+    "notes": "Exactly 3 examples found \u2014 at the minimum evidence threshold. Not flagged as low-evidence per the skill's 'fewer than 3' rule, but this is the thinnest archetype in the dataset; a 4th example would meaningfully firm up the marking-pattern consensus."
+   },
+   "language_notes": "Always phrased as 'Prove that...' or 'Prove the above identity', distinct from 'Simplify' \u2014 no restriction/quadrant condition is normally attached.",
+   "source_examples": [
+    "Nov 2022 P2 Q5.2.1",
+    "Nov 2025 P2 Q4.5.1",
+    "KZN Jun 2024 CT P2 Q4.2",
+    "G12 Nov 2023 P2 Q5.2.1",
+    "G12 Nov 2021 P2 Q5.2",
+    "G12 Nov 2025 P2 Q6.1"
+   ],
+   "examples_detail": [
+    {
+     "ref": "Nov 2022 P2 Q5.2.1",
+     "marks": 4,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "quadratic-in-cos\u03b8 denominator must be factorised",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2025 P2 Q4.5.1",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "standard tan-to-sin/cos + Pythagorean substitution",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "KZN Jun 2024 CT P2 Q4.2",
+     "marks": 5,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "compound fraction + difference-of-squares factoring",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2023 P2 Q5.2.1",
+     "marks": 4,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "factor out cos\u00b2x via Pythagorean id, then difference-of-squares cancel",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2021 P2 Q5.2",
+     "marks": 4,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "reduction substitution + quadratic-in-cosx factoring",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2025 P2 Q6.1",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "difference-of-cubes factoring after reduction + Pythagorean substitution",
+     "tier_confidence": "high"
+    }
+   ],
+   "difficulty_distribution": {
+    "knowledge": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    },
+    "routine": {
+     "easy": 0,
+     "medium": 1,
+     "difficult": 5
+    },
+    "complex": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    },
+    "problem_solving": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    }
+   },
+   "level_assignment_note": "Per-example levels reconstructed during v1->v2 enrichment; matches v1's recorded level counts exactly.",
+   "grid_label": "prove trigonometric identity"
+  },
+  {
+   "archetype_id": "trigreduction_004",
+   "name": "Determine the value(s) for which a trigonometric expression or identity is undefined, on a given interval",
+   "description": "Following a simplify/prove sub-question, learners must identify the value(s) of the variable within a stated interval where the (simplified) expression's denominator would be zero.",
+   "evidence_count": 5,
+   "low_evidence": false,
+   "cognitive_level_distribution": {
+    "knowledge": 0,
+    "routine": 5,
+    "complex": 0,
+    "problem_solving": 0
+   },
+   "command_verbs_used": [
+    "for which value(s) of \u03b8 will the identity/expression be undefined"
+   ],
+   "marking_pattern": {
+    "typical_total_marks": "2-5 (2-3 marks when the denominator's zeros are directly known special angles; up to 5 when it requires solving an equation from a prior sub-part first)",
+    "typical_breakdown": [
+     "1 mark per correct excluded value (each value is its own accuracy mark)"
+    ],
+    "consensus": "Consistent \u2014 one mark per correctly identified excluded value.",
+    "notes": "Consistent -- one mark per correctly identified excluded value, across all 4 examples. Cognitive level note: Nov 2022 P2 Q5.2.2 was originally flagged as an outlier (Complex) because it requires solving 2cos(theta)-1=0 first -- but per the booklet's own anchor example, solving a simple equation of this form to find a general/specific solution is itself Routine, so this is not actually an outlier; all 4 examples are consistently Routine."
+   },
+   "language_notes": "Interval typically given as 'x \u2208 [0\u00b0 ; 180\u00b0]' or listed as three answer lines (x = 0\u00b0, 90\u00b0, 180\u00b0); values are usually where cos or sin equals 0.",
+   "source_examples": [
+    "Nov 2022 P2 Q5.2.2",
+    "Nov 2025 P2 Q4.5.2",
+    "Jun 2019 P2 Q2.4",
+    "KZN Jun 2024 CT P2 Q4.3",
+    "G12 Nov 2023 P2 Q5.2.2"
+   ],
+   "examples_detail": [
+    {
+     "ref": "Nov 2022 P2 Q5.2.2",
+     "marks": 5,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "must solve quadratic in cos\u03b8 for two excluded values",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2025 P2 Q4.5.2",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "direct single reduction, one excluded value",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2019 P2 Q2.4",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "must check both tanx's and sin\u00b2x's own excluded values",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "KZN Jun 2024 CT P2 Q4.3",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "must check both tanx's and sinx's own excluded values",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2023 P2 Q5.2.2",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "single direct excluded value, denominator already isolated",
+     "tier_confidence": "high"
+    }
+   ],
+   "difficulty_distribution": {
+    "knowledge": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    },
+    "routine": {
+     "easy": 2,
+     "medium": 0,
+     "difficult": 3
+    },
+    "complex": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    },
+    "problem_solving": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    }
+   },
+   "level_assignment_note": "Per-example levels reconstructed during v1->v2 enrichment; matches v1's recorded level counts exactly.",
+   "grid_label": "values where trig expression undefined"
+  },
+  {
+   "archetype_id": "trigreduction_005",
+   "name": "Solve a trigonometric equation for its general solution (or all solutions on a restricted interval)",
+   "description": "A trigonometric equation (often quadratic in sin\u03b8 or cos\u03b8, sometimes requiring a co-function identity to combine two different angle expressions first) must be solved, either for the full general solution (\u03b8 = ... + k\u00b7360\u00b0, k \u2208 \u2124) or for all values within a stated interval.",
+   "evidence_count": 8,
+   "low_evidence": false,
+   "cognitive_level_distribution": {
+    "knowledge": 0,
+    "routine": 7,
+    "complex": 1,
+    "problem_solving": 0
+   },
+   "command_verbs_used": [
+    "hence, determine the general solution",
+    "determine the general solution of",
+    "solve for x",
+    "in how many quadrants will there be solutions"
+   ],
+   "marking_pattern": {
+    "typical_total_marks": "1-7 (1 mark for a quick quadrant-count sub-part; 3-7 for a full solve)",
+    "typical_breakdown": [
+     "M1: correct standard form / factorisation (or, if scaffolded by a prior 'show that' sub-part, this step is awarded there instead)",
+     "A1: reference angle correct",
+     "A1 per quadrant/solution family (QI, QII, etc.)",
+     "final A1 for correct 'k \u2208 \u2124' notation on general-solution versions"
+    ],
+    "consensus": "Consistent method (isolate ratio -> reference angle -> apply CAST/quadrant rule -> write general solution) across all 6; 5 of 6 sit at Routine per the booklet's own anchor example for this exact skill, with only the co-function-conversion example (Jun 2022 Q2.3) genuinely Complex.",
+    "notes": "Consistent method (isolate ratio -> reference angle -> apply CAST/quadrant rule -> write general solution) across all 6. Cognitive level note: per the booklet's own Grade 11 worked example ('Determine the general solution of 2sin(x-30)+1=0' = Routine), solving a trig equation for its general solution -- including a quadratic-in-sin/cos version reached by factoring, whether scaffolded or not -- is Routine; factoring a quadratic is itself Routine per the booklet's Grade 10 anchor ('Solve for x: x^2-5x=14'). Only Jun 2022 P2 Q2.3 is Complex: it requires converting sin(x+10)=cos(x-30) into a single-ratio equation via a co-function identity -- a genuine switch of representation -- before the routine general-solution procedure can even begin."
+   },
+   "language_notes": "General solution answers are written '\u03b8 = ... + k.360\u00b0 ; k \u2208 \u2124' (SA convention, k\u2208\u2124 stated explicitly and separately mark-worthy). Restricted-interval versions instead list the specific solutions found within the stated domain.",
+   "source_examples": [
+    "Nov 2021 P2 Q5.5.1",
+    "Nov 2021 P2 Q5.5.2",
+    "Nov 2023 P2 Q5.4.1",
+    "Nov 2023 P2 Q5.4.2",
+    "Nov 2025 P2 Q4.6",
+    "Jun 2022 P2 Q2.3",
+    "G12 Nov 2020 P2 Q6.3",
+    "G12 Nov 2024 P2 Q6.2"
+   ],
+   "examples_detail": [
+    {
+     "ref": "Nov 2021 P2 Q5.5.1",
+     "marks": 1,
+     "cognitive_level": "routine",
+     "difficulty_tier": "easy",
+     "tier_note": "direct quadrant count, minimal working",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2021 P2 Q5.5.2",
+     "marks": 3,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "reference angle + CAST, restricted interval",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2023 P2 Q5.4.1",
+     "marks": 2,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "standard Pythagorean substitution + factor",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2023 P2 Q5.4.2",
+     "marks": 5,
+     "cognitive_level": "routine",
+     "difficulty_tier": "medium",
+     "tier_note": "zero-product to general solution, two families",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Nov 2025 P2 Q4.6",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "rejects invalid root sin\u03b8=2 outside [-1,1]",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "Jun 2022 P2 Q2.3",
+     "marks": 7,
+     "cognitive_level": "complex",
+     "difficulty_tier": "difficult",
+     "tier_note": "co-function conversion, two solution families, restricted interval",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2020 P2 Q6.3",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "quadratic-in-cosx, rejects invalid root, non-special-angle answer",
+     "tier_confidence": "high"
+    },
+    {
+     "ref": "G12 Nov 2024 P2 Q6.2",
+     "marks": 6,
+     "cognitive_level": "routine",
+     "difficulty_tier": "difficult",
+     "tier_note": "quadratic-in-sinx via reduction, rejects invalid root, non-special-angle answer",
+     "tier_confidence": "high"
+    }
+   ],
+   "difficulty_distribution": {
+    "knowledge": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    },
+    "routine": {
+     "easy": 1,
+     "medium": 3,
+     "difficult": 3
+    },
+    "complex": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 1
+    },
+    "problem_solving": {
+     "easy": 0,
+     "medium": 0,
+     "difficult": 0
+    }
+   },
+   "level_assignment_note": "Per-example levels reconstructed during v1->v2 enrichment; matches v1's recorded level counts exactly.",
+   "grid_label": "general solution of trig equation"
+  }
+ ],
+ "excluded_archetypes": [
+  {
+   "name": "Solve a simultaneous system of two trigonometric equations for two unknown angles",
+   "evidence_count": 1,
+   "source_examples": [
+    "KZN Jun 2024 CT P2 Q4.4"
+   ],
+   "reason": "Dropped per instruction \u2014 only one example (a provincial common test, not a standard NSC paper), too thin to build a reliable marking pattern from."
+  }
+ ],
+ "excluded_sub_questions": [
+  {
+   "source": "Nov 2025 P2 Q4.3.2 ('Hence, or otherwise, write down the period of the expression in Question 4.3')",
+   "reason": "Did not fit cleanly into any archetype above \u2014 it asks for the period of a trig expression derived from an identity simplification, which is conceptually closer to the graphs topic (Trigonometric Functions) than to any identities/equations archetype, but appears embedded inside an identities question. Single occurrence \u2014 flagged rather than force-fitted, per the skill's Step 6 requirement. Worth a decision: fold into a future 'period of a simplified expression' archetype if it recurs, or treat as a one-off hybrid question."
+  },
+  {
+   "source": "All Nov 2021/2022/2023 Q6 and Nov 2025 Q5 (graphs questions, in full)",
+   "reason": "Separate ATP topic \u2014 Trigonometric Functions (Term 3). Already covered by its own knowledge base."
+  },
+  {
+   "source": "All Nov 2021/2022/2023 Q7 and Nov 2025 Q6 (whole questions)",
+   "reason": "Sine/cosine/area-rule application \u2014 separate ATP topic."
+  },
+  {
+   "source": "Jun 2022 P2 Q2.4.1-2.4.4",
+   "reason": "Sine/cosine/area-rule 2D problem embedded within the otherwise-relevant Q2 \u2014 excluded at sub-question level."
+  },
+  {
+   "source": "Jun 2023 P2 Q4.1.3(b)",
+   "reason": "Area-rule (\u00bdab sinC) calculation embedded within an otherwise-relevant sub-question \u2014 excluded at sub-question level; 4.1.3(a) retained."
+  },
+  {
+   "source": "G12 Nov 2023 P2 Q5.2.3 ('write down the minimum value of the function')",
+   "reason": "Cross-grade top-up: derived from the same identity as Q5.2.1 (accepted into trigreduction_003) but this part asks for a function's minimum value -- a Trigonometric Functions (graphs/range) skill, not an identities/equations skill. Doesn't fit any of the 5 archetypes in this topic. Single occurrence -- flagged per Step 6 rather than force-fitted."
+  },
+  {
+   "source": "G12 Nov 2024 P2 Q6.3.1-6.3.2 ('calculate the maximum value of g' / smallest x for that maximum)",
+   "reason": "Cross-grade top-up: same issue as Nov 2023 Q5.2.3 -- a function max-value question, not an identities/equations archetype. Flagged rather than force-fitted."
+  },
+  {
+   "source": "G12 Nov 2025 P2 Q5.1.3 ('sin10\u00b0' in terms of k, given tan50\u00b0=k)",
+   "reason": "Cross-grade top-up, borderline scope call: 10\u00b0 is not reachable from 50\u00b0 via a single reduction formula (not 90\u00b0\u00b150\u00b0, 180\u00b0\u00b150\u00b0, 360\u00b0\u00b150\u00b0, or -50\u00b0); relating them plausibly requires a compound-angle decomposition (e.g. 10\u00b0=50\u00b0-40\u00b0) which is Grade 12-only. Excluded and flagged separately rather than guessed, per instruction."
+  },
+  {
+   "source": "G12 Nov 2025 P2 Q5.2.2 ('for which values of x will [the square root of the Q5.2.1 expression] be real')",
+   "reason": "Cross-grade top-up: a domain/real-valued-radicand question, distinct in kind from trigreduction_004's 'undefined' (zero-denominator) archetype. Doesn't fit any existing archetype. Single occurrence -- flagged rather than force-fitted."
+  },
+  {
+   "source": "G12 Nov 2021 P2 Q5.3.2 ('cos108\u00b0' in terms of p, given sin36\u00b0=\u221a(1-p\u00b2))",
+   "reason": "Cross-grade top-up: 108\u00b0=180\u00b0-2(36\u00b0), so bridging p (defined at 36\u00b0) to 108\u00b0 requires a double-angle relationship. Excluded under the double-angle scope filter."
+  },
+  {
+   "source": "All Nov 2020 Q5, Nov 2022 Q6, Nov 2023 Q6 (graphs questions, in full, Grade 12)",
+   "reason": "Cross-grade top-up: Trigonometric Functions (graphs) is a separate ATP topic with its own knowledge base; out of scope here regardless of grade."
+  }
+ ],
+ "style_profile": {
+  "typical_sequencing": "This question always opens with short 'given a ratio, find another ratio' warm-ups (trigreduction_001), builds through simplification and proof (trigreduction_002/003), through undefined-value sub-parts (trigreduction_004), and closes with the heaviest cognitive-demand item \u2014 a general-solution equation (trigreduction_005, Complex Procedures).",
+  "scaffolding_pattern": "Heavy use of 'hence' and CA (Consistent Accuracy) follow-through: later sub-parts routinely depend on an earlier answer (e.g. Nov 2023 Q5.2.1\u21925.2.2\u21925.2.3 all build on the same t; Jun 2023 Q4.1.1\u21924.1.2\u21924.1.3 build on the same triangle). A 'show that' sub-part is sometimes inserted immediately before a 'hence, determine' sub-part specifically to de-risk the harder step for weaker candidates (Nov 2023 Q5.4.1\u21925.4.2).",
+  "notation_conventions": "Intervals stated as 'x \u2208 [a\u00b0 ; b\u00b0]' or 'a\u00b0 \u2264 x \u2264 b\u00b0' (semicolon, not comma, inside interval notation \u2014 SA/DBE convention). General solutions always close with '; k \u2208 \u2124'. Degree symbol (\u00b0) is retained throughout, including inside trig function arguments (sin 28\u00b0, not sin 28). Reduction-formula memo lines consistently show the identity used as its own tick (e.g. '\u2713 cos(180\u00b0\u2212\u03b8)=\u2212cos\u03b8') rather than folding it silently into the algebra \u2014 worth mirroring in generated marking guides.",
+  "june_papers_note": "Confirmed appropriate: this is Term 1 content (completed by end of March), so May/June mid-year exams correctly and consistently test it every year checked (2019, 2022, 2023, plus the KZN 2024 common test) \u2014 unlike the Trigonometric Functions (graphs) topic, no pacing anomaly exists here. June papers are treated as full, equal-weight evidence alongside the Nov papers."
+ },
+ "cognitive_level_verification": "Cognitive levels re-checked directly against standard_setting_booklet_2026_FET.pdf (WCED MNED, Grade 10-12 Prescribed Cognitive Levels table, page 13-14) after initial drafting. This surfaced a real discrepancy: the booklet's own Grade 11 worked example for ROUTINE (Level 2) is 'Determine the general solution of the equation 2sin(x-30)+1=0' -- the same skill as archetype trigreduction_005 -- yet most examples in that archetype had been classified Complex. On review, several archetypes had over-applied 'Complex' wherever a variable (t, g) replaced a number, or a question chained 2-4 standard reduction steps -- neither is a complexity trigger per the booklet's actual criteria (which explicitly allow 'derivation from given information' and 'generally similar to class' work, however parameterised, to remain Routine). Cognitive levels below have been corrected accordingly; only genuine representation-switching, non-obvious routes, or multi-concept integration are now classified Complex.",
+ "schema_version": "2.0",
+ "tier_method": "Analyst-assigned (Claude) using difficulty_tier_rules.md v1.2; not published by DBE. Cognitive level per WC MNED 2026 standard (standard_setting_booklet_2026_FET.pdf).",
+ "level_review_note": "Human-reviewed Sept 2026 by Anne-Marie. Resolution rules applied: (1) insight-spotting alone (noticing a shortcut/identity mid-expression) does NOT change cognitive level, stays Routine; (2) chain-length/execution difficulty stays Routine but justifies Difficult tier; (3) a geometric/cross-point reasoning step (similar triangles, rotating to a second point, connecting one point's ratio to another's coordinates via a shared angle) counts as Complex; (4) an extra genuine technique layered on top of reduction-formula work (e.g. trig values used as exponents, square-root restructuring) counts as Complex. All previously low-confidence tier calls (27 total) were reviewed against these rules and resolved; tier_confidence now high throughout."
+}
