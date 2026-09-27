@@ -258,6 +258,227 @@ class DocumentGenerator:
 
         return self._save_to_bytes(doc)
 
+    def generate_question_paper(self, topics_data: list, total_marks: int,
+                               task: str = None, term: str = None,
+                               time_minutes: int = None, examiner: str = None,
+                               moderator: str = None, grade: str = "11",
+                               include_information_sheet: bool = True) -> bytes:
+        """
+        Question paper ONLY, as its own standalone .docx: cover page +
+        question-paper body + (optionally) the information sheet -- no
+        marking guide, no cognitive grid. Shares every rendering call
+        (_add_generic_cover_page/_set_header_footer/_add_question_paper_body)
+        with generate_full_assessment() so the output is byte-for-byte the
+        same content as that combined document's QP section, just split
+        into its own file.
+        """
+        target_marks = total_marks
+        topic_display = " & ".join(name for name, _ in topics_data)
+        question_groups = [(i + 1, questions) for i, (_, questions) in enumerate(topics_data)]
+        actual_total_marks = _compute_actual_marks(question_groups)
+        if target_marks is not None and actual_total_marks != target_marks:
+            print(
+                f"  [docgen] WARNING: requested total_marks={target_marks} but the leaves actually "
+                f"present in topics_data sum to {actual_total_marks} -- printing {actual_total_marks}."
+            )
+
+        if self.template_path:
+            doc = self._load_and_replace_template(
+                topic_display, task, term, time_minutes, actual_total_marks, examiner,
+                moderator, grade
+            )
+        else:
+            doc = Document()
+            set_document_page_setup(doc)
+            set_document_default_font(doc)
+            self._add_generic_cover_page(doc, topic_display, task, term, time_minutes,
+                                         actual_total_marks, examiner, moderator, grade)
+            left_header = f"Mathematics {task}".strip() if task else f"Grade {grade} Mathematics"
+            right_header = term or ""
+            self._set_header_footer(doc, left_header, right_header)
+
+        self._add_question_paper_body(doc, question_groups, actual_total_marks)
+
+        if include_information_sheet and grade in ("11", "12"):
+            doc.add_page_break()
+            add_information_sheet_image(doc, str(self.info_sheet_path))
+
+        return self._save_to_bytes(doc)
+
+    def generate_marking_guide(self, topics_data: list, total_marks: int,
+                              task: str = None, term: str = None,
+                              time_minutes: int = None, examiner: str = None,
+                              moderator: str = None, grade: str = "11") -> bytes:
+        """
+        Marking guide ONLY, as its own standalone .docx -- no question paper,
+        no cognitive grid. Uses the same _add_marking_guide_body() renderer
+        as generate_full_assessment(), preceded by a light identifying header
+        (topic/task/term/grade) since this file no longer follows a shared
+        cover page.
+        """
+        topic_display = " & ".join(name for name, _ in topics_data)
+        question_groups = [(i + 1, questions) for i, (_, questions) in enumerate(topics_data)]
+        actual_total_marks = _compute_actual_marks(question_groups)
+
+        doc = Document()
+        set_document_page_setup(doc)
+        set_document_default_font(doc)
+
+        left_header = f"Mathematics {task}".strip() if task else f"Grade {grade} Mathematics"
+        right_header = term or ""
+        self._set_header_footer(doc, left_header, right_header)
+
+        title = doc.add_paragraph()
+        r = title.add_run(f"Grade {grade} Mathematics -- {topic_display}")
+        set_font(r, size=14, bold=True)
+        subtitle_bits = []
+        if task:
+            subtitle_bits.append(task)
+        if term:
+            subtitle_bits.append(term)
+        subtitle_bits.append(f"Total Marks: {actual_total_marks}")
+        subtitle = doc.add_paragraph()
+        r = subtitle.add_run(" | ".join(subtitle_bits))
+        set_font(r, size=11)
+        doc.add_paragraph()
+
+        self._add_marking_guide_body(doc, question_groups, actual_total_marks)
+
+        return self._save_to_bytes(doc)
+
+    def generate_cognitive_grid_xlsx(self, topics_data: list, targets: dict = None) -> bytes:
+        """
+        COGNITIVE LEVEL ANALYSIS GRID as a genuine .xlsx workbook, reusing
+        the exact same leaf data / column-total reconciliation as
+        _add_cognitive_grid()'s docx table (_collect_grid_leaves(),
+        COGNITIVE_LEVELS/DIFFICULTY_TIERS, same 16-column layout: Topic/Q/
+        Sub-topic + 4 levels x 3 tiers (E/M/D) + Total). Same content and
+        row/column reconciliation logic as the docx grid -- delivered as a
+        spreadsheet instead of a Word table.
+        """
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
+        from openpyxl.utils import get_column_letter
+
+        targets = targets or DEFAULT_COGNITIVE_TARGETS
+        leaves = _collect_grid_leaves(topics_data)
+        total_marks = sum(leaf["marks"] for leaf in leaves if leaf["marks"])
+
+        col_totals = {(lvl, tier): 0 for lvl in COGNITIVE_LEVELS for tier in DIFFICULTY_TIERS}
+        for leaf in leaves:
+            key = (leaf["level"], leaf["tier"])
+            if key in col_totals and leaf["marks"]:
+                col_totals[key] += leaf["marks"]
+        level_totals = {lvl: sum(col_totals[(lvl, t)] for t in DIFFICULTY_TIERS) for lvl in COGNITIVE_LEVELS}
+
+        def frac(x):
+            return (x / total_marks) if total_marks else 0
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Cognitive Level Grid"
+
+        thin = Side(style="thin", color="000000")
+        border = Border(left=thin, right=thin, top=thin, bottom=thin)
+        shade = PatternFill("solid", fgColor="D9D9D9")
+        bold = Font(bold=True)
+        center = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        left_align = Alignment(horizontal="left", vertical="center", wrap_text=True)
+
+        NUM_COLS = 16
+
+        def set_cell(row, col, value, *, bold_=False, center_=True, shade_=False, pct=False):
+            c = ws.cell(row=row, column=col, value=value)
+            c.font = Font(bold=bold_)
+            c.alignment = center if center_ else left_align
+            c.border = border
+            if shade_:
+                c.fill = shade
+            if pct:
+                c.number_format = "0%"
+            return c
+
+        def merge_row(row, start_col, end_col, value, **kw):
+            ws.merge_cells(start_row=row, start_column=start_col, end_row=row, end_column=end_col)
+            set_cell(row, start_col, value, **kw)
+            for col in range(start_col + 1, end_col + 1):
+                ws.cell(row=row, column=col).border = border
+                if kw.get("shade_"):
+                    ws.cell(row=row, column=col).fill = shade
+
+        r = 1
+        # --- Top summary rows ---
+        merge_row(r, 1, 3, "Weighting (Prescribed)", bold_=True, center_=False, shade_=True)
+        for i, lvl in enumerate(COGNITIVE_LEVELS):
+            merge_row(r, 4 + 3 * i, 6 + 3 * i, targets.get(lvl, 0) / 100, bold_=True, shade_=True, pct=True)
+        set_cell(r, 16, 1.0, bold_=True, shade_=True, pct=True)
+        r += 1
+
+        merge_row(r, 1, 3, "Actual %", bold_=True, center_=False, shade_=True)
+        for i, lvl in enumerate(COGNITIVE_LEVELS):
+            merge_row(r, 4 + 3 * i, 6 + 3 * i, frac(level_totals[lvl]), bold_=True, shade_=True, pct=True)
+        set_cell(r, 16, frac(total_marks), bold_=True, shade_=True, pct=True)
+        r += 1
+
+        # --- Column headers (2 rows) ---
+        header_row1 = r
+        header_row2 = r + 1
+        for i, h in enumerate(["Topic", "Q", "Sub-topic"], start=1):
+            ws.merge_cells(start_row=header_row1, start_column=i, end_row=header_row2, end_column=i)
+            set_cell(header_row1, i, h, bold_=True)
+        for i, lvl in enumerate(COGNITIVE_LEVELS):
+            merge_row(header_row1, 4 + 3 * i, 6 + 3 * i, COGNITIVE_LEVEL_NAMES[lvl], bold_=True)
+        ws.merge_cells(start_row=header_row1, start_column=16, end_row=header_row2, end_column=16)
+        set_cell(header_row1, 16, "Total", bold_=True)
+        for i in range(12):
+            set_cell(header_row2, 4 + i, DIFFICULTY_TIER_LABELS[DIFFICULTY_TIERS[i % 3]], bold_=True)
+        r = header_row2 + 1
+
+        # --- Data rows: one per sub-question ---
+        last_topic = None
+        for leaf in leaves:
+            set_cell(r, 1, leaf["topic"] if leaf["topic"] != last_topic else "", bold_=True, center_=False)
+            last_topic = leaf["topic"]
+            set_cell(r, 2, leaf["num"])
+            set_cell(r, 3, leaf["label"], center_=False)
+            for col in range(4, 16):
+                set_cell(r, col, None)
+            if leaf["level"] in COGNITIVE_LEVELS and leaf["tier"] in DIFFICULTY_TIERS:
+                col_index = 4 + COGNITIVE_LEVELS.index(leaf["level"]) * 3 + DIFFICULTY_TIERS.index(leaf["tier"])
+                set_cell(r, col_index, leaf["marks"])
+            set_cell(r, 16, leaf["marks"], bold_=True)
+            r += 1
+
+        # --- Bottom summary rows ---
+        merge_row(r, 1, 3, "TOTAL", bold_=True, center_=False, shade_=True)
+        for i in range(12):
+            lvl = COGNITIVE_LEVELS[i // 3]
+            tier = DIFFICULTY_TIERS[i % 3]
+            set_cell(r, 4 + i, col_totals[(lvl, tier)], bold_=True, shade_=True)
+        set_cell(r, 16, total_marks, bold_=True, shade_=True)
+        r += 1
+
+        merge_row(r, 1, 3, "%", bold_=True, center_=False, shade_=True)
+        for i, lvl in enumerate(COGNITIVE_LEVELS):
+            merge_row(r, 4 + 3 * i, 6 + 3 * i, frac(level_totals[lvl]), bold_=True, shade_=True, pct=True)
+        set_cell(r, 16, 1.0, bold_=True, shade_=True, pct=True)
+        r += 2
+
+        note = ws.cell(row=r, column=1, value="E = Easy, M = Medium, D = Difficult.")
+        note.font = Font(italic=True, size=9)
+
+        # Column widths, tuned for readability rather than the docx grid's
+        # fixed inch layout (which doesn't map 1:1 onto Excel's character
+        # units).
+        widths = [14, 8, 22] + [5] * 12 + [8]
+        for i, w in enumerate(widths, start=1):
+            ws.column_dimensions[get_column_letter(i)].width = w
+
+        buffer = io.BytesIO()
+        wb.save(buffer)
+        buffer.seek(0)
+        return buffer.getvalue()
+
     def _load_and_replace_template(self, topic: str, task: str, term: str,
                                    time_minutes: int, total_marks: int,
                                    examiner: str, moderator: str, grade: str):
